@@ -1,5 +1,5 @@
 <template>
-    <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="listData">
+    <a-list style="maxwidth:80%" item-layout="vertical" size="large" :pagination="pagination" :data-source="listData">
       <template #footer>
         <div>
           <b>ant design vue</b>

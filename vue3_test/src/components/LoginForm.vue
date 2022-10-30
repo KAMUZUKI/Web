@@ -1,37 +1,41 @@
 <template>
-  <a-form :model="formState" name="normal_login" class="login-form" @finish="onFinish" @finishFailed="onFinishFailed">
-    <a-form-item label="Username" name="username" :rules="[{ required: true, message: 'Please input your username!' }]">
-      <a-input v-model:value="formState.username">
-        <template #prefix>
-          <UserOutlined class="site-form-item-icon" />
-        </template>
-      </a-input>
-    </a-form-item>
-
-    <a-form-item label="Password" name="password" :rules="[{ required: true, message: 'Please input your password!' }]">
-      <a-input-password v-model:value="formState.password">
-        <template #prefix>
-          <LockOutlined class="site-form-item-icon" />
-        </template>
-      </a-input-password>
-    </a-form-item>
-
-    <a-form-item>
-      <a-form-item name="remember" no-style>
-        <a-checkbox v-model:checked="formState.remember">Remember me</a-checkbox>
+  <div style="background: #ececec; padding: 5px">
+    <a-form :model="formState" name="normal_login" class="login-form" @finish="onFinish" @finishFailed="onFinishFailed">
+      <a-form-item label="用户" name="username"
+        :rules="[{ required: true, message: 'Please input your username!' }]">
+        <a-input v-model:value="formState.username">
+          <template #prefix>
+            <UserOutlined class="site-form-item-icon" />
+          </template>
+        </a-input>
       </a-form-item>
-      <a class="login-form-forgot" href="">Forgot password</a>
-    </a-form-item>
 
-    <a-form-item>
-      <a-button :disabled="disabled" type="primary" html-type="submit" class="login-form-button"
-        @click="showAvatar();login()">
-        Log in
-      </a-button>
-      Or
-      <a @click="showDrawer">register now!</a>
-    </a-form-item>
-  </a-form>
+      <a-form-item label="密码" name="password"
+        :rules="[{ required: true, message: 'Please input your password!' }]">
+        <a-input-password v-model:value="formState.password">
+          <template #prefix>
+            <LockOutlined class="site-form-item-icon" />
+          </template>
+        </a-input-password>
+      </a-form-item>
+
+      <a-form-item>
+        <a-form-item name="remember" no-style>
+          <a-checkbox v-model:checked="formState.remember">记住</a-checkbox>
+        </a-form-item>
+        <a class="login-form-forgot" href="">忘记密码</a>
+      </a-form-item>
+
+      <a-form-item>
+        <a-button :disabled="disabled" type="primary" html-type="submit" class="login-form-button"
+          @click="showAvatar();login()">
+          Log in
+        </a-button>
+        Or
+        <a @click="showDrawer">register now!</a>
+      </a-form-item>
+    </a-form>
+  </div>
 </template>
 <script>
 import { defineComponent, reactive, computed } from 'vue';
@@ -108,7 +112,7 @@ export default defineComponent({
       login
     };
   },
-  
+
 });
 </script>
 <style>

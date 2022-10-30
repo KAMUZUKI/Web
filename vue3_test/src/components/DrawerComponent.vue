@@ -1,6 +1,6 @@
 <template>
   <LoginForm v-if="!avatarVisible" :showDrawer="showDrawer" :showAvatar="showAvatar"
-    :openNotificationWithIcon="openNotificationWithIcon" style="width:270px">
+    :openNotificationWithIcon="openNotificationWithIcon" style="width:100%">
   </LoginForm>
   <AvatarComponent v-if="avatarVisible" :showAvatar="showAvatar" :openNotificationWithIcon="openNotificationWithIcon" style="width:270px">
   </AvatarComponent>
