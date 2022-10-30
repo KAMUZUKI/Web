@@ -1,11 +1,11 @@
 <template>
     <a-row class="a-row" type="flex">
-        <a-col :flex="2">2 / 5</a-col>
+        <a-col :flex="2"><h1>DIZCARD</h1></a-col>
         <a-col :flex="3">3 / 5</a-col>
     </a-row>
     <a-row class="a-row" type="flex">
-        <a-col style="background-color:#fff" flex="270px"><LoginForm></LoginForm></a-col>
-        <a-col flex="auto">auto</a-col>
+        <a-col style="background-color:#fff" flex="300px"><DrawerComponent></DrawerComponent></a-col>
+        <a-col flex="auto"></a-col>
     </a-row>
     <a-row class="a-row" type="flex">
         <a-col flex="1 1 200px">1 1 200px</a-col>
@@ -14,11 +14,11 @@
 </template>
 
 <script>
-import LoginForm from './LoginForm.vue';
+import DrawerComponent from './DrawerComponent.vue';
 export default {
     name: 'LayoutFramework',
     components:{
-        LoginForm
+        DrawerComponent
     }
 }
 </script>

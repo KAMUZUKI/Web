@@ -42,26 +42,19 @@
           Log in
         </a-button>
         Or
-        <a href="">register now!</a>
+        <a @click="showDrawer">register now!</a>
       </a-form-item>
     </a-form>
-    <ConfirmComponent>
-      <RegisterComponent></RegisterComponent>
-    </ConfirmComponent>
   </template>
   <script>
   import { defineComponent, reactive, computed } from 'vue';
   import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
-  import RegisterComponent from './RegisterComponent.vue';
-  import ConfirmComponent from './ConfirmComponent.vue';
   export default defineComponent({
     name: 'LoginForm',
     
     components: {
       UserOutlined,
-      LockOutlined,
-      RegisterComponent,
-      ConfirmComponent
+      LockOutlined
     },
   
     setup() {
@@ -90,7 +83,12 @@
         disabled,
       };
     },
-  
+    props: {
+      showDrawer: {
+        type: Function,
+        required: true,
+      },
+    },
   });
   </script>
   <style>
