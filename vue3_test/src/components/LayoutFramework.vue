@@ -4,21 +4,33 @@
         <a-col :flex="3">3 / 5</a-col>
     </a-row>
     <a-row class="a-row" type="flex">
-        <a-col style="background-color:#fff" flex="300px"><DrawerComponent></DrawerComponent></a-col>
-        <a-col flex="auto"></a-col>
+        <a-col style="background-color:#fff" flex="300px">
+            <a-row class="a-row" style="background-color:#fff" type="flex">
+                <DrawerComponent></DrawerComponent>
+            </a-row>
+            <a-row class="a-row" style="background-color:#fff" type="flex">
+                <DrawerComponent></DrawerComponent>
+            </a-row>
+        </a-col>
+        <a-col flex="">
+            <ContentComponent></ContentComponent>
+        </a-col>
     </a-row>
     <a-row class="a-row" type="flex">
         <a-col flex="1 1 200px">1 1 200px</a-col>
-        <a-col flex="0 1 300px">0 1 300px</a-col>
+        <a-col flex="auto">copyright 2022 By MUZUKI</a-col>
+        <a-col flex="0 1 300px">1 1 200px</a-col>
     </a-row>
 </template>
 
 <script>
 import DrawerComponent from './DrawerComponent.vue';
+import ContentComponent from './ContentComponent.vue';
 export default {
     name: 'LayoutFramework',
     components:{
-        DrawerComponent
+        DrawerComponent,
+        ContentComponent
     }
 }
 </script>

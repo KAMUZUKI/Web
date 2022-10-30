@@ -1,41 +1,63 @@
 <template>
-    <LoginForm :showDrawer="showDrawer" style="width:270px"></LoginForm>
-    <a-drawer placement="left" :closable="false" :visible="visible" :get-container="true"
-        :style="{ position: 'absolute' }" @close="onClose">
-        <RegisterComponent :onClose="onClose"></RegisterComponent>
-    </a-drawer>
+  <LoginForm v-if="!avatarVisible" :showDrawer="showDrawer" :showAvatar="showAvatar"
+    :openNotificationWithIcon="openNotificationWithIcon" style="width:270px">
+  </LoginForm>
+  <AvatarComponent v-if="avatarVisible" :showAvatar="showAvatar" :openNotificationWithIcon="openNotificationWithIcon" style="width:270px">
+  </AvatarComponent>
+  <a-drawer placement="left" :closable="false" :visible="visible" :get-container="true"
+    :style="{ position: 'absolute' }" @close="onClose">
+    <RegisterComponent :openNotificationWithIcon="openNotificationWithIcon" :onClose="onClose"></RegisterComponent>
+  </a-drawer>
 </template>
 <script>
-  import { defineComponent, ref } from 'vue';
-  import LoginForm from './LoginForm.vue';
-  import RegisterComponent from './RegisterComponent.vue';
-  export default defineComponent({
-    name: 'DrawerComponent',
-    setup() {
-      const visible = ref(false);
-  
-      const afterVisibleChange = bool => {
-        console.log('visible', bool);
-      };
-  
-      const showDrawer = () => {
-        visible.value = true;
-      };
-  
-      const onClose = () => {
-        visible.value = false;
-      };
-  
-      return {
-        visible,
-        afterVisibleChange,
-        showDrawer,
-        onClose,
-      };
-    },
-    components: {
-        LoginForm,
-        RegisterComponent
-    }
-  });
-  </script>
+import { defineComponent, ref} from 'vue';
+import { notification } from 'ant-design-vue';
+import LoginForm from './LoginForm.vue';
+import RegisterComponent from './RegisterComponent.vue';
+import AvatarComponent from './tools/AvatarComponent.vue';
+export default defineComponent({
+  name: 'DrawerComponent',
+  setup() {
+    const visible = ref(false);
+    const avatarVisible = ref(false);
+
+    const afterVisibleChange = bool => {
+      console.log('visible', bool);
+    };
+
+    const showDrawer = () => {
+      visible.value = true;
+    };
+
+    const onClose = () => {
+      visible.value = false;
+    };
+
+    const showAvatar = () => {
+      avatarVisible.value = !avatarVisible.value;
+    };
+
+    const openNotificationWithIcon = (type,status,message) => {
+      notification[type]({
+        message: status,
+        description: message,
+      });
+    };
+
+    return {
+      visible,
+      avatarVisible,
+      afterVisibleChange,
+      showDrawer,
+      showAvatar,
+      onClose,
+      openNotificationWithIcon,
+    };
+  },
+  components: {
+    LoginForm,
+    RegisterComponent,
+    AvatarComponent
+  }
+});
+</script>

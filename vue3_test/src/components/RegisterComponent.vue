@@ -1,7 +1,8 @@
 <template>
     <a-form ref="formRef" name="custom-validation" :model="formState" :rules="rules" v-bind="layout"
         @finish="handleFinish" @validate="handleValidate" @finishFailed="handleFinishFailed">
-        <a-form-item label="Username" name="username" :rules="[{ required: true, message: 'Please input your username!' }]">
+        <a-form-item label="Username" name="username"
+            :rules="[{ required: true, message: 'Please input your username!' }]">
             <a-input v-model:value="formState.username">
                 <template #prefix>
                     <UserOutlined class="site-form-item-icon" />
@@ -21,47 +22,27 @@
             </a-select>
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 16, offset: 6 }">
-            <a-button type="primary" html-type="submit">注册</a-button>
+            <a-button type="primary" html-type="submit" @click="register">注册</a-button>
             <a-button style="margin-left: 10px" @click="onClose">退出</a-button>
         </a-form-item>
     </a-form>
 </template>
 <style>
-    a-form-item {
-        color: rgba(0, 0, 0, 0.25);
-    }
+
 </style>
 <script>
 import { defineComponent, reactive, ref } from 'vue';
-import { toRaw, computed } from 'vue';
-import { toArray } from 'lodash-es';
-import { Form } from 'ant-design-vue';
-const useForm = Form.useForm;
+import { notification } from 'ant-design-vue';
+
 export default defineComponent({
-    name:'RegisterComponent',
+    name: 'RegisterComponent',
     setup() {
-
-      const { resetFields, validate, validateInfos, mergeValidateInfo } = useForm(modelRef, rulesRef);
-      const onSubmit = () => {
-        validate()
-          .then(() => {
-            console.log(toRaw(modelRef));
-          })
-          .catch(err => {
-            console.log('error', err);
-          });
-      };
-      const errorInfos = computed(() => {
-        return mergeValidateInfo(toArray(validateInfos));
-      });
-      
-
         const formRef = ref();
         const formState = reactive({
             username: '',
             pass: '',
             checkPass: '',
-            gender:'1',
+            gender: '1',
         });
 
         let validatePass = async (_rule, value) => {
@@ -95,8 +76,9 @@ export default defineComponent({
                 validator: validatePass2,
                 trigger: 'change',
             }],
-            
+
         };
+
         const layout = {
             labelCol: {
                 span: 6,
@@ -118,6 +100,19 @@ export default defineComponent({
             console.log(args);
         };
 
+        const register = () => {
+            // TODO: register
+            openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
+            openNotificationWithIcon('error', '注册失败', '注册失败');
+        };
+
+        const openNotificationWithIcon = (type,title,message)=> {
+            notification[type]({
+                message: title,
+                description: message,
+            });
+        };
+
         return {
             formState,
             formRef,
@@ -126,17 +121,11 @@ export default defineComponent({
             handleFinishFailed,
             handleFinish,
             handleValidate,
+            register,
+            openNotificationWithIcon,
             labelCol: { span: 4 },
-            wrapperCol: { span: 14 },
-            validateInfos,
-            resetFields,
-            modelRef,
-            onSubmit,
-            errorInfos,
+            wrapperCol: { span: 14 }
         };
-        
-        
-        
     },
     props: {
         onClose: {

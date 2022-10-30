@@ -7,7 +7,7 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { createVNode, defineComponent } from 'vue';
 import { Modal } from 'ant-design-vue';
-import RegisterComponent from './RegisterComponent.vue';
+import RegisterComponent from '.../RegisterComponent.vue';
 export default defineComponent({
     name: 'ConfirmComponent',
     setup() {
@@ -23,7 +23,6 @@ export default defineComponent({
                     }).catch(() => console.log('Oops errors!'));
                 },
                 onCancel() { },
-
             });
         };
         return {
