@@ -13,7 +13,7 @@
 		-->
 		<!-- 准备好一个容器-->
 		<div id="root">
-			<school></school>
+			<school :message="msg"></school>
 		</div>
 	</body>
 
@@ -28,6 +28,7 @@
 				<div>
 					<h2>学校名称：{{name}}</h2>	
 					<h2>学校地址：{{address}}</h2>	
+					<h2>学校地址：{{message}}</h2>	
 					<button @click="showX">点我输出x</button>
 				</div>
 			`,
@@ -42,6 +43,7 @@
 					console.log(this.x)
 				}
 			},
+			props: ['message']
 		})
 
 		//创建一个vm

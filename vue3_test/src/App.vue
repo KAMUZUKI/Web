@@ -1,13 +1,15 @@
 <template>
-  <div></div>
+  <LayoutFramework>
+  </LayoutFramework>
 </template>
 
 <script>
+import LayoutFramework from './components/LayoutFramework.vue';
 
 export default {
   name: 'App',
   components: {
-    
+    LayoutFramework
   }
 }
 </script>
@@ -18,7 +20,5 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
