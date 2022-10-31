@@ -1,9 +1,9 @@
 <template>
-  <div style="background: #ececec; padding: 5px">
+  <div style="background: #ececec; padding: 5px;border-radius: 10px;">
     <a-form :model="formState" name="normal_login" class="login-form" @finish="onFinish" @finishFailed="onFinishFailed">
       <a-form-item label="用户" name="username"
         :rules="[{ required: true, message: 'Please input your username!' }]">
-        <a-input v-model:value="formState.username">
+        <a-input v-model:value="formState.username" style="border-radius:10px">
           <template #prefix>
             <UserOutlined class="site-form-item-icon" />
           </template>
@@ -12,7 +12,7 @@
 
       <a-form-item label="密码" name="password"
         :rules="[{ required: true, message: 'Please input your password!' }]">
-        <a-input-password v-model:value="formState.password">
+        <a-input-password v-model:value="formState.password" style="border-radius:10px">
           <template #prefix>
             <LockOutlined class="site-form-item-icon" />
           </template>
@@ -27,7 +27,7 @@
       </a-form-item>
 
       <a-form-item>
-        <a-button :disabled="disabled" type="primary" html-type="submit" class="login-form-button"
+        <a-button :disabled="disabled" style="border-radius:10px" type="primary" html-type="submit" class="login-form-button"
           @click="showAvatar();login()">
           Log in
         </a-button>

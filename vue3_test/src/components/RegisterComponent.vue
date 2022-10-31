@@ -21,7 +21,7 @@
                 <a-select-option value="1">男</a-select-option>
                 <a-select-option value="0">女</a-select-option>
             </a-select>
-        </a-form-item>z
+        </a-form-item>
         <a-form-item :wrapper-col="{ span: 16, offset: 6 }">
             <a-button type="primary" html-type="submit" @click="register">注册</a-button>
             <a-button style="margin-left: 10px" @click="onClose">退出</a-button>
