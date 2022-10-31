@@ -1,12 +1,27 @@
 <template>
     <a-layout>
-        <a-layout-header style="background-color:#d9d9d9;padding:0 0">
-            <AvatarComponent></AvatarComponent>
+        <a-layout-header style="background-color:#d9d9d9;padding:0 0;height:90px">
+            <a-row>
+                <a-col :span="15">
+                    <span style="display: inline-block;width: 100px;font-size:xx-large;float: left">DIZCARD</span><br>
+                    <BreadcrumbComponent style="float:left;margin-left:20px"></BreadcrumbComponent>
+                </a-col>
+                <a-col :span="9">
+                    <AvatarComponent v-if="avatarVisible" :showAvatar="showAvatar"
+                        :openNotificationWithIcon="openNotificationWithIcon" style="width:100%;float: right">
+                    </AvatarComponent>
+                </a-col>
+            </a-row>
+            <a-row>
+            </a-row>
         </a-layout-header>
         <a-layout>
             <a-layout-sider theme="light" style="width:200px">
                 <a-row class="a-row" style="background-color:#fff" type="flex">
-                    <DrawerComponent></DrawerComponent>
+                    <DrawerComponent :avatarVisible="avatarVisible" :showAvatar="showAvatar" :openNotificationWithIcon="openNotificationWithIcon"></DrawerComponent>
+                </a-row>
+                <a-row class="a-row" style="background-color:#fff" type="flex">
+                    <MenuComponent></MenuComponent>
                 </a-row>
             </a-layout-sider>
             <a-layout-content>
@@ -24,17 +39,41 @@
 </template>
 
 <script>
+import { defineComponent,ref} from 'vue';
+import { notification } from 'ant-design-vue';
 import DrawerComponent from './DrawerComponent.vue';
 import ContentComponent from './ContentComponent.vue';
+import BreadcrumbComponent from './tools/BreadcrumbComponent.vue';
 import AvatarComponent from './tools/AvatarComponent.vue';
-export default {
+import MenuComponent from './tools/MenuComponent.vue';
+export default defineComponent({
     name: 'LayoutFramework',
+    setup() {
+        const avatarVisible = ref(false);
+        const showAvatar = () => {
+            avatarVisible.value = !avatarVisible.value;
+        };
+        const openNotificationWithIcon = (type, status, message) => {
+            notification[type]({
+                message: status,
+                description: message,
+            });
+        };
+        return {
+            avatarVisible,
+            showAvatar,
+            openNotificationWithIcon
+        };
+    },
     components: {
         DrawerComponent,
         ContentComponent,
-        AvatarComponent
+        AvatarComponent,
+        BreadcrumbComponent,
+        MenuComponent
     },
-}
+})
+
 </script>
 
 <style>

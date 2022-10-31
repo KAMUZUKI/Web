@@ -1,6 +1,7 @@
 <template>
     <a-form ref="formRef" name="custom-validation" :model="formState" :rules="rules" v-bind="layout"
         @finish="handleFinish" @validate="handleValidate" @finishFailed="handleFinishFailed">
+        <center><h2>注册</h2></center>
         <a-form-item label="Username" name="username"
             :rules="[{ required: true, message: 'Please input your username!' }]">
             <a-input v-model:value="formState.username">
@@ -20,7 +21,7 @@
                 <a-select-option value="1">男</a-select-option>
                 <a-select-option value="0">女</a-select-option>
             </a-select>
-        </a-form-item>
+        </a-form-item>z
         <a-form-item :wrapper-col="{ span: 16, offset: 6 }">
             <a-button type="primary" html-type="submit" @click="register">注册</a-button>
             <a-button style="margin-left: 10px" @click="onClose">退出</a-button>
