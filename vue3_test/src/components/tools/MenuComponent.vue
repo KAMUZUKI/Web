@@ -4,17 +4,17 @@
             <div style="width: 100%" v-for="(item,index) in data" :key="index">
                 <div class="list-item" v-if="index==0">
                     <a href="#">
-                        <a-list-item><a-tag color="red">Top{{index}}</a-tag>{{ item }}</a-list-item>
+                        <a-list-item class="a-list-item"><a-tag color="red">Top{{index}}</a-tag>{{ item }}</a-list-item>
                     </a><br/>
                 </div>
                 <div class="list-item" v-else-if="index==1">
                     <a href="#">
-                        <a-list-item><a-tag color="cyan">Top{{index}}</a-tag>{{ item }}</a-list-item>
+                        <a-list-item class="a-list-item"><a-tag color="cyan">Top{{index}}</a-tag>{{ item }}</a-list-item>
                     </a><br/>
                 </div>
                 <div class="list-item" v-else>
                     <a href="#">
-                        <a-list-item><a-tag color="green">Top{{index}}</a-tag>{{ item }}</a-list-item>
+                        <a-list-item class="a-list-item"><a-tag color="green">Top{{index}}</a-tag>{{ item }}</a-list-item>
                     </a><br/>
                 </div>
             </div>
@@ -28,7 +28,13 @@
         height: 40px;
         border:1px solid lightblue;
         text-align:left;
+        border-radius:10px;
     }
+
+    .a-list-item{
+        margin-left: 20px;
+    }
+
 </style>
 
 

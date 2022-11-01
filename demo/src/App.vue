@@ -1,15 +1,18 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
+  <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
   <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <mavon-editor v-model="value"/>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-
+import MavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    HelloWorld,
+    MavonEditor,
   }
 }
 </script>
