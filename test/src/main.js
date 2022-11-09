@@ -1,17 +1,15 @@
-import { createApp } from 'vue';
-import Antd from 'ant-design-vue';
-import App from './App';
-import 'ant-design-vue/dist/antd.css';
-import 'animate.css/animate.min.css';
+import { createApp } from 'vue'
+import App from './App.vue'
+import 'animate.css'
 import router from './router'
-import 'element-plus/dist/index.css'
-
 // 预览组件以及样式
 import VMdPreview from '@kangc/v-md-editor/lib/preview';
 import '@kangc/v-md-editor/lib/style/preview.css';
 // VuePress主题以及样式（这里也可以选择github主题）
 import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
 import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
+
+
 
 // Prism
 import Prism from 'prismjs';
@@ -22,12 +20,5 @@ VMdPreview.use(vuepressTheme, {
   Prism,
 });
 
-import store from './store'
-
-const app = createApp(App);
-
-app.use(Antd)
-    .use(router)
-    .use(VMdPreview)
-    .use(store)
-    .mount('#app');
+createApp(App).use(router).use(VMdPreview)
+    .mount('#app')

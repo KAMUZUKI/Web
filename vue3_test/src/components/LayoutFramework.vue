@@ -1,87 +1,76 @@
 <template>
     <a-layout>
         <a-layout-header style="background-color:#d9d9d9;padding:0 0;height:90px">
-            <a-row>
-                <a-col :span="15">
-                    <span style="display: inline-block;width: 100px;font-size:xx-large;float: left">DIZCARD</span><br>
-                    <BreadcrumbComponent style="float:left;margin-left:20px"></BreadcrumbComponent>
+            <a-row style="max-height:100%">
+                <a-col style="max-height:90px" :span="15">
+                    <span style="display: inline-block;width: 100px;font-size:xx-large;float: left;line-height:1">DIZCARD</span>
+                    <!-- <BreadcrumbComponent style="float:left;margin-left:20px"></BreadcrumbComponent> -->
                 </a-col>
-                <a-col :span="9">
-                    <AvatarComponent v-if="avatarVisible" :showAvatar="showAvatar"
-                        :openNotificationWithIcon="openNotificationWithIcon" style="width:100%;float: right">
-                    </AvatarComponent>
+                <a-col style="max-height:100%" :span="9">
+                    <HeadMenu></HeadMenu>
                 </a-col>
-            </a-row>
-            <a-row>
             </a-row>
         </a-layout-header>
-        <a-layout>
-            <a-layout-sider theme="light" style="width:200px">
-                <a-row class="a-row" style="background-color:#fff" type="flex">
-                    <DrawerComponent :avatarVisible="avatarVisible" :showAvatar="showAvatar" :openNotificationWithIcon="openNotificationWithIcon"></DrawerComponent>
-                </a-row>
-                <a-row class="a-row" style="background-color:#fff" type="flex">
-                    <MenuComponent></MenuComponent>
-                </a-row>
-            </a-layout-sider>
-            <a-layout-content>
-                <a-col style="background-color:#fff;float:left;" flex="fix">
-                    <ContentComponent></ContentComponent>
-                </a-col>
-            </a-layout-content>
-        </a-layout>
+        <router-view #default="{ route, Component }">
+            <transition :enter-active-class="`animate__animated ${route.meta.transition_enter}`"
+                :leave-active-class="`animate__animated ${route.meta.transition_leave}`" mode="out-in">
+                <component :is="Component" :openNotificationWithIcon="openNotificationWithIcon"></component>
+            </transition>
+        </router-view>
         <a-layout-footer>
-            <a-col flex="1 1 200px">1 1 200px</a-col>
+            <a-col flex="1 1 200px"></a-col>
             <a-col flex="auto">copyright 2022 By MUZUKI</a-col>
-            <a-col flex="0 1 300px">1 1 200px</a-col>
+            <a-col flex="0 1 300px"></a-col>
         </a-layout-footer>
     </a-layout>
 </template>
 
 <script>
-import { defineComponent,ref} from 'vue';
+import { defineComponent } from 'vue';
 import { notification } from 'ant-design-vue';
-import DrawerComponent from './DrawerComponent.vue';
-import ContentComponent from './ContentComponent.vue';
-import BreadcrumbComponent from './tools/BreadcrumbComponent.vue';
-import AvatarComponent from './tools/AvatarComponent.vue';
-import MenuComponent from './tools/MenuComponent.vue';
+import HeadMenu from './Menu/HeadMenu.vue';
+import { useStore } from 'vuex' // 引入useStore 方法
 export default defineComponent({
     name: 'LayoutFramework',
     setup() {
-        const avatarVisible = ref(false);
-        const showAvatar = () => {
-            avatarVisible.value = !avatarVisible.value;
-        };
+
+        const store = useStore() 
+
         const openNotificationWithIcon = (type, status, message) => {
             notification[type]({
                 message: status,
                 description: message,
             });
         };
+
+        store.commit('openNotificationWithIcon', openNotificationWithIcon)
+
         return {
-            avatarVisible,
-            showAvatar,
             openNotificationWithIcon
         };
     },
     components: {
-        DrawerComponent,
-        ContentComponent,
-        AvatarComponent,
-        BreadcrumbComponent,
-        MenuComponent
+        HeadMenu,
     },
 })
 
 </script>
 
 <style>
+.animate__fadeInLeft {
+    --animation-duration: 0.5s;
+    --animate-delay: 2s;
+}
+
+.animate__fadeOutLeft {
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+}
+
 .a-row {
     background-color: #d9d9d9;
     margin-top: 20px;
 }
-
 
 #components-layout-demo-basic .code-box-demo {
     text-align: center;

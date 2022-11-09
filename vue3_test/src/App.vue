@@ -1,14 +1,12 @@
 <template>
-  <LayoutFramework>
-  </LayoutFramework>
+  <LayoutFramework></LayoutFramework>
 </template>
 
 <script>
 import LayoutFramework from './components/LayoutFramework.vue';
-
 export default {
   name: 'App',
-  components: {
+  components:{
     LayoutFramework
   }
 }
