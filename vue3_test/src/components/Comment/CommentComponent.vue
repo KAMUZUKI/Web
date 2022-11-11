@@ -3,14 +3,14 @@
         :header="`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`" item-layout="horizontal">
         <template #renderItem="{ item }">
             <a-list-item>
-                <a-comment style="margin-left:30px" :author="item.createBy" :avatar="item.avatar" :content="item.content"
-                    :datetime="item.createTime" />
+                <a-comment style="margin-left:30px" :author="item.createBy" :avatar="item.avatar"
+                    :content="item.content" :datetime="item.createTime" />
             </a-list-item>
         </template>
     </a-list>
-    <a-comment>
+    <a-comment style="margin-left:30px">
         <template #avatar>
-            <a-avatar src="userDetial.head" alt="Han Solo" />
+            <a-avatar :src="userDetial.head" :alt="userDetial.username" />
         </template>
         <template #content>
             <a-form-item>
@@ -25,9 +25,11 @@
     </a-comment>
 </template>
 <script>
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, createVNode } from 'vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { Modal } from 'ant-design-vue';
 // import axios from 'axios';
 import { useStore } from 'vuex' // 引入useStore 方法
 dayjs.extend(relativeTime);
@@ -37,13 +39,26 @@ export default defineComponent({
         const store = useStore()
         const detail = ref();
         const user = ref();
+        const isComment = ref(store.state.isCertified)
 
+        //判断是否登录，未登录从本地获取用户信息，若无则使用默认信息
         if (typeof (store.state.user) == "undefined") {
             user.value = JSON.parse(sessionStorage.getItem("user"))
+            if (user.value == null) {
+                user.value = {
+                    username: 'zhangsan',
+                    email: '1437487442',
+                    head: 'http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100',
+                }
+            } else {
+                isComment.value = true
+            }
         } else {
-            user.value = store.state.user;
+            //使用登录信息
+            user.value = store.state.user
+            isComment.value = true
         }
-        
+
         const userDetial = user.value
 
         const CommentData = [
@@ -85,7 +100,7 @@ export default defineComponent({
 
         const submitting = ref(false);
         const value = ref('');
-        
+
         const initComment = () => {
             CommentData.forEach(item => {
                 if (item.articleid == props.articleId) {
@@ -94,10 +109,34 @@ export default defineComponent({
             })
         }
 
+        const showPromiseConfirm = (title,message)=> {
+            Modal.confirm({
+                title: title,
+                icon: createVNode(ExclamationCircleOutlined),
+                content: createVNode('div', {
+                    style: 'color:red;',
+                }, message),
+                onOk() {
+                    console.log('OK');
+                },
+                onCancel() {
+                    console.log('Cancel');
+                },
+                class: 'test',
+            });
+        }
+
         const handleSubmit = () => {
+            if (isComment.value != true) {
+                showPromiseConfirm("无权限", "您还未登录，是否前往登录？")
+                return
+            }
+
             if (!value.value) {
+                showPromiseConfirm("输入错误", "请输入评论内容！")
                 return;
             }
+            
             console.log(dayjs().format("YYYY-MM-DD HH:mm:ss"))
             submitting.value = true;
 
@@ -105,8 +144,8 @@ export default defineComponent({
                 submitting.value = false;
                 comments.value.push({
                     articleid: props.articleId,
-                    createBy: 'Han Solo',
-                    avatar: 'https://joeschmoe.io/api/v1/random',
+                    createBy: userDetial.username,
+                    avatar: userDetial.head,
                     content: value.value,
                     createTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
                 })
@@ -142,6 +181,7 @@ export default defineComponent({
             detail,
             userDetial,
             handleSubmit,
+            showPromiseConfirm
         }
     },
     props: {

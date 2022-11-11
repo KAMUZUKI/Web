@@ -96,6 +96,7 @@ export default defineComponent({
     const login = () => {
       store.state.isLogin = true
       store.state.user = user
+      store.state.isCertified = true
       sessionStorage.setItem("user", JSON.stringify(user));
       props.showAvatar()
       props.openNotificationWithIcon('success', '登录', '恭喜登录成功');
@@ -123,6 +124,7 @@ export default defineComponent({
       if(sessionStorage.getItem("user")!==null){
         store.state.isLogin = true
         store.state.user = user
+        store.state.isCertified = true
         props.showAvatar()
         props.openNotificationWithIcon('success', '登录', '自动登录成功');
       }

@@ -57,11 +57,25 @@
 </template>
 
 <script>
-import { defineComponent, reactive,ref } from 'vue';
+import { defineComponent, reactive,ref,onMounted } from 'vue';
 import MavonEditor from './MavonEditor/MavonEditor.vue';
+import useRouter from 'vue-router'
+import useStore from 'vuex';
 export default defineComponent({
     name: 'EditFramework',
     setup(props) {
+        const store = useStore()
+        const router = useRouter()
+        const isEdit = store.state.isCertified
+
+        onMounted(() => {
+            if (isEdit==false) {
+                // showPromiseConfirm("无权限", "您还未登录，是否前往登录？")
+                router.push('/')
+                return
+            }
+        })
+
         const formState = reactive({
             user: {
                 name: '',

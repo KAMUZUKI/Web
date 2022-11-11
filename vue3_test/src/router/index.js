@@ -17,7 +17,7 @@ const routes = [
         },
         children: [
             {
-                path: '/',
+                path: '',
                 name: 'articleList',
                 component: () => import('@/components/Content/ContentComponent.vue'),
                 meta: {
