@@ -54,7 +54,7 @@ export default {
         }
 
         const toArticle = (articleId) => {
-            router.push({path: '/article/'+articleId, query: {id: articleId}})
+            router.push({path: '/article/'+articleId})
         }
 
         onMounted(() => {
