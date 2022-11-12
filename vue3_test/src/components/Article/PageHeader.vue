@@ -3,8 +3,8 @@
     <a-page-header class="demo-page-header" style="border: 1px solid rgb(235, 237, 240)" :title=details.title
       :sub-title=details.description @back="back">
       <a-descriptions size="small" :column="3">
-        <a-descriptions-item label="Created">{{ details.author }}</a-descriptions-item>
-        <a-descriptions-item label="Association">
+        <a-descriptions-item label="作者">{{ details.author }}</a-descriptions-item>
+        <a-descriptions-item label="社交">
           <a>{{ details.createTime }}</a>
         </a-descriptions-item>
         <a-descriptions-item label="发布时间">{{details.createTime}}</a-descriptions-item>

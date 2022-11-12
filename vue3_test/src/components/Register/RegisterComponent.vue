@@ -45,7 +45,6 @@
 <script>
 import { defineComponent, reactive, ref } from 'vue';
 import { notification } from 'ant-design-vue';
-
 export default defineComponent({
     name: 'RegisterComponent',
     setup() {
@@ -116,7 +115,6 @@ export default defineComponent({
         };
 
         const register = () => {
-            // TODO: register
             openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
             openNotificationWithIcon('error', '注册失败', '注册失败');
         };

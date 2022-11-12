@@ -51,7 +51,7 @@ const routes = [
                 name: 'flink',
                 component: () => import('@/components/Flink/FlinkComponent.vue'),
                 meta: {
-                    title: '关于',
+                    title: '友链',
                     transition_enter: 'animate__fadeInDown',
                     transition_leave: 'animate__fadeOutDown',
                 }
@@ -67,6 +67,58 @@ const routes = [
             transition_enter: 'animate__fadeInRight',
             transition_leave: 'animate__fadeOutLeft',
         }
+    },
+    {
+        path: '/setting',
+        name: 'setting',
+        component: () => import('@/components/SettingFramework.vue'),
+        meta: {
+            title: '设置',
+            transition_enter: 'animate__fadeInRight',
+            transition_leave: 'animate__fadeOutLeft',
+        },
+        children: [
+            {
+                path: 'userinfo',
+                name: 'userinfo',
+                component: () => import('@/components/Setting/SetUserinfo.vue'),
+                meta: {
+                    title: '用户信息',
+                    transition_enter: 'animate__fadeInDown',
+                    transition_leave: 'animate__fadeOutDown',
+                }
+            },
+            {
+                path: 'setflink',
+                name: 'setflink',
+                component: () => import('@/components/Setting/SetFlink.vue'),
+                meta: {
+                    title: '设置友链',
+                    transition_enter: 'animate__fadeInDown',
+                    transition_leave: 'animate__fadeOutDown',
+                }
+            },
+            {
+                path: 'article',
+                name: 'articlemanager',
+                component: () => import('@/components/Setting/ArticleManager.vue'),
+                meta: {
+                    title: '文章管理',
+                    transition_enter: 'animate__fadeInDown',
+                    transition_leave: 'animate__fadeOutDown',
+                }
+            },
+            {
+                path: 'manager',
+                name: 'manager',
+                component: () => import('@/components/Setting/ManagerUser.vue'),
+                meta: {
+                    title: '管理用户',
+                    transition_enter: 'animate__fadeInDown',
+                    transition_leave: 'animate__fadeOutDown',
+                }
+            },
+        ]
     }
 ]
 

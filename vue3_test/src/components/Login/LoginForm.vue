@@ -1,5 +1,5 @@
 <template>
-  <a-card bordered style="width: 300px;height: 200px;border-radius: 20px;" hoverable>
+  <a-card bordered style="width: 300px;height: 200px;border-radius: 20px;margin-top:20px" hoverable>
       <a-form :model="formState" name="normal_login" class="login-form" @finish="onFinish"
         @finishFailed="onFinishFailed">
         <a-form-item style="margin-bottom:10px;width: 220px" label="用户" name="username" :rules="[{ required: true, message: 'Please input your username!' }]">
@@ -129,7 +129,6 @@ export default defineComponent({
         // props.openNotificationWithIcon('success', '登录', '自动登录成功');
       }
     });
-
     return {
       formState,
       onFinish,

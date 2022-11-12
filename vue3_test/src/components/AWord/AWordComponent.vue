@@ -1,7 +1,7 @@
 <template>
     <a-card title="每日一言" style="width: 300px;border-radius: 20px;background-color:lightblue" hoverable>
         <div id="hitokoto">
-            <span style="font-size:20px;weight:bold">{{AWord.data}}</span>
+            <span style="font-size:16px;weight:bold">{{AWord.data}}</span>
         </div>
     </a-card>
 </template>
@@ -12,7 +12,7 @@ import { defineComponent,reactive } from 'vue'
 // import axios from 'axios'
 
 const AWord = reactive({
-    data:''
+    data:'白茶清欢无别事'
 });
 
 const getAWord = ()=>{

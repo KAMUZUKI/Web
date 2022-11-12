@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import Antd from 'ant-design-vue';
 import App from './App';
 import router from './router'
+import store from './store'
 import 'ant-design-vue/dist/antd.css';
 import 'animate.css/animate.min.css';
 import 'element-plus/dist/index.css'
@@ -23,12 +24,17 @@ VMdPreview.use(vuepressTheme, {
 });
 //MARKED END
 
-import store from './store'
+//引入Element-plus icons
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const app = createApp(App);
 
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
+
 app.use(Antd)
-    .use(router)
-    .use(VMdPreview)
-    .use(store)
-    .mount('#app');
+  .use(router)
+  .use(VMdPreview)
+  .use(store)
+  .mount('#app');

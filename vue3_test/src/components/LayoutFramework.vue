@@ -2,11 +2,11 @@
     <a-layout>
         <a-layout-header style="background-color:#d9d9d9;padding:0 0;height:50px">
             <a-row style="max-height:100%">
-                <a-col style="max-height:90px" :span="15">
+                <a-col style="max-height:50px" :span="15">
                     <span style="display: inline-block;width: 100px;font-size:xx-large;float: left;line-height:1">DIZCARD</span>
                     <!-- <BreadcrumbComponent style="float:left;margin-left:20px"></BreadcrumbComponent> -->
                 </a-col>
-                <a-col style="max-height:100%" :span="9">
+                <a-col style="max-height:50px" :span="9">
                     <HeadMenu></HeadMenu>
                 </a-col>
             </a-row>
