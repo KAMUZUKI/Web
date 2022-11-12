@@ -1,10 +1,20 @@
 <template>
-    <a-form ref="formRef" name="custom-validation" :model="formState" :rules="rules" v-bind="layout"
-        @finish="handleFinish" @validate="handleValidate" @finishFailed="handleFinishFailed">
-        <center><h2>注册</h2></center>
-        <a-form-item label="Username" name="username"
-            :rules="[{ required: true, message: 'Please input your username!' }]">
-            <a-input v-model:value="formState.username">
+    <a-form 
+        ref="formRef" 
+        name="custom-validation" 
+        :model="formState" 
+        :rules="rules" 
+        v-bind="layout"
+        @finish="handleFinish" 
+        @validate="handleValidate" 
+        @finishFailed="handleFinishFailed"
+        :validate-messages="validateMessages"
+    >
+        <center>    
+            <h2>注册</h2>
+        </center>
+        <a-form-item label="Username" name="username" >
+            <a-input v-model:value="formState.username" :rules="[{ required: true }]">
                 <template #prefix>
                     <UserOutlined class="site-form-item-icon" />
                 </template>
@@ -15,6 +25,9 @@
         </a-form-item>
         <a-form-item has-feedback label="Confirm" name="checkPass">
             <a-input v-model:value="formState.checkPass" type="password" autocomplete="off" />
+        </a-form-item>
+        <a-form-item :name="['email']" label="Email" :rules="[{ required: true },{ type: 'email' }]">
+            <a-input v-model:value="formState.email" />
         </a-form-item>
         <a-form-item label="gender" required>
             <a-select v-model:value="formState.gender" placeholder="please select your gender">
@@ -39,12 +52,27 @@ export default defineComponent({
     name: 'RegisterComponent',
     setup() {
         const formRef = ref();
+
         const formState = reactive({
             username: '',
             pass: '',
             checkPass: '',
+            email:'',
             gender: '1',
+            status:0,
+            usernamePass:0, 
+            password1Pass:0,
+            password2Pass:0,
+            emailPass:0,
         });
+
+        const validateMessages = {
+            required: '${label} is required!',
+            types: {
+                email: '${label} is not a valid email!',
+                number: '${label} is not a valid number!',
+            }
+        };
 
         let validatePass = async (_rule, value) => {
             if (value === '') {
@@ -89,6 +117,12 @@ export default defineComponent({
             },
         };
 
+        const register = () => {
+            // TODO: register
+            openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
+            openNotificationWithIcon('error', '注册失败', '注册失败');
+        };
+
         const handleFinish = values => {
             console.log(values, formState);
         };
@@ -97,17 +131,15 @@ export default defineComponent({
             console.log(errors);
         };
 
+        const resetForm = () => {
+            formRef.value.resetFields();
+        };
+
         const handleValidate = (...args) => {
             console.log(args);
         };
 
-        const register = () => {
-            // TODO: register
-            openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
-            openNotificationWithIcon('error', '注册失败', '注册失败');
-        };
-
-        const openNotificationWithIcon = (type,title,message)=> {
+        const openNotificationWithIcon = (type, title, message) => {
             notification[type]({
                 message: title,
                 description: message,
@@ -115,14 +147,16 @@ export default defineComponent({
         };
 
         return {
-            formState,
-            formRef,
             rules,
             layout,
-            handleFinishFailed,
+            formRef,
+            formState,
+            validateMessages,
+            register,
+            resetForm,
             handleFinish,
             handleValidate,
-            register,
+            handleFinishFailed,
             openNotificationWithIcon,
             labelCol: { span: 4 },
             wrapperCol: { span: 14 }

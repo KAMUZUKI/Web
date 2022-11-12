@@ -46,7 +46,7 @@ export default defineComponent({
 
   components: {
     UserOutlined,
-    LockOutlined
+    LockOutlined,
   },
   props: {
     showDrawer: {
@@ -126,7 +126,7 @@ export default defineComponent({
         store.state.user = user
         store.state.isCertified = true
         props.showAvatar()
-        props.openNotificationWithIcon('success', '登录', '自动登录成功');
+        // props.openNotificationWithIcon('success', '登录', '自动登录成功');
       }
     });
 

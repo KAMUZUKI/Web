@@ -34,7 +34,6 @@ import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-v
 import { defineComponent,onMounted,ref,onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex' // 引入useStore 方法
 
-
 const listData = [
   {
     id:1,

@@ -1,6 +1,6 @@
 <template>
-  <div style="float:left;">
-    <a-space style="margin-top:30px" size="small" align="end" direction="horizontal">
+  <div style="float:right;">
+    <a-space size="small" align="end" direction="horizontal">
       <div class="link">
         <router-link class="nav-link" to="/">
           <message-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>首页</span>
@@ -21,13 +21,31 @@
           <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>友链</span>
         </router-link>
       </div>
-    </a-space>
+      <a-dropdown>
+        <a class="ant-dropdown-link" @click.prevent>
+          Hover me
+          <DownOutlined />
+        </a>
+        <template #overlay>
+          <a-menu>
+            <a-menu-item>
+              <a href="javascript:;">1st menu item</a>
+            </a-menu-item>
+            <a-menu-item>
+              <a href="javascript:;">2nd menu item</a>
+            </a-menu-item>
+            <a-menu-item>
+              <a href="javascript:;">3rd menu item</a>
+            </a-menu-item>
+          </a-menu>
+        </template>
+      </a-dropdown>
+      </a-space>
   </div>
 </template>
 
 <style scoped>
 .link {
-  float: right;
   margin-right: 20px;
   display: inline-block;
   font-size: 16px;
@@ -36,7 +54,7 @@
 </style>
 
 <script>
-import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue';
+import { MessageOutlined, CommentOutlined,DownOutlined } from '@ant-design/icons-vue';
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -55,7 +73,8 @@ export default defineComponent({
   name: 'BarDemo',
   components: {
     MessageOutlined,
-    CommentOutlined
+    CommentOutlined,
+    DownOutlined
   },
   setup() {
     return {

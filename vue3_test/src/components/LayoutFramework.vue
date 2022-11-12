@@ -1,6 +1,6 @@
 <template>
     <a-layout>
-        <a-layout-header style="background-color:#d9d9d9;padding:0 0;height:90px">
+        <a-layout-header style="background-color:#d9d9d9;padding:0 0;height:50px">
             <a-row style="max-height:100%">
                 <a-col style="max-height:90px" :span="15">
                     <span style="display: inline-block;width: 100px;font-size:xx-large;float: left;line-height:1">DIZCARD</span>
@@ -29,21 +29,15 @@
 import { defineComponent } from 'vue';
 import { notification } from 'ant-design-vue';
 import HeadMenu from './Menu/HeadMenu.vue';
-import { useStore } from 'vuex' // 引入useStore 方法
 export default defineComponent({
     name: 'LayoutFramework',
     setup() {
-
-        const store = useStore() 
-
         const openNotificationWithIcon = (type, status, message) => {
             notification[type]({
                 message: status,
                 description: message,
             });
         };
-
-        store.commit('openNotificationWithIcon', openNotificationWithIcon)
 
         return {
             openNotificationWithIcon

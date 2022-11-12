@@ -57,9 +57,11 @@
 </template>
 
 <script>
-import { defineComponent, reactive,ref,onMounted } from 'vue';
+import { defineComponent, reactive,ref,onMounted,createVNode } from 'vue';
 import MavonEditor from './MavonEditor/MavonEditor.vue';
-import useRouter from 'vue-router'
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { Modal } from 'ant-design-vue';
+import useRouter from 'vue-router';
 import useStore from 'vuex';
 export default defineComponent({
     name: 'EditFramework',
@@ -70,11 +72,28 @@ export default defineComponent({
 
         onMounted(() => {
             if (isEdit==false) {
-                // showPromiseConfirm("无权限", "您还未登录，是否前往登录？")
+                showPromiseConfirm("无权限", "您还未登录，是否前往登录？")
                 router.push('/')
                 return
             }
         })
+
+        const showPromiseConfirm = (title,message)=> {
+            Modal.confirm({
+                title: title,
+                icon: createVNode(ExclamationCircleOutlined),
+                content: createVNode('div', {
+                    style: 'color:red;',
+                }, message),
+                onOk() {
+                    console.log('OK');
+                },
+                onCancel() {
+                    console.log('Cancel');
+                },
+                class: 'test',
+            });
+        }
 
         const formState = reactive({
             user: {

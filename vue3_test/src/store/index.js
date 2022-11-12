@@ -1,9 +1,11 @@
 import { createStore } from 'vuex'
 
 export default createStore({
-  state: {
-    msg:'Hello Vuex',
-    isCertified:false,
+  state () {
+    return {
+      msg:'Hello Vuex',
+      isCertified:false,
+    }
   },
   mutations: {
   },

@@ -80,7 +80,7 @@ export default {
     margin: 0;
 }
 
-.el-card /deep/ .el-card__body {
+.el-card :deep() .el-card__body {
   padding: 0;
 }
 

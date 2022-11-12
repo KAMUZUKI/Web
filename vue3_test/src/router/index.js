@@ -67,7 +67,7 @@ const routes = [
             transition_enter: 'animate__fadeInRight',
             transition_leave: 'animate__fadeOutLeft',
         }
-    },
+    }
 ]
 
 // 3. 创建路由实例并传递 `routes` 配置
