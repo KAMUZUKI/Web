@@ -1,5 +1,5 @@
 <template>
-    <a-card bordered style="width: 200px;height: 290px;border-radius: 20px;position: absolute;margin: 60px 0 0 68px;" hoverable>
+    <a-card bordered style="width: 200px;height: 290px;border-radius: 20px;margin: 60px 0 0 68px;" hoverable>
         <div style="width: 100%" v-for="(item, index) in data" :key="index">
             <div class="list-item" v-if="index == 0">
                 <router-link @click.prevent="showContentBycategory(item)" to="/">

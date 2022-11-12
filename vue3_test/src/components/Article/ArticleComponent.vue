@@ -1,11 +1,6 @@
 <template>
   <div style="text-align:left;">
-    <p>{{details.anthor}}</p>
-    <p>{{details.title}}</p>
-    <p>{{details.description}}</p>
-    <p>{{details.keywords}}</p>
-    <p>{{details.category}}</p>
-    <p>{{details.colCnt}}</p>
+    <PageHeader :details="details"></PageHeader>
     <v-md-preview :text="details.content"></v-md-preview>
     <CommentComponent :articleId="articleId"></CommentComponent>
   </div>
@@ -13,8 +8,9 @@
 
 <script>
 import {defineComponent,ref} from "vue"
-import CommentComponent from "@/components/Comment/CommentComponent.vue"
 import { useStore } from 'vuex' // 引入useStore 方法
+import CommentComponent from "@/components/Comment/CommentComponent.vue"
+import PageHeader from "@/components/Article/PageHeader.vue"
 export default defineComponent({
     name:'ArticleComponent',
     setup(){
@@ -39,6 +35,7 @@ export default defineComponent({
     },
     components: {
       CommentComponent,
+      PageHeader
     }
 })
 </script>

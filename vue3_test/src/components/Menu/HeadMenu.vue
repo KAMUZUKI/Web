@@ -7,11 +7,6 @@
         </router-link>
       </div>
       <div class="link">
-        <router-link class="nav-link" to="/about">
-          <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>关于</span>
-        </router-link>
-      </div>
-      <div class="link">
         <router-link class="nav-link" to="/editor">
           <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>编辑</span>
         </router-link>
@@ -19,6 +14,11 @@
       <div class="link">
         <router-link class="nav-link" to="/flink">
           <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>友链</span>
+        </router-link>
+      </div>
+      <div class="link">
+        <router-link class="nav-link" to="/about">
+          <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>关于</span>
         </router-link>
       </div>
       <a-dropdown>

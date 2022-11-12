@@ -1,16 +1,18 @@
 import { createStore } from 'vuex'
 
-export default createStore({
+const store = createStore({
   state () {
     return {
+      count: 0,
       msg:'Hello Vuex',
-      // isCertified:false,
+      isCertified:false,
     }
   },
   mutations: {
-  },
-  actions: {
-  },
-  modules: {
+    increment (state) {
+      state.count++
+    }
   }
 })
+
+export default store

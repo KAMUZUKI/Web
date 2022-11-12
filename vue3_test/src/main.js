@@ -23,7 +23,6 @@ VMdPreview.use(vuepressTheme, {
 });
 //MARKED END
 
-// import globalFunc from '@/components/GlobalComponent.vue'
 import store from './store'
 
 const app = createApp(App);

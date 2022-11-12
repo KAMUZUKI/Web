@@ -10,9 +10,7 @@
         @finishFailed="handleFinishFailed"
         :validate-messages="validateMessages"
     >
-        <center>    
-            <h2>注册</h2>
-        </center>
+        <h2 style="text-align:center;">注册</h2>
         <a-form-item label="Username" name="username" >
             <a-input v-model:value="formState.username" :rules="[{ required: true }]">
                 <template #prefix>

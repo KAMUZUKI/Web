@@ -61,8 +61,8 @@ import { defineComponent, reactive,ref,onMounted,createVNode } from 'vue';
 import MavonEditor from './MavonEditor/MavonEditor.vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { Modal } from 'ant-design-vue';
-import useRouter from 'vue-router';
-import useStore from 'vuex';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex' // 引入useStore 方法
 export default defineComponent({
     name: 'EditFramework',
     setup(props) {

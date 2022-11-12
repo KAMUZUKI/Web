@@ -13,9 +13,9 @@
             <a-avatar :src="userDetial.head" :alt="userDetial.username" />
         </template>
         <template #content>
-            <a-form-item>
-                <a-textarea v-model:value="value" :rows="4" />
-            </a-form-item>
+            <div style="">
+                <V3Emoji :textArea="true" size="mid" v-model="value" />
+            </div>
             <a-form-item>
                 <a-button html-type="submit" :loading="submitting" type="primary" @click="handleSubmit">
                     Add Comment
@@ -30,6 +30,8 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Modal } from 'ant-design-vue';
+import V3Emoji from 'vue3-emoji'
+import 'vue3-emoji/dist/style.css'
 // import axios from 'axios';
 import { useStore } from 'vuex' // 引入useStore 方法
 dayjs.extend(relativeTime);
@@ -183,6 +185,9 @@ export default defineComponent({
             handleSubmit,
             showPromiseConfirm
         }
+    },
+    components: {
+        V3Emoji
     },
     props: {
         articleId: {

@@ -1,18 +1,18 @@
 <template>
     <!-- <el-card class="Carouselcard" style="width: 300px" shadow="hover"> -->
-        <el-carousel autoplay=false style="width: 300px;border-radius: 10px;" indicator-position="outside" height="230px">
-            <el-carousel-item v-for="item in initCarousel" :key="item.id" :label="item.info">
-                <img width="300" height="200" :src="item.imgSrc" @click="toArticle(item.id)">
-                <span>{{item.description}}</span>
-            </el-carousel-item>
-        </el-carousel>
+    <el-carousel autoplay=false style="width: 300px;border-radius: 10px;" indicator-position="outside" height="230px">
+        <el-carousel-item v-for="item in initCarousel" :key="item.id" :label="item.info">
+            <img width="300" height="200" :src="item.imgSrc" @click="toArticle(item.id)">
+            <span>{{ item.description }}</span>
+        </el-carousel-item>
+    </el-carousel>
     <!-- </el-card> -->
 </template>
 
 <script>
-import {onMounted,reactive} from 'vue'
-import { ElCarousel, ElCarouselItem} from 'element-plus'
-import {useRouter} from 'vue-router'
+import { onMounted, reactive } from 'vue'
+import { ElCarousel, ElCarouselItem } from 'element-plus'
+import { useRouter } from 'vue-router'
 export default {
     name: 'CarouselElement',
     components: {
@@ -22,6 +22,7 @@ export default {
     },
     setup() {
         const router = useRouter()
+
         const imgList = reactive([
             {
                 id: 1,
@@ -43,20 +44,57 @@ export default {
             }
         ])
 
+        const listData = [
+            {
+                id: 1,
+                author: 'zhangsan',
+                title: `zhangsan part`,
+                avatar: 'https://joeschmoe.io/api/v1/random',
+                description: 'GO JAVA',
+                content: '# 111111Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
+                keywords: ['GO', 'JAVA'],
+                category: ['GO', 'PYTHON', 'JAVA'],
+                createTime: '2015-07-23 15:23:05',
+                colCnt: [234, 34, 43],
+            },
+            {
+                id: 2,
+                author: 'lisi',
+                title: `lisi part`,
+                avatar: 'https://joeschmoe.io/api/v1/random',
+                description: 'GO PYTHON.',
+                content: '# 222222Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
+                keywords: ['GO', 'PYTHON'],
+                category: ['GO', 'PYTHON', 'JAVA'],
+                createTime: '2015-07-23 15:23:05',
+                colCnt: [423, 153, 98],
+            },
+            {
+                id: 3,
+                author: 'wangwu',
+                title: `wangwu part`,
+                avatar: 'https://joeschmoe.io/api/v1/random',
+                description: 'PYTHON JAVA.',
+                content: '# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
+                keywords: ['PYTHON', 'JAVA'],
+                category: ['GO', 'PYTHON', 'JAVA'],
+                createTime: '2015-07-23 15:23:05',
+                colCnt: [365, 433, 43],
+            }
+        ];
         const initCarousel = reactive([])
 
         const getImage = () => {
             //axios
             imgList.forEach(item => {
-                item.description = item.description.slice(0, 20)+"....."
+                item.description = item.description.slice(0, 20) + "....."
                 initCarousel.push(item)
             })
         }
 
         //跳转到文章详情页
         const toArticle = (articleId) => {
-            alert(articleId)
-            router.go({path: '/article/'+articleId})
+            router.go({ path: '/article/' + articleId })
         }
 
         onMounted(() => {
@@ -65,6 +103,7 @@ export default {
 
         return {
             initCarousel,
+            listData,
             toArticle
         }
     }
@@ -81,7 +120,7 @@ export default {
 }
 
 .el-card :deep() .el-card__body {
-  padding: 0;
+    padding: 0;
 }
 
 .el-carousel__item:nth-child(2n) {
