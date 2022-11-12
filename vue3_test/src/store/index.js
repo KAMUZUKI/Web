@@ -4,7 +4,7 @@ export default createStore({
   state () {
     return {
       msg:'Hello Vuex',
-      isCertified:false,
+      // isCertified:false,
     }
   },
   mutations: {
