@@ -1,16 +1,25 @@
 <template>
-  <div class="wrap_box">
-    <h1>文章管理</h1>
-    <a-list class="demo-loadmore-list" :loading="initLoading" item-layout="horizontal" :data-source="listData">
+  <div class="container">
+    <a-list item-layout="horizontal" :data-source="listData">
       <template #renderItem="{ item }">
         <a-list-item>
-          <template #actions>
-            <a key="list-loadmore-edit">edit</a>
-            <a key="list-loadmore-more">more</a>
-          </template>
+          <a-list-item-meta :description=item.content>
+            <template #title>
+              <a>{{ item.title }}</a>
+            </template>
+            <template #avatar>
+              <a-avatar style="margin-left:30px;width:45px;height:45px"
+                :src="'http://q1.qlogo.cn/g?b=qq&nk=' + item.img + '&s=100'" />
+            </template>
+          </a-list-item-meta>
+          <a-button class="button" type="primary" @click="modify(item.id)">修改</a-button>
+          <a-popconfirm title="确定删除该文章?" ok-text="确认" cancel-text="取消" @confirm="confirm" @cancel="cancel">
+            <a-button class="button" type="primary" danger @click="deleteByUserId(item.id)">删除</a-button>
+          </a-popconfirm>
         </a-list-item>
       </template>
     </a-list>
+    <a-pagination hideOnSinglePage v-model:current="current" :total="50" show-less-items />
   </div>
 </template>
   
@@ -22,16 +31,17 @@
   align-items: center;
 }
 
-.wrap_box {
+.container {
   min-height: 80vh;
   min-width: 1000px;
 }
 </style>
 <script>
-import { defineComponent} from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
+import { message } from 'ant-design-vue';
 export default defineComponent({
   setup() {
-    const listData = [
+    const originData = [
       {
         id: 1,
         author: 'zhangsan',
@@ -105,8 +115,46 @@ export default defineComponent({
         colCnt: [432, 64, 876],
       },
     ];
+
+    const listData = ref([])
+
+    const initDataList = () => {
+      originData.forEach((item) => {
+        item.content = item.content.replaceAll(/[#*`-]/ig, "").slice(0, 200) + "....."
+        listData.value.push(item)
+      })
+    }
+
+    const modify = (articleId) => {
+      //TODO: 根据id修改文章
+      console.log("modify", articleId)
+    }
+
+    const deleteByUserId = (articleId) => {
+      //TODO:根据id删除文章
+      console.log(articleId)
+    }
+
+    const confirm = e => {
+      console.log(e);
+      message.success('Click on Yes');
+    };
+    const cancel = e => {
+      console.log(e);
+      message.error('Click on No');
+    };
+
+    onMounted(() => {
+      initDataList()
+    })
+
     return {
-      listData
+      listData,
+      modify,
+      deleteByUserId,
+      confirm,
+      cancel,
+      current: ref(2),
     };
   },
 });

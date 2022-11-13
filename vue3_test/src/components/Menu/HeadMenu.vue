@@ -26,22 +26,22 @@
             <a-menu>
               <a-menu-item>
                 <router-link class="nav-link" to="/setting/manager">
-                  <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>管理文章</span>
+                  <span>管理用户</span>
                 </router-link>
               </a-menu-item>
               <a-menu-item>
                 <router-link class="nav-link" to="/setting/setflink">
-                  <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>设置友链</span>
+                  <span>设置友链</span>
                 </router-link>
               </a-menu-item>
               <a-menu-item>
                 <router-link class="nav-link" to="/setting/article">
-                  <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>管理文章</span>
+                  <span>管理文章</span>
                 </router-link>
               </a-menu-item>
               <a-menu-item>
                 <router-link class="nav-link" to="/setting/userinfo">
-                  <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>用户信息</span>
+                 <span>用户信息</span>
                 </router-link>
               </a-menu-item>
             </a-menu>

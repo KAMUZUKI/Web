@@ -3,7 +3,7 @@
         <a-layout-content>
             <a-space :size="small" direction="horizontal" align="start">
                 <a-col>
-                    <a-card title="设置中心" style="width: 300px">
+                    <a-card title="设置中心" style="width: 200px">
                         <a-button class="siderSelect" block>
                             <router-link class="nav-link" to="/setting/manager">
                                 <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>用户管理</span>
