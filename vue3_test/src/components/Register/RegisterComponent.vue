@@ -38,17 +38,21 @@
             <a-button style="margin-left: 10px" @click="onClose">退出</a-button>
         </a-form-item>
     </a-form>
+    <notification-component ref="openNotification"></notification-component>
 </template>
 <style>
 
 </style>
 <script>
 import { defineComponent, reactive, ref } from 'vue';
-import { notification } from 'ant-design-vue';
+import NotificationComponent from '../tools/NotificationComponent.vue';
 export default defineComponent({
+  components: { NotificationComponent },
     name: 'RegisterComponent',
     setup() {
         const formRef = ref();
+
+        const openNotification = ref()
 
         const formState = reactive({
             username: '',
@@ -115,8 +119,8 @@ export default defineComponent({
         };
 
         const register = () => {
-            openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
-            openNotificationWithIcon('error', '注册失败', '注册失败');
+            openNotification.value.openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
+            openNotification.value.openNotificationWithIcon('error', '注册失败', '注册失败');
         };
 
         const handleFinish = values => {
@@ -135,27 +139,20 @@ export default defineComponent({
             console.log(args);
         };
 
-        const openNotificationWithIcon = (type, title, message) => {
-            notification[type]({
-                message: title,
-                description: message,
-            });
-        };
-
         return {
             rules,
             layout,
             formRef,
             formState,
+            openNotification,
             validateMessages,
+            labelCol: { span: 4 },
+            wrapperCol: { span: 14 },
             register,
             resetForm,
             handleFinish,
             handleValidate,
             handleFinishFailed,
-            openNotificationWithIcon,
-            labelCol: { span: 4 },
-            wrapperCol: { span: 14 }
         };
     },
     props: {

@@ -17,7 +17,7 @@
         <template v-else-if="column.dataIndex === 'modify'">
           <div class="editable-row-operations">
             <span v-if="editableData[record.id]">
-              <a-typography-link @click="save(record)">Save</a-typography-link>
+              <a-typography-link @click="save(record.id)">Save</a-typography-link>
               <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.id)">
                 <a>Cancel</a>
               </a-popconfirm>
@@ -43,7 +43,7 @@
   </template>
   <script>
   import { cloneDeep } from 'lodash-es';
-  import { defineComponent, reactive, ref,onMounted } from 'vue';
+  import { defineComponent, reactive, ref } from 'vue';
   const columns = [{
             title: 'Id',
             width: 15,
@@ -136,7 +136,7 @@
         }, {
             id: 6,
             name: '张三',
-            account: '10006',
+            account: '10001',
             phone: '123456677',
             email: '1437487442@qq.com',
             createTime: '2021-05-01 12:00:00',
@@ -146,7 +146,7 @@
         {
             id: 7,
             name: '李四',
-            account: '10007',
+            account: '10002',
             phone: '123456677',
             email: '1437487442@qq.com',
             createTime: '2021-05-01 12:00:00',
@@ -156,7 +156,7 @@
         {
             id: 8,
             name: '王五',
-            account: '10008',
+            account: '10003',
             phone: '123456677',
             email: '1437487442@qq.com',
             createTime: '2021-05-01 12:00:00',
@@ -166,7 +166,7 @@
         {
             id: 9,
             name: '赵六',
-            account: '10009',
+            account: '10004',
             phone: '123456677',
             email: '1437487442@qq.com',
             createTime: '2021-05-01 12:00:00',
@@ -175,7 +175,7 @@
         }, {
             id: 10,
             name: '田七',
-            account: '10010',
+            account: '10005',
             phone: '123456677',
             email: '1437487442@qq.com',
             createTime: '2021-05-01 12:00:00',
@@ -195,23 +195,15 @@
     name:'ManagerTest',
     setup() {
       const dataSource = ref(data);
-
-      const initDataSource = () => {
-        //TODO:获取数据
-        //dataSource.value.push()
-      } 
-
       const editableData = reactive({});
 
       const edit = key => {
         editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.id)[0]);
       }
 
-      const save = user => {
-        Object.assign(dataSource.value.filter(item => user.id === item.id)[0], editableData[user.id]);
-        delete editableData[user.id];
-        //TODO:通过userid修改后台用户数据
-        alert(user)
+      const save = key => {
+        Object.assign(dataSource.value.filter(item => key === item.id)[0], editableData[key]);
+        delete editableData[key];
       }
 
       const cancel = key => {
@@ -219,14 +211,9 @@
       }
 
       const deleteById = key => {
+        alert(key);
         dataSource.value = dataSource.value.filter(item => key !== item.id);
-        //TODO:通过userid删除后台用户数据
       }
-
-      onMounted(() => {
-        initDataSource()
-      })
-
       return {
         dataSource,
         columns,

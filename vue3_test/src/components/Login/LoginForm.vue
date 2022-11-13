@@ -35,10 +35,12 @@
         </a-form-item>
       </a-form>
   </a-card>
+  <NotificationComponent ref="openNotification"></NotificationComponent>
 </template>
 <script>
-import { defineComponent, reactive, computed,onMounted } from 'vue';
+import { defineComponent, reactive, computed,onMounted,ref } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
+import NotificationComponent from '../tools/NotificationComponent.vue';
 import { useStore } from 'vuex' // 引入useStore 方法
 // import axios from 'axios';
 export default defineComponent({
@@ -47,21 +49,9 @@ export default defineComponent({
   components: {
     UserOutlined,
     LockOutlined,
+    NotificationComponent
   },
-  props: {
-    showDrawer: {
-      type: Function,
-      required: true,
-    },
-    showAvatar: {
-      type: Function,
-      required: true,
-    },
-    openNotificationWithIcon: {
-      type: Function,
-      required: true,
-    },
-  },
+
   setup(props) {
 
     const user = {
@@ -70,6 +60,7 @@ export default defineComponent({
       head:'http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100',
     }
 
+    const openNotification = ref() 
     const store = useStore();
 
     // const login = () => {
@@ -99,7 +90,7 @@ export default defineComponent({
       store.state.isCertified = true
       sessionStorage.setItem("user", JSON.stringify(user));
       props.showAvatar()
-      props.openNotificationWithIcon('success', '登录', '恭喜登录成功');
+      openNotification.value.openNotificationWithIcon('success', '登录', '恭喜登录成功');
     }
 
     const formState = reactive({
@@ -126,7 +117,7 @@ export default defineComponent({
         store.state.user = user
         store.state.isCertified = true
         props.showAvatar()
-        // props.openNotificationWithIcon('success', '登录', '自动登录成功');
+        openNotification.value.openNotificationWithIcon('success', '登录', '自动登录成功')
       }
     });
     return {
@@ -134,10 +125,19 @@ export default defineComponent({
       onFinish,
       onFinishFailed,
       disabled,
-      login
+      login,
+      openNotification
     };
+  },props: {
+    showDrawer: {
+      type: Function,
+      required: true,
+    },
+    showAvatar: {
+      type: Function,
+      required: true,
+    }
   },
-
 });
 </script>
 <style>

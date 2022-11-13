@@ -23,22 +23,10 @@
   </div>
 </template>
   
-<style scoped>
-.flink {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.container {
-  min-height: 80vh;
-  min-width: 1000px;
-}
-</style>
 <script>
 import { defineComponent, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
+import {useRouter} from 'vue-router';
 export default defineComponent({
   setup() {
     const originData = [
@@ -116,6 +104,8 @@ export default defineComponent({
       },
     ];
 
+    const router = useRouter()
+
     const listData = ref([])
 
     const initDataList = () => {
@@ -126,8 +116,13 @@ export default defineComponent({
     }
 
     const modify = (articleId) => {
-      //TODO: 根据id修改文章
-      console.log("modify", articleId)
+      //TODO: 根据id修改文章,跳转至编辑页面
+      router.push({
+        path: '/editor',
+        query: {
+          articleId: articleId
+        }
+      })
     }
 
     const deleteByUserId = (articleId) => {
@@ -137,12 +132,13 @@ export default defineComponent({
 
     const confirm = e => {
       console.log(e);
-      message.success('Click on Yes');
-    };
+      message.success('删除成功');
+    }
+
     const cancel = e => {
       console.log(e);
-      message.error('Click on No');
-    };
+      message.error('取消删除');
+    }
 
     onMounted(() => {
       initDataList()
@@ -159,3 +155,21 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.flink {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.container {
+  min-height: 80vh;
+  min-width: 1000px;
+}
+
+.button{
+  margin-right: 20px;
+}
+</style>

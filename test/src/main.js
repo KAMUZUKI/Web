@@ -8,8 +8,8 @@ import '@kangc/v-md-editor/lib/style/preview.css';
 // VuePress主题以及样式（这里也可以选择github主题）
 import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
 import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
-
-
+import 'ant-design-vue/dist/antd.css';
+import Antd from 'ant-design-vue';
 
 // Prism
 import Prism from 'prismjs';
@@ -20,5 +20,8 @@ VMdPreview.use(vuepressTheme, {
   Prism,
 });
 
-createApp(App).use(router).use(VMdPreview)
+createApp(App)
+    .use(router)
+    .use(VMdPreview)
+    .use(Antd)  
     .mount('#app')

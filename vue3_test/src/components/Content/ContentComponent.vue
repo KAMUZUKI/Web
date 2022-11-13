@@ -1,5 +1,5 @@
 <template>
-  <a-list style="maxwidth:80%;" item-layout="vertical" size="large" :pagination="pagination" :data-source="initDataList">
+  <a-list style="maxwidth:80%;min-width: 700px;" item-layout="vertical" size="large" :pagination="pagination" :data-source="initDataList">
     <template #footer>
       <div>
         <b>到底了,没有了!!!</b>

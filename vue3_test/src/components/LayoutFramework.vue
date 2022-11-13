@@ -14,7 +14,7 @@
         <router-view #default="{ route, Component }">
             <transition :enter-active-class="`animate__animated ${route.meta.transition_enter}`"
                 :leave-active-class="`animate__animated ${route.meta.transition_leave}`" mode="out-in">
-                <component :is="Component" :openNotificationWithIcon="openNotificationWithIcon"></component>
+                <component :is="Component"></component>
             </transition>
         </router-view>
         <a-layout-footer>
@@ -27,20 +27,11 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { notification } from 'ant-design-vue';
 import HeadMenu from './Menu/HeadMenu.vue';
 export default defineComponent({
     name: 'LayoutFramework',
     setup() {
-        const openNotificationWithIcon = (type, status, message) => {
-            notification[type]({
-                message: status,
-                description: message,
-            });
-        };
-
         return {
-            openNotificationWithIcon
         };
     },
     components: {

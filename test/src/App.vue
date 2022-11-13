@@ -10,45 +10,29 @@
     <router-link class="nav-link" to="/about">
         About
     </router-link>
-    <!-- <HomeComp ref="getMsg"></HomeComp>
-    <button @click="printMsg">输出</button> -->
-    <!-- 路由出口 -->
-    <!-- 路由匹配到的组件将渲染在这里 -->
-    <router-view #default="{route,Component}" style="margin-left:400px">
-        <transition  
-            :enter-active-class="`animate__animated ${route.meta.transition_enter}`" 
-            :leave-active-class="`animate__animated ${route.meta.transition_leave}`"
-            mode="out-in"
-            ease-in-out 
-            >
-            <component :is="Component"></component>
-        </transition>
-    </router-view>
+    <button @click="printMsg">弹出信息</button>
+    <NotificationComponent ref="childRef"></NotificationComponent>
 </template>
 
 <script>
 import { defineComponent,ref } from 'vue'
-import MarkdedComp from '@/components/MarkedComp.vue'
-import HomeComp from '@/components/HomeComp.vue'
+import NotificationComponent from '@/components/tools/NotificationComponent.vue'
 export default defineComponent({
   setup() {
-    const getMsg = ref();
-
+    const childRef = ref()
     const printMsg = () => {
       console.log('getMsg')
-      getMsg.value.getMsg('Hello')
+      // getMsg.value.getMsg('Hello')
+      childRef.value.openNotificationWithIcon('success', 'Success', 'Hello')
     }
-
     return {
       value: '',
       printMsg,
-      getMsg
+      childRef
     }
   },
   components:{
-    MarkdedComp,
-    HomeComp,
-    
+    NotificationComponent
   }
 })
 </script>

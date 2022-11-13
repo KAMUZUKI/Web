@@ -16,7 +16,7 @@ import axios from 'axios';
 export default {
     name: 'MavonEditor',
     components: { Editor, Toolbar },
-    setup() {
+    setup(props) {
         // 编辑器实例，必须用 shallowRef
         const editorRef = shallowRef()
 
@@ -25,13 +25,18 @@ export default {
 
         // 模拟 ajax 异步获取内容
         onMounted(() => {
-            // setTimeout(() => {
-            //     valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
-            // }, 1500)
+            setTimeout(() => {
+                valueHtml.value = props.content??''
+            }, 500)
         })
 
         const toolbarConfig = {}
         const editorConfig = { placeholder: '请输入内容...' }
+
+        const getContent = ()=>{
+            alert("valueHtml.value" + valueHtml.value)
+            return valueHtml.value
+        }
 
         // 组件销毁时，也及时销毁编辑器
         onBeforeUnmount(() => {
@@ -68,9 +73,16 @@ export default {
             mode: 'default', // 或 'simple'
             toolbarConfig,
             editorConfig,
+            commit,
+            getContent,
             handleCreated,
-            commit
         };
+    },
+    props: {
+        content: {
+            type: String,
+            default: ''
+        }
     }
 }
 </script>    

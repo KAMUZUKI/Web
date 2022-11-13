@@ -1,14 +1,13 @@
 <template>
-  <LoginForm v-if="!avatarVisible" :showDrawer="showDrawer" :showAvatar="showAvatar"
-    :openNotificationWithIcon="openNotificationWithIcon" style="width:100%">
+  <LoginForm v-if="!avatarVisible" :showDrawer="showDrawer" :showAvatar="showAvatar" style="width:100%">
   </LoginForm>
   <a-drawer placement="left" :closable="false" :visible="visible" :get-container="true"
     :style="{ position: 'absolute' }" @close="onClose">
-    <RegisterComponent :openNotificationWithIcon="openNotificationWithIcon" :onClose="onClose"></RegisterComponent>
+    <RegisterComponent :onClose="onClose"></RegisterComponent>
   </a-drawer>
 </template>
 <script>
-import { defineComponent, ref} from 'vue';
+import { defineComponent, ref } from 'vue';
 // import { notification } from 'ant-design-vue';
 import LoginForm from './Login/LoginForm.vue';
 import RegisterComponent from './Register/RegisterComponent.vue';
@@ -58,18 +57,14 @@ export default defineComponent({
     // AvatarComponent
   },
   props: {
-      avatarVisible:{
-          type:Boolean,
-          default:false
-      },
-      showAvatar: {
-        type: Function,
-        required: true,
-      },
-      openNotificationWithIcon: {
-        type: Function,
-        required: true,
-      },
+    avatarVisible: {
+      type: Boolean,
+      default: false
     },
+    showAvatar: {
+      type: Function,
+      required: true,
+    },
+  },
 });
 </script>

@@ -3,8 +3,7 @@
         <a-layout-content v-if="!refresh">
             <a-space :size="small" direction="horizontal" align="start">
                 <a-col style="float:left;height:800px" flex="fix">
-                    <DrawerComponent :avatarVisible="avatarVisible" :showAvatar="showAvatar"
-                        :openNotificationWithIcon="openNotificationWithIcon"></DrawerComponent>
+                    <DrawerComponent :avatarVisible="avatarVisible" :showAvatar="showAvatar"></DrawerComponent>
                     <MenuComponent :showContentByCategory="showContentByCategory"></MenuComponent>
                 </a-col>
                 <a-col style="background-color:#fff;min-width: 600px;max-width: 1300px;" flex="fix">
@@ -17,8 +16,7 @@
                 </a-col>
                 <a-col style="float:left;" flex="fix">
                     <a-space :size="40" direction="vertical" align="start">
-                        <AvatarComponent v-if="avatarVisible" :showAvatar="showAvatar"
-                            :openNotificationWithIcon="openNotificationWithIcon" style="width:100%;">
+                        <AvatarComponent v-if="avatarVisible" :showAvatar="showAvatar" style="width:100%;">
                         </AvatarComponent>
                         <AWordComponent></AWordComponent>
                         <CarouselElement></CarouselElement>
@@ -33,7 +31,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue';
-import { notification } from 'ant-design-vue';
+// import { notification } from 'ant-design-vue';
 import DrawerComponent from './DrawerComponent.vue';
 // import BreadcrumbComponent from './tools/BreadcrumbComponent.vue';
 import AvatarComponent from './Avatar/AvatarComponent.vue';
@@ -67,18 +65,10 @@ export default defineComponent({
             avatarVisible.value = !avatarVisible.value;
         };
 
-        const openNotificationWithIcon = (type, status, message) => {
-            notification[type]({
-                message: status,
-                description: message,
-            });
-        };
-
         return {
+            transContent,
             avatarVisible,
             showAvatar,
-            openNotificationWithIcon,
-            transContent,
             showContentByCategory,
             showContentByKeyword,
         };

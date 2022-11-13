@@ -1,9 +1,7 @@
 <template>
     <!-- <div style="background: #ececec; padding: 0px"> -->
-
     <a-card size="small" style="width: 300px;" hoverable="true">
         <div style="background: #ececec;">
-
             <a-avatar shape="circle" :size="48" :src="userInfo.url">
                 <template #icon>
                     <UserOutlined />
@@ -32,13 +30,14 @@
             </a-tag>
         </div>
     </a-card>
-
+    <NotificationComponent ref="openNotification"></NotificationComponent>
     <!-- </div> -->
 </template>
 
 <script>
 import { UserOutlined } from '@ant-design/icons-vue';
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive,ref } from 'vue';
+import NotificationComponent from '../tools/NotificationComponent.vue';
 import { TwitterOutlined, YoutubeOutlined, FacebookOutlined } from '@ant-design/icons-vue';
 import { useStore } from 'vuex' // 引入useStore 方法
 export default defineComponent({
@@ -48,10 +47,12 @@ export default defineComponent({
         TwitterOutlined,
         YoutubeOutlined,
         FacebookOutlined,
+        NotificationComponent,
     },
     setup(props) {
-
         const store = useStore()
+        
+        const openNotification = ref()
 
         const userInfo = reactive({
             username: store.state.user.username,
@@ -64,20 +65,17 @@ export default defineComponent({
             sessionStorage.removeItem('articleDetail')
             store.state.isComment = false
             props.showAvatar()
-            props.openNotificationWithIcon('success', '成功', '恭喜退出成功')
+            openNotification.value.openNotificationWithIcon('success', '成功', '恭喜退出成功')
         }
 
         return {
             userInfo,
-            logout
+            openNotification,
+            logout,
         };
     },
     props: {
         showAvatar: {
-            type: Function,
-            required: true,
-        },
-        openNotificationWithIcon: {
             type: Function,
             required: true,
         },
