@@ -63,7 +63,7 @@ export default defineComponent({
         const logout = ()=>{
             sessionStorage.removeItem('user')
             sessionStorage.removeItem('articleDetail')
-            store.state.isComment = false
+            store.state.isCertified = false
             props.showAvatar()
             openNotification.value.openNotificationWithIcon('success', '成功', '恭喜退出成功')
         }

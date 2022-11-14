@@ -119,6 +119,16 @@ const routes = [
                 }
             },
         ]
+    },
+    {
+        path: '/status/404',
+        name: 'status',
+        component: () => import('@/components/status/404Component.vue'),
+        meta: {
+            title: '设置',
+            transition_enter: 'animate__fadeInRight',
+            transition_leave: 'animate__fadeOutLeft',
+        },
     }
 ]
 

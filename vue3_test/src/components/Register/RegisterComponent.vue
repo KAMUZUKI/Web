@@ -119,6 +119,7 @@ export default defineComponent({
         };
 
         const register = () => {
+            //TODO:注册账号
             openNotification.value.openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
             openNotification.value.openNotificationWithIcon('error', '注册失败', '注册失败');
         };

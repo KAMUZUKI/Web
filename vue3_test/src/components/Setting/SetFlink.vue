@@ -141,7 +141,7 @@ export default defineComponent({
     };
 
     const onFinish = values => {
-      //TODO: submit form
+      //TODO: submit form 添加友链
       
       console.log('Success:', values);
     };

@@ -94,7 +94,12 @@ export default {
 
         //跳转到文章详情页
         const toArticle = (articleId) => {
-            router.go({ path: '/article/' + articleId })
+            router.push({
+                path: '/article/'+articleId,
+                query: {
+                    mode: 1
+                }
+            })
         }
 
         onMounted(() => {

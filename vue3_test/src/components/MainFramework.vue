@@ -20,7 +20,6 @@
                         </AvatarComponent>
                         <AWordComponent></AWordComponent>
                         <CarouselElement></CarouselElement>
-                        <!-- <CarouselComponent></CarouselComponent> -->
                         <SiderTag :showContentByKeyword="showContentByKeyword" :showContent="showContent"></SiderTag>
                     </a-space>
                 </a-col>
@@ -36,7 +35,6 @@ import DrawerComponent from './DrawerComponent.vue';
 // import BreadcrumbComponent from './tools/BreadcrumbComponent.vue';
 import AvatarComponent from './Avatar/AvatarComponent.vue';
 import MenuComponent from './Menu/MenuComponent.vue';
-import CarouselComponent from './Carousel/CarouselComponent.vue';
 import SiderTag from './SiderTag/SiderTag.vue'
 import AWordComponent from './AWord/AWordComponent.vue'
 import ContentComponent from './Content/ContentComponent.vue'
@@ -78,7 +76,6 @@ export default defineComponent({
         AvatarComponent,
         // BreadcrumbComponent,
         MenuComponent,
-        CarouselComponent,
         SiderTag,
         AWordComponent,
         ContentComponent,

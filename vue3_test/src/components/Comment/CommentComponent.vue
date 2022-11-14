@@ -41,8 +41,6 @@ export default defineComponent({
         const store = useStore()
         const detail = ref();
         const user = ref();
-        const isComment = ref(store.state.isCertified)
-
         //判断是否登录，未登录从本地获取用户信息，若无则使用默认信息
         if (typeof (store.state.user) == "undefined") {
             user.value = JSON.parse(sessionStorage.getItem("user"))
@@ -53,12 +51,12 @@ export default defineComponent({
                     head: 'http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100',
                 }
             } else {
-                isComment.value = true
+                store.state.isCertified = true
             }
         } else {
             //使用登录信息
             user.value = store.state.user
-            isComment.value = true
+            store.state.isCertified = true
         }
 
         const userDetial = user.value
@@ -129,7 +127,7 @@ export default defineComponent({
         }
 
         const handleSubmit = () => {
-            if (isComment.value != true) {
+            if (store.state.isCertified != true) {
                 showPromiseConfirm("无权限", "您还未登录，是否前往登录？")
                 return
             }
@@ -154,6 +152,7 @@ export default defineComponent({
                 value.value = '';
             }, 1000);
 
+            //TODO:提交评论
             // var params = new URLSearchParams();
             // params.append('op', 'login');
             // params.append('username', );

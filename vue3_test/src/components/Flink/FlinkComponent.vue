@@ -29,7 +29,7 @@
 }
 </style>
 <script>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref,onMounted } from 'vue';
 export default defineComponent({
   setup() {
     const flinkList = ref([
@@ -66,6 +66,15 @@ export default defineComponent({
         status: 1,
       }
     ])
+    
+    const initData = ()=>{
+      //TODO:初始化友链列表  flinkList
+    }
+    
+    onMounted(() => {
+      initData()
+    })
+
     return {
       flinkList
     };

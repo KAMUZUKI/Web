@@ -1,41 +1,97 @@
 <template>
-  <div style="text-align:left;">
+  <div style="text-align:left;" v-if="isShow" :key='indexKey'>
     <PageHeader :details="details"></PageHeader>
     <v-md-preview :text="details.content"></v-md-preview>
-    <CommentComponent :articleId="articleId"></CommentComponent>
+    <CommentComponent :articleId="details.id"></CommentComponent>
   </div>
 </template>
 
 <script>
-import {defineComponent,ref} from "vue"
+import { defineComponent, ref, onMounted, watch } from "vue"
 import { useStore } from 'vuex' // 引入useStore 方法
+import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import CommentComponent from "@/components/Comment/CommentComponent.vue"
 import PageHeader from "@/components/Article/PageHeader.vue"
 export default defineComponent({
-    name:'ArticleComponent',
-    setup(){
-      const store = useStore()  // 该方法用于返回store 实例
-      const detail = ref()
-      const articleId = ref()
-      
-      //刷新页面时，store无数据从sessionStorage中获取数据
-      if (typeof(store.state.detail) == "undefined") {
-        detail.value = JSON.parse(sessionStorage.getItem("articleDetail"))
-      }else {
-        detail.value = JSON.parse(store.state.detail);
+  name: 'ArticleComponent',
+  setup() {
+    const store = useStore()  // 该方法用于返回store 实例
+    const articleId = ref()
+    const route = useRoute()
+    const router = useRouter()
+    const isShow = ref(true)
+    const detail = ref({
+      id: Number,
+      author: '',
+      title: '',
+      avatar: '',
+      description: '',
+      content: '',
+      keywords: [],
+      categorys: [],
+      createTime: '',
+      colCnt: [],
+    })
+
+    const judgeMode = (mode) => {
+      if (route.query.mode == 1||mode == 1) {
+        const info = route.path
+        //TODO:通过articleId获取文章详情
+        detail.value = {
+          id: 1,
+          author: 'zhangsan',
+          title: `zhangsan part:` + info,
+          avatar: 'https://joeschmoe.io/api/v1/random',
+          description: 'GO JAVA',
+          content: info+'# 111111Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
+          keywords: ['GO', 'JAVA'],
+          categorys: ['GO', 'PYTHON', 'JAVA'],
+          createTime: '2015-07-23 15:23:05',
+          colCnt: [234, 34, 43],
+        }
+        sessionStorage.setItem("articleDetail", JSON.stringify(detail.value));
       }
 
-      const details = detail.value
-      articleId.value = details.id
-
-      return {
-        details,
-        articleId
-      }
-    },
-    components: {
-      CommentComponent,
-      PageHeader
     }
+
+    //刷新页面时，store无数据从sessionStorage中获取数据
+    if (typeof (store.state.detail) == "undefined") {
+      detail.value = JSON.parse(sessionStorage.getItem("articleDetail"))
+      if (detail.value == null) {
+        judgeMode()
+      }
+    } else {
+      detail.value = JSON.parse(store.state.detail);
+    }
+
+    watch(() => router.currentRoute.value, (newVal,oldVal) => {
+      if (newVal != oldVal) {
+      // alert('路由发生变化new' + newVal.path + 'old' + oldVal.path)
+        router.push({ path: newVal.path })
+        judgeMode(1)
+        isShow.value = !isShow.value
+        isShow.value = !isShow.value
+      }
+    })
+
+    onMounted(() => {
+      judgeMode()
+    })
+
+    const details = ref(detail)
+    // articleId.value = detail.value.id
+
+    return {
+      details,
+      articleId,
+      isShow,
+      indexKey: 0
+    }
+  },
+  components: {
+    CommentComponent,
+    PageHeader
+  }
 })
 </script>

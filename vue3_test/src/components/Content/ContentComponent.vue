@@ -116,6 +116,11 @@ export default defineComponent({
 
     const store = useStore()  // 该方法用于返回store 实例
 
+    const initData = ()=>{
+      //TODO:获取文章列表   listData
+      
+    }
+
     const pushToDetail = (item) => {
       store.state.detail = JSON.stringify(item)
       sessionStorage.setItem("articleDetail", JSON.stringify(item));
@@ -151,7 +156,8 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      initDataByCategory('all');
+      initData()
+      initDataByCategory('all')
     });
 
     onBeforeUnmount(() => {
@@ -178,6 +184,7 @@ export default defineComponent({
       id:2,
       type: 'MessageOutlined',
     }];
+    
     return {
       listData,
       pagination,
