@@ -40,8 +40,8 @@
                 </router-link>
               </a-menu-item>
               <a-menu-item>
-                <router-link class="nav-link" to="/setting/userinfo">
-                 <span>用户信息</span>
+                <router-link class="nav-link" to="/setting/add">
+                 <span>添加</span>
                 </router-link>
               </a-menu-item>
             </a-menu>

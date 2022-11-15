@@ -20,8 +20,8 @@
                             </router-link>
                         </a-button>
                         <a-button class="siderSelect" block>
-                            <router-link class="nav-link" to="/setting/userinfo">
-                                <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>个人设置</span>
+                            <router-link class="nav-link" to="/setting/add">
+                                <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>添加</span>
                             </router-link>
                         </a-button>
                     </a-card>
@@ -56,15 +56,8 @@
 </style>
 <script>
 import { defineComponent } from 'vue';
-import SetUserinfo from '@/components/Setting/SetUserinfo.vue';
 export default defineComponent({
     name: 'SettingFramework',
-    setup() {
-
-    },
-    components: {
-        SetUserinfo
-    }
 })
 
 </script>

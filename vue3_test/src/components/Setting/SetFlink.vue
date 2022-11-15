@@ -1,6 +1,6 @@
 <template>
-  <div class="wrap_box">
-    <h1>友链管理</h1>
+  <div class="wrap_box"><h1>友链管理</h1>
+    
     <div class="flink">
       <template v-for="item in flinkList" :key="item.id">
         <a-popconfirm title="操作" ok-text="删除" cancel-text="取消" @confirm="confirm" @cancel="cancel">
@@ -20,27 +20,6 @@
       </a-card>
       <a-drawer title="添加友链" :width="500" :visible="visible" :body-style="{ paddingBottom: '80px' }"
         :footer-style="{ textAlign: 'right' }" @close="onClose">
-        <!-- <a-form :model="formState" v-bind="layout" name="nest-messages" :validate-messages="validateMessages"
-          @finish="onFinish">
-          <a-form-item :name="['user', 'name']" label="Name" :rules="[{ required: true }]">
-            <a-input v-model:value="formState.name" />
-          </a-form-item>
-          <a-form-item :name="['user', 'email']" label="Email" :rules="[{ type: 'email' }, { required: true }]">
-            <a-input v-model:value="formState.email" />
-          </a-form-item>
-          <a-form-item :name="['user', 'website']" label="Website" :rules="[{ required: true }]">
-            <a-input v-model:value="formState.website" />
-          </a-form-item>
-          <a-form-item :name="['user', 'introduction']" label="Introduction" :rules="[{ required: true }]">
-            <a-textarea v-model:value="formState.introduction" />
-          </a-form-item>
-          <a-form-item label="是否启用">
-            <a-switch v-model:checked="formState.status" />
-          </a-form-item>
-          <a-form-item :wrapper-col="{ ...layout.wrapperCol, offset: 8 }">
-            <a-button type="primary" html-type="submit">Submit</a-button>
-          </a-form-item>
-        </a-form> -->
         <a-form ref="formRef" name="custom-validation" :model="formState" :rules="rules" v-bind="layout"
           @finish="handleFinish" @validate="handleValidate" @finishFailed="handleFinishFailed"
           :validate-messages="validateMessages">

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { message } from 'ant-design-vue';
 // 1. 定义路由组件.
 // 也可以从其他文件导入
 
@@ -64,6 +65,7 @@ const routes = [
         component: () => import('@/components/EditFramework.vue'),
         meta: {
             title: '编辑',
+            requireAuth: true,
             transition_enter: 'animate__fadeInRight',
             transition_leave: 'animate__fadeOutLeft',
         }
@@ -74,16 +76,17 @@ const routes = [
         component: () => import('@/components/SettingFramework.vue'),
         meta: {
             title: '设置',
+            requireAuth: true,
             transition_enter: 'animate__fadeInRight',
             transition_leave: 'animate__fadeOutLeft',
         },
         children: [
             {
-                path: 'userinfo',
-                name: 'userinfo',
-                component: () => import('@/components/Setting/SetUserinfo.vue'),
+                path: 'add',
+                name: 'add',
+                component: () => import('@/components/Setting/AddProperties.vue'),
                 meta: {
-                    title: '用户信息',
+                    title: '添加',
                     transition_enter: 'animate__fadeInDown',
                     transition_leave: 'animate__fadeOutDown',
                 }
@@ -111,7 +114,7 @@ const routes = [
             {
                 path: 'manager',
                 name: 'manager',
-                component: () => import('@/components/Setting/ManagerUser.vue'),
+                component: () => import('@/components/Setting/UserManager.vue'),
                 meta: {
                     title: '管理用户',
                     transition_enter: 'animate__fadeInDown',
@@ -157,7 +160,7 @@ router.beforeEach((to,from,next)=>{
     //to 目标路由
     //from 来源
     //next 放行
-   
+    
     //如果需要验证，首页守卫
     if(to.meta.requireAuth){
       //vuex仓库中的信息是否存在
@@ -165,6 +168,7 @@ router.beforeEach((to,from,next)=>{
         next()
       }else{
         //拦截路由
+        message.warning('您没有权限，请先登录');
         next('/')
       }
     }else{//不需要验证，直接放行
