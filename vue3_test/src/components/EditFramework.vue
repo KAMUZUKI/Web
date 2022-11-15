@@ -1,59 +1,63 @@
 <template>
-    <a-layout>
-        <a-layout-content>
-            <a-space :size="small" direction="horizontal" align="start">
-                <a-col>
-                    <!-- <div style="border: 1px solid #ccc;text-align:left;">
-                        <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef"
-                            :defaultConfig="toolbarConfig" :mode="mode" />
-                        <Editor style="height: 500px; overflow-y: hidden;" v-model="valueHtml"
-                            :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
-                    </div> -->
-                </a-col>
-                <a-col style="background-color:#fff;" flex="fix">
-                    <a-card style="width: 300px;border-radius: 20px;" hoverable>
-                        <a-form :layout="vertical" :labelAlign="left" :model="formState" v-bind="layout"
-                            name="nest-messages" :validate-messages="validateMessages" @finish="onFinish">
-                            <a-form-item name="date-time-picker" label="日期" v-bind="config">
-                                <a-date-picker v-model:value="formState['createTime']" show-time
-                                    format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" />
-                            </a-form-item>
-                            <a-form-item label="文章标题" name="title">
-                                <a-input v-model:value="formState['title']" placeholder="文章标题" />
-                            </a-form-item>
-                            <a-form-item :name="description" label="文章描述">
-                                <a-input v-model:value="formState['description']" />
-                            </a-form-item>
-                            <a-form-item :name="articleImg" label="文章图片">
-                                <a-input v-model:value="formState['avatar']" />
-                            </a-form-item>
-                            <a-form-item :name="categorys" label="栏目选择">
-                                <a-select showSearch v-model:categoryOptions="categoryOptions" mode="multiple"
-                                    style="width: 100%" placeholder="请选择栏目" :options="categorys" @change="handleChange">
-                                </a-select>
-                            </a-form-item>
-                            <a-form-item :name="keywords" label="关键词">
-                                <a-select showSearch v-model:keywordOptions="keywordOptions" mode="multiple"
-                                    style="width: 100%" placeholder="请选择关键词" :options="keywords" @change="handleChange">
-                                </a-select>
-                            </a-form-item>
-                            <a-button @click="onFinish" type="primary" shape="round" :size="size">
-                                <template #icon>
-                                    <DownloadOutlined />
-                                </template>
-                                提交
-                            </a-button>
-                        </a-form>
-                    </a-card>
-                </a-col>
-            </a-space>
-        </a-layout-content>
-    </a-layout>
-    <NotificationComponent ref="openNotification" />
+    <div>
+        <a-layout>
+            <a-layout-content>
+                <a-space :size="small" direction="horizontal" align="start">
+                    <a-col>
+                        <div style="border: 1px solid #ccc;text-align:left;">
+                            <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef"
+                                :defaultConfig="toolbarConfig" :mode="mode" />
+                            <Editor style="height: 500px; overflow-y: hidden;" v-model="valueHtml"
+                                :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
+                        </div>
+                    </a-col>
+                    <a-col style="background-color:#fff;" flex="fix">
+                        <a-card style="width: 300px;border-radius: 20px;" hoverable>
+                            <a-form :layout="vertical" :labelAlign="left" :model="formState" v-bind="layout"
+                                name="nest-messages" :validate-messages="validateMessages" @finish="onFinish">
+                                <a-form-item name="date-time-picker" label="日期" v-bind="config">
+                                    <a-date-picker v-model:value="formState['createTime']" show-time
+                                        format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" />
+                                </a-form-item>
+                                <a-form-item label="文章标题" name="title">
+                                    <a-input v-model:value="formState['title']" placeholder="文章标题" />
+                                </a-form-item>
+                                <a-form-item :name="description" label="文章描述">
+                                    <a-input v-model:value="formState['description']" />
+                                </a-form-item>
+                                <a-form-item :name="articleImg" label="文章图片">
+                                    <a-input v-model:value="formState['avatar']" />
+                                </a-form-item>
+                                <a-form-item :name="categorys" label="栏目选择">
+                                    <a-select showSearch v-model:categoryOptions="categoryOptions" mode="multiple"
+                                        style="width: 100%" placeholder="请选择栏目" :options="categorys"
+                                        @change="handleChange">
+                                    </a-select>
+                                </a-form-item>
+                                <a-form-item :name="keywords" label="关键词">
+                                    <a-select showSearch v-model:keywordOptions="keywordOptions" mode="multiple"
+                                        style="width: 100%" placeholder="请选择关键词" :options="keywords"
+                                        @change="handleChange">
+                                    </a-select>
+                                </a-form-item>
+                                <a-button @click="onFinish" type="primary" shape="round" :size="size">
+                                    <template #icon>
+                                        <DownloadOutlined />
+                                    </template>
+                                    提交
+                                </a-button>
+                            </a-form>
+                        </a-card>
+                    </a-col>
+                </a-space>
+            </a-layout-content>
+        </a-layout>
+        <NotificationComponent ref="openNotification" />
+    </div>
 </template>
 
 <script>
-import { defineComponent, ref, toRef, onMounted} from 'vue';
+import { defineComponent, ref, toRef, onMounted } from 'vue';
 // import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import NotificationComponent from './tools/NotificationComponent.vue';
 // import { Modal } from 'ant-design-vue';
@@ -63,7 +67,7 @@ import { useRoute } from 'vue-router'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
 import { onBeforeUnmount, shallowRef } from 'vue'
-// import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import axios from 'axios';
 export default defineComponent({
     name: 'EditFramework',
@@ -225,8 +229,8 @@ export default defineComponent({
     },
     components: {
         NotificationComponent,
-        // Editor,
-        // Toolbar
+        Editor,
+        Toolbar
     },
     props: {
         openNotificationWithIcon: {

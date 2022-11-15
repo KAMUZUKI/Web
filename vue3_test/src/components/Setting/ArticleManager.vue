@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <a-list item-layout="horizontal" :data-source="listData">
+    <a-list item-layout="horizontal" :pagination="pagination" :data-source="listData">
       <template #renderItem="{ item }">
         <a-list-item>
           <a-list-item-meta :description=item.content>
@@ -19,97 +19,45 @@
         </a-list-item>
       </template>
     </a-list>
-    <a-pagination hideOnSinglePage v-model:current="current" :total="50" show-less-items />
   </div>
 </template>
   
 <script>
 import { defineComponent, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
-import {useRouter} from 'vue-router';
+import { useRouter } from 'vue-router';
 export default defineComponent({
   setup() {
-    const originData = [
-      {
-        id: 1,
-        author: 'zhangsan',
-        title: `zhangsan part`,
+    const originData = ref([]);
+
+    for (let i = 1; i < 20; i++) {
+      originData.value.push({
+        id: i,
+        author: 'zhangsan' + i,
+        title: `zhangsan part` + i,
         avatar: 'https://joeschmoe.io/api/v1/random',
         description: 'GO JAVA',
-        content: '# 111111Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
+        content: i + '# Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
         keywords: ['GO', 'JAVA'],
         category: ['GO', 'PYTHON', 'JAVA'],
         createTime: '2015-07-23 15:23:05',
         colCnt: [234, 34, 43],
+      })
+    }
+
+    const pagination = {
+      onChange: page => {
+        console.log(page);
       },
-      {
-        id: 2,
-        author: 'lisi',
-        title: `lisi part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'GO PYTHON.',
-        content: '# 222222Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['GO', 'PYTHON'],
-        category: ['GO', 'PYTHON', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [423, 153, 98],
-      },
-      {
-        id: 3,
-        author: 'wangwu',
-        title: `wangwu part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'PYTHON JAVA.',
-        content: '# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['PYTHON', 'JAVA'],
-        category: ['GO', 'PYTHON', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [365, 433, 43],
-      },
-      {
-        id: 4,
-        author: 'zhaoliu',
-        title: `zhaoliu part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'GO PYTHON JAVA.',
-        content: '# 444444Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['GO', 'PYTHON', 'JAVA'],
-        category: ['GO', 'PYTHON', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [432, 64, 876],
-      },
-      {
-        id: 5,
-        author: 'zhaoliu',
-        title: `zhaoliu part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'JAVA技术 .NET技术 JAVA.',
-        content: '# 555555Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['JAVA技术', '.NET技术', 'JAVA'],
-        category: ['JAVA技术', '.NET技术', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [432, 64, 876],
-      },
-      {
-        id: 5,
-        author: 'zhaoliu',
-        title: `zhaoliu part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'C# 数据库技术 JAVA.',
-        content: '# 666666Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['C#', '数据库技术', 'JAVA'],
-        category: ['C#', '数据库技术', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [432, 64, 876],
-      },
-    ];
+      pageSize: 5,
+    };
 
     const router = useRouter()
 
     const listData = ref([])
 
     const initDataList = () => {
-      originData.forEach((item) => {
+      originData.value.forEach((item) => {
         item.content = item.content.replaceAll(/[#*`-]/ig, "").slice(0, 200) + "....."
         listData.value.push(item)
       })
@@ -146,11 +94,12 @@ export default defineComponent({
 
     return {
       listData,
+      pagination,
+      current: ref(2),
       modify,
       deleteByUserId,
       confirm,
       cancel,
-      current: ref(2),
     };
   },
 });
@@ -169,7 +118,7 @@ export default defineComponent({
   min-width: 1000px;
 }
 
-.button{
+.button {
   margin-right: 20px;
 }
 </style>

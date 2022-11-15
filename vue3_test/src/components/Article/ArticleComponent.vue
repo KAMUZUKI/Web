@@ -52,9 +52,12 @@ export default defineComponent({
           colCnt: [234, 34, 43],
         }
         sessionStorage.setItem("articleDetail", JSON.stringify(detail.value));
+        // alert("articleDetail")
         isShow.value = !isShow.value
+        setTimeout(() => {
+          isShow.value = !isShow.value
+        }, 100);
       }
-
     }
 
     //刷新页面时，store无数据从sessionStorage中获取数据
