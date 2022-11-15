@@ -3,12 +3,12 @@
         <a-layout-content>
             <a-space :size="small" direction="horizontal" align="start">
                 <a-col>
-                    <div style="border: 1px solid #ccc;text-align:left;">
+                    <!-- <div style="border: 1px solid #ccc;text-align:left;">
                         <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef"
                             :defaultConfig="toolbarConfig" :mode="mode" />
                         <Editor style="height: 500px; overflow-y: hidden;" v-model="valueHtml"
                             :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
-                    </div>
+                    </div> -->
                 </a-col>
                 <a-col style="background-color:#fff;" flex="fix">
                     <a-card style="width: 300px;border-radius: 20px;" hoverable>
@@ -59,24 +59,21 @@ import NotificationComponent from './tools/NotificationComponent.vue';
 // import { Modal } from 'ant-design-vue';
 // import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router'
-import { useStore } from 'vuex' // 引入useStore 方法
 
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
 import { onBeforeUnmount, shallowRef } from 'vue'
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+// import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import axios from 'axios';
 export default defineComponent({
     name: 'EditFramework',
     setup() {
-        const store = useStore()
         // const router = useRouter()
         const route = useRoute()
         const openNotification = ref()
         const getContent = ref()
         const catagoryOptions = ref([])
         const keywordOptions = ref([])
-        const isEdit = store.state.isCertified
         const formState = ref({
             id: Number,
             author: '',
@@ -112,11 +109,6 @@ export default defineComponent({
         }
 
         onMounted(() => {
-            if (isEdit == false) {
-                // showPromiseConfirm("无权限", "您还未登录，是否前往登录？")
-                // router.push('/status/403')
-                return
-            }
             setTimeout(() => {
                 valueHtml.value = formState.value.content ?? ''
             }, 500)
@@ -233,8 +225,8 @@ export default defineComponent({
     },
     components: {
         NotificationComponent,
-        Editor,
-        Toolbar
+        // Editor,
+        // Toolbar
     },
     props: {
         openNotificationWithIcon: {

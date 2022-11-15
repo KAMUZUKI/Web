@@ -1,5 +1,6 @@
 <template>
-  <a-list style="maxwidth:80%;min-width: 700px;" item-layout="vertical" size="large" :pagination="pagination" :data-source="initDataList">
+  <a-list style="maxwidth:80%;min-width: 700px;" item-layout="vertical" size="large" :pagination="pagination"
+    :data-source="initDataList">
     <template #footer>
       <div>
         <b>到底了,没有了!!!</b>
@@ -8,7 +9,7 @@
     <template #renderItem="{ item }">
       <a-list-item key="item.title">
         <template #actions>
-          <span v-for="{ type,id } in actions" :key="type">
+          <span v-for="{ type, id } in actions" :key="type">
             <component :is="type" style="margin-right: 8px" />
             {{ item.colCnt[id] }}
           </span>
@@ -18,107 +19,109 @@
         </template>
         <a-list-item-meta :description="item.description">
           <template #title>
-            <router-link class="nav-link" :to="'/article/'+item.id" @click="pushToDetail(item)">{{ item.title }}</router-link>
+            <router-link class="nav-link" :to="'/article/' + item.id" @click="pushToDetail(item)">{{ item.title }}
+            </router-link>
           </template>
           <template #avatar>
             <a-avatar :src="item.avatar" />
           </template>
         </a-list-item-meta>
-        {{ item.content.replaceAll(/[#*`-]/ig, "").slice(0, 300)+"....." }}
+        {{ item.content.replaceAll(/[#*`-]/ig, "").slice(0, 300) + "....." }}
       </a-list-item>
     </template>
   </a-list>
 </template>
 <script>
 import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
-import { defineComponent,onMounted,ref,onBeforeUnmount } from 'vue';
+import { defineComponent, onMounted, ref, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex' // 引入useStore 方法
 
-const listData = [
-  {
-    id:1,
-    author: 'zhangsan',
-    title: `zhangsan part`,
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    description: 'GO JAVA',
-    content: '# 111111Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-    keywords: ['GO','JAVA'],
-    category: ['GO','PYTHON','JAVA'],
-    createTime:'2015-07-23 15:23:05',
-    colCnt:[234,34,43],
-  },
-  {
-    id:2,
-    author: 'lisi',
-    title: `lisi part`,
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    description: 'GO PYTHON.',
-    content: '# 222222Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-    keywords: ['GO','PYTHON'],
-    category: ['GO','PYTHON','JAVA'],
-    createTime:'2015-07-23 15:23:05',
-    colCnt:[423,153,98],
-  },
-  {
-    id:3,
-    author: 'wangwu',
-    title: `wangwu part`,
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    description: 'PYTHON JAVA.',
-    content: '# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-    keywords: ['PYTHON','JAVA'],
-    category: ['GO','PYTHON','JAVA'],
-    createTime:'2015-07-23 15:23:05',
-    colCnt:[365,433,43],
-  },
-  {
-    id:4,
-    author: 'zhaoliu',
-    title: `zhaoliu part`,
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    description: 'GO PYTHON JAVA.',
-    content: '# 444444Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-    keywords: ['GO','PYTHON','JAVA'],
-    category: ['GO','PYTHON','JAVA'],
-    createTime:'2015-07-23 15:23:05',
-    colCnt:[432,64,876],
-  },
-  {
-    id:5,
-    author: 'zhaoliu',
-    title: `zhaoliu part`,
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    description: 'JAVA技术 .NET技术 JAVA.',
-    content: '# 555555Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-    keywords: ['JAVA技术','.NET技术','JAVA'],
-    category: ['JAVA技术','.NET技术','JAVA'],
-    createTime:'2015-07-23 15:23:05',
-    colCnt:[432,64,876],
-  },
-  {
-    id:5,
-    author: 'zhaoliu',
-    title: `zhaoliu part`,
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    description: 'C# 数据库技术 JAVA.',
-    content: '# 666666Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-    keywords: ['C#','数据库技术','JAVA'],
-    category: ['C#','数据库技术','JAVA'],
-    createTime:'2015-07-23 15:23:05',
-    colCnt:[432,64,876],
-  },
-];
 
-const initDataList = ref([]);
 
 export default defineComponent({
   setup() {
 
+    const listData = [
+      {
+        id: 1,
+        author: 'zhangsan',
+        title: `zhangsan part`,
+        avatar: 'https://joeschmoe.io/api/v1/random',
+        description: 'GO JAVA',
+        content: '# 111111Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
+        keywords: ['GO', 'JAVA'],
+        category: ['GO', 'PYTHON', 'JAVA'],
+        createTime: '2015-07-23 15:23:05',
+        colCnt: [234, 34, 43],
+      },
+      {
+        id: 2,
+        author: 'lisi',
+        title: `lisi part`,
+        avatar: 'https://joeschmoe.io/api/v1/random',
+        description: 'GO PYTHON.',
+        content: '# 222222Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
+        keywords: ['GO', 'PYTHON'],
+        category: ['GO', 'PYTHON', 'JAVA'],
+        createTime: '2015-07-23 15:23:05',
+        colCnt: [423, 153, 98],
+      },
+      {
+        id: 3,
+        author: 'wangwu',
+        title: `wangwu part`,
+        avatar: 'https://joeschmoe.io/api/v1/random',
+        description: 'PYTHON JAVA.',
+        content: '# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
+        keywords: ['PYTHON', 'JAVA'],
+        category: ['GO', 'PYTHON', 'JAVA'],
+        createTime: '2015-07-23 15:23:05',
+        colCnt: [365, 433, 43],
+      },
+      {
+        id: 4,
+        author: 'zhaoliu',
+        title: `zhaoliu part`,
+        avatar: 'https://joeschmoe.io/api/v1/random',
+        description: 'GO PYTHON JAVA.',
+        content: '# 444444Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
+        keywords: ['GO', 'PYTHON', 'JAVA'],
+        category: ['GO', 'PYTHON', 'JAVA'],
+        createTime: '2015-07-23 15:23:05',
+        colCnt: [432, 64, 876],
+      },
+      {
+        id: 5,
+        author: 'zhaoliu',
+        title: `zhaoliu part`,
+        avatar: 'https://joeschmoe.io/api/v1/random',
+        description: 'JAVA技术 .NET技术 JAVA.',
+        content: '# 555555Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
+        keywords: ['JAVA技术', '.NET技术', 'JAVA'],
+        category: ['JAVA技术', '.NET技术', 'JAVA'],
+        createTime: '2015-07-23 15:23:05',
+        colCnt: [432, 64, 876],
+      },
+      {
+        id: 6,
+        author: 'zhaoliu',
+        title: `zhaoliu part`,
+        avatar: 'https://joeschmoe.io/api/v1/random',
+        description: 'C# 数据库技术 JAVA.',
+        content: '# 666666Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
+        keywords: ['C#', '数据库技术', 'JAVA'],
+        category: ['C#', '数据库技术', 'JAVA'],
+        createTime: '2015-07-23 15:23:05',
+        colCnt: [432, 64, 876],
+      },
+    ];
+
+    const initDataList = ref([]);
     const store = useStore()  // 该方法用于返回store 实例
 
-    const initData = ()=>{
+    const initData = () => {
       //TODO:获取文章列表   listData
-      
+
     }
 
     const pushToDetail = (item) => {
@@ -129,7 +132,7 @@ export default defineComponent({
     const initDataByCategory = (type) => {
       if (type === 'all') {
         for (let i = 0; i < listData.length; i++) {
-            initDataList.value.push(listData[i]);
+          initDataList.value.push(listData[i]);
         }
       } else {
         for (let i = 0; i < listData.length; i++) {
@@ -141,11 +144,11 @@ export default defineComponent({
     }
 
     const initDataByKeyword = (type) => {
-        for (let i = 0; i < listData.length; i++) {
-          if (listData[i].keywords.includes(type)) {
-            initDataList.value.push(listData[i]);
-          }
+      for (let i = 0; i < listData.length; i++) {
+        if (listData[i].keywords.includes(type)) {
+          initDataList.value.push(listData[i]);
         }
+      }
     }
 
     const pagination = {
@@ -175,16 +178,16 @@ export default defineComponent({
     }
 
     const actions = [{
-      id:0,
+      id: 0,
       type: 'StarOutlined',
     }, {
-      id:1,
+      id: 1,
       type: 'LikeOutlined',
     }, {
-      id:2,
+      id: 2,
       type: 'MessageOutlined',
     }];
-    
+
     return {
       listData,
       pagination,

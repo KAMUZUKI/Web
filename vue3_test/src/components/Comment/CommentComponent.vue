@@ -41,6 +41,7 @@ export default defineComponent({
         const store = useStore()
         const detail = ref();
         const user = ref();
+        const articleId = JSON.parse(sessionStorage.getItem("articleDetail")).id
         //判断是否登录，未登录从本地获取用户信息，若无则使用默认信息
         if (typeof (store.state.user) == "undefined") {
             user.value = JSON.parse(sessionStorage.getItem("user"))
@@ -103,7 +104,7 @@ export default defineComponent({
 
         const initComment = () => {
             CommentData.forEach(item => {
-                if (item.articleid == props.articleId) {
+                if (item.articleid == articleId) {
                     comments.value.push(item)
                 }
             })
@@ -127,7 +128,7 @@ export default defineComponent({
         }
 
         const handleSubmit = () => {
-            if (store.state.isCertified != true) {
+            if (!sessionStorage.getItem("user")) {
                 showPromiseConfirm("无权限", "您还未登录，是否前往登录？")
                 return
             }
@@ -187,12 +188,6 @@ export default defineComponent({
     },
     components: {
         V3Emoji
-    },
-    props: {
-        articleId: {
-            type: Number,
-            default: 1
-        }
     }
 });
 </script>

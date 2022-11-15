@@ -37,9 +37,10 @@ export default defineComponent({
     const judgeMode = (mode) => {
       if (route.query.mode == 1||mode == 1) {
         const info = route.path
+        const id = route.path.replace('/article/', '')
         //TODO:通过articleId获取文章详情
         detail.value = {
-          id: 1,
+          id: id,
           author: 'zhangsan',
           title: `zhangsan part:` + info,
           avatar: 'https://joeschmoe.io/api/v1/random',
@@ -51,6 +52,7 @@ export default defineComponent({
           colCnt: [234, 34, 43],
         }
         sessionStorage.setItem("articleDetail", JSON.stringify(detail.value));
+        isShow.value = !isShow.value
       }
 
     }
