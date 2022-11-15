@@ -55,6 +55,7 @@ export default defineComponent({
   setup(props) {
 
     const user = {
+      id:1,
       username:'zhangsan',
       email:'1437487442',
       head:'http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100',
@@ -94,6 +95,7 @@ export default defineComponent({
     }
 
     const formState = reactive({
+      id:1,
       username: 'a',
       password: 'a',
       remember: true,

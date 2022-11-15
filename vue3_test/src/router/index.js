@@ -122,13 +122,23 @@ const routes = [
     },
     {
         path: '/status/404',
-        name: 'status',
+        name: 'status404',
         component: () => import('@/components/status/404Component.vue'),
         meta: {
-            title: '设置',
+            title: '404',
             transition_enter: 'animate__fadeInRight',
             transition_leave: 'animate__fadeOutLeft',
-        },
+        }, 
+    },
+    {
+        path: '/status/403',
+        name: 'status403',
+        component: () => import('@/components/status/403Component.vue'),
+        meta: {
+            title: '403',
+            transition_enter: 'animate__fadeInRight',
+            transition_leave: 'animate__fadeOutLeft',
+        }, 
     }
 ]
 
@@ -136,10 +146,30 @@ const routes = [
 // 你可以在这里输入更多的配置，但我们在这里a
 // 暂时保持简单
 
+
 const router = createRouter({
     // 4. 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
     history: createWebHistory(),
     routes // `routes: routes` 的缩写
 })
+
+router.beforeEach((to,from,next)=>{
+    //to 目标路由
+    //from 来源
+    //next 放行
+   
+    //如果需要验证，首页守卫
+    if(to.meta.requireAuth){
+      //vuex仓库中的信息是否存在
+      if(sessionStorage.getItem('user')){
+        next()
+      }else{
+        //拦截路由
+        next('/')
+      }
+    }else{//不需要验证，直接放行
+      next()
+    }
+  })
 
 export default router

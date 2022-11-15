@@ -11,30 +11,30 @@
         :validate-messages="validateMessages"
     >
         <h2 style="text-align:center;">注册</h2>
-        <a-form-item label="Username" name="username" >
+        <a-form-item label="用户名" name="username" required>
             <a-input v-model:value="formState.username" :rules="[{ required: true }]">
                 <template #prefix>
                     <UserOutlined class="site-form-item-icon" />
                 </template>
             </a-input>
         </a-form-item>
-        <a-form-item has-feedback label="Password" name="pass">
+        <a-form-item has-feedback label="密码" name="pass">
             <a-input v-model:value="formState.pass" type="password" autocomplete="off" />
         </a-form-item>
-        <a-form-item has-feedback label="Confirm" name="checkPass">
+        <a-form-item has-feedback label="确认密码" name="checkPass">
             <a-input v-model:value="formState.checkPass" type="password" autocomplete="off" />
         </a-form-item>
-        <a-form-item :name="['email']" label="Email" :rules="[{ required: true },{ type: 'email' }]">
+        <a-form-item :name="['email']" label="邮箱" :rules="[{ required: true },{ type: 'email' }]">
             <a-input v-model:value="formState.email" />
         </a-form-item>
-        <a-form-item label="gender" required>
+        <a-form-item label="性别" required>
             <a-select v-model:value="formState.gender" placeholder="please select your gender">
                 <a-select-option value="1">男</a-select-option>
                 <a-select-option value="0">女</a-select-option>
             </a-select>
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 16, offset: 6 }">
-            <a-button type="primary" html-type="submit" @click="register">注册</a-button>
+            <a-button type="primary" html-type="submit">注册</a-button>
             <a-button style="margin-left: 10px" @click="onClose">退出</a-button>
         </a-form-item>
     </a-form>
@@ -68,16 +68,16 @@ export default defineComponent({
         });
 
         const validateMessages = {
-            required: '${label} is required!',
+            required: '${label} 是必要的!',
             types: {
-                email: '${label} is not a valid email!',
-                number: '${label} is not a valid number!',
+                email: '${label} 是无效的邮箱!',
+                number: '${label} 是无效的数字!',
             }
         };
 
         let validatePass = async (_rule, value) => {
             if (value === '') {
-                return Promise.reject('Please input the password');
+                return Promise.reject('请输入密码!');
             } else {
                 if (formState.checkPass !== '') {
                     formRef.value.validateFields('checkPass');
@@ -88,9 +88,9 @@ export default defineComponent({
 
         let validatePass2 = async (_rule, value) => {
             if (value === '') {
-                return Promise.reject('Please input the password again');
+                return Promise.reject('请再次输入密码!');
             } else if (value !== formState.pass) {
-                return Promise.reject("Two inputs don't match!");
+                return Promise.reject("两次输入不一致!");
             } else {
                 return Promise.resolve();
             }
@@ -118,14 +118,11 @@ export default defineComponent({
             },
         };
 
-        const register = () => {
+        const handleFinish = values => {
+            console.log(values, formState);
             //TODO:注册账号
             openNotification.value.openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
             openNotification.value.openNotificationWithIcon('error', '注册失败', '注册失败');
-        };
-
-        const handleFinish = values => {
-            console.log(values, formState);
         };
 
         const handleFinishFailed = errors => {
@@ -149,7 +146,6 @@ export default defineComponent({
             validateMessages,
             labelCol: { span: 4 },
             wrapperCol: { span: 14 },
-            register,
             resetForm,
             handleFinish,
             handleValidate,

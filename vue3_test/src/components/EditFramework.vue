@@ -53,11 +53,11 @@
 </template>
 
 <script>
-import { defineComponent, ref, toRef, onMounted, createVNode } from 'vue';
-import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { defineComponent, ref, toRef, onMounted} from 'vue';
+// import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import NotificationComponent from './tools/NotificationComponent.vue';
-import { Modal } from 'ant-design-vue';
-import { useRouter } from 'vue-router';
+// import { Modal } from 'ant-design-vue';
+// import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex' // 引入useStore 方法
 
@@ -70,7 +70,7 @@ export default defineComponent({
     name: 'EditFramework',
     setup() {
         const store = useStore()
-        const router = useRouter()
+        // const router = useRouter()
         const route = useRoute()
         const openNotification = ref()
         const getContent = ref()
@@ -113,8 +113,8 @@ export default defineComponent({
 
         onMounted(() => {
             if (isEdit == false) {
-                showPromiseConfirm("无权限", "您还未登录，是否前往登录？")
-                router.push('/')
+                // showPromiseConfirm("无权限", "您还未登录，是否前往登录？")
+                // router.push('/status/403')
                 return
             }
             setTimeout(() => {
@@ -123,22 +123,22 @@ export default defineComponent({
             judgeMode()
         })
 
-        const showPromiseConfirm = (title, message) => {
-            Modal.confirm({
-                title: title,
-                icon: createVNode(ExclamationCircleOutlined),
-                content: createVNode('div', {
-                    style: 'color:red;',
-                }, message),
-                onOk() {
-                    console.log('OK');
-                },
-                onCancel() {
-                    console.log('Cancel');
-                },
-                class: 'test',
-            });
-        }
+        // const showPromiseConfirm = (title, message) => {
+        //     Modal.confirm({
+        //         title: title,
+        //         icon: createVNode(ExclamationCircleOutlined),
+        //         content: createVNode('div', {
+        //             style: 'color:red;',
+        //         }, message),
+        //         onOk() {
+        //             console.log('OK');
+        //         },
+        //         onCancel() {
+        //             console.log('Cancel');
+        //         },
+        //         class: 'test',
+        //     });
+        // }
 
         const categorys = ref([
             { label: 'JAVA技术', value: 'JAVA技术' },
