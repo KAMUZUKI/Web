@@ -38,6 +38,10 @@ export default defineComponent({
       if (route.query.mode == 1||mode == 1) {
         const info = route.path
         const id = route.path.replace('/article/', '')
+        isShow.value = !isShow.value
+        setTimeout(() => {
+          isShow.value = !isShow.value
+        }, 100);
         //TODO:通过articleId获取文章详情
         detail.value = {
           id: id,
@@ -53,10 +57,9 @@ export default defineComponent({
         }
         sessionStorage.setItem("articleDetail", JSON.stringify(detail.value));
         // alert("articleDetail")
-        isShow.value = !isShow.value
-        setTimeout(() => {
-          isShow.value = !isShow.value
-        }, 100);
+        // setTimeout(() => {
+        //   isShow.value = !isShow.value
+        // }, 1000);
       }
     }
 

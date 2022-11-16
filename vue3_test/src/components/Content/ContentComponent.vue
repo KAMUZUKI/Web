@@ -9,10 +9,12 @@
     <template #renderItem="{ item }">
       <a-list-item key="item.title">
         <template #actions>
-          <span v-for="{ type, id } in actions" :key="type">
-            <component :is="type" style="margin-right: 8px" />
-            {{ item.colCnt[id] }}
-          </span>
+          <template v-if="actions === 'liked'">
+            <LikeFilled @click="like" />
+          </template>
+          <template v-else>
+            <LikeOutlined @click="like" />
+          </template>
         </template>
         <template #extra>
           <img width="272" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />
@@ -32,11 +34,9 @@
   </a-list>
 </template>
 <script>
-import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
+import { StarOutlined, StarFilled, LikeOutlined, LikeFilled, MessageOutlined } from '@ant-design/icons-vue';
 import { defineComponent, onMounted, ref, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex' // 引入useStore 方法
-
-
 
 export default defineComponent({
   setup() {
@@ -177,7 +177,7 @@ export default defineComponent({
       initDataByKeyword(type);
     }
 
-    const actions = [{
+    const actions = ref([{
       id: 0,
       type: 'StarOutlined',
     }, {
@@ -186,7 +186,16 @@ export default defineComponent({
     }, {
       id: 2,
       type: 'MessageOutlined',
-    }];
+    }]);
+
+    const handleStar = () => {
+      actions.value[0].type = 'StarFilled';
+
+    }
+
+    const handleLike = () => {
+      actions.value[2].type = 'LikeFiller';
+    }
 
     return {
       listData,
@@ -198,11 +207,15 @@ export default defineComponent({
       initDataByCategory,
       changeContenByCategory,
       changeContenByKeyword,
+      handleStar,
+      handleLike,
     };
   },
   components: {
     StarOutlined,
+    StarFilled,
     LikeOutlined,
+    LikeFilled,
     MessageOutlined,
   },
 });

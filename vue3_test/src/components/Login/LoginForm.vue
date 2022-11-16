@@ -42,7 +42,7 @@ import { defineComponent, reactive, computed,onMounted,ref } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import NotificationComponent from '../tools/NotificationComponent.vue';
 import { useStore } from 'vuex' // 引入useStore 方法
-// import axios from 'axios';
+import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'LoginForm',
 
@@ -53,7 +53,6 @@ export default defineComponent({
   },
 
   setup(props) {
-
     const user = {
       id:1,
       username:'zhangsan',
@@ -61,38 +60,39 @@ export default defineComponent({
       head:'http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100',
     }
 
+    const router = useRouter()
     const openNotification = ref() 
     const store = useStore();
 
-    // const login = () => {
-    //   var params = new URLSearchParams();
-    //   params.append('op', 'login');
-    //   params.append('username', formState.username);
-    //   params.append('password', formState.password);
-    //   //TODO: Login
-    //   axios.post('http://kamuzuki.top:8080/bbs/user.action', params)
-    //     .then(res=>{
-    //       if (res.data.status == 'success') {
-    //         store.state.isLogin = true
-    //         props.showAvatar()
-    //         props.openNotificationWithIcon('success', 'Login', 'Login success')
-    //       } else {
-    //         props.openNotificationWithIcon('error', 'Login', 'Login failed')
-    //       }
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error); 
-    //     });
-    // }
-
     const login = () => {
-      store.state.isLogin = true
-      store.state.user = user
-      store.state.isCertified = true
-      sessionStorage.setItem("user", JSON.stringify(user));
-      props.showAvatar()
-      openNotification.value.openNotificationWithIcon('success', '登录', '恭喜登录成功');
+      var params = new URLSearchParams();
+      params.append('op', 'login');
+      params.append('username', formState.username);
+      params.append('password', formState.password);
+      //TODO: Login
+      router.post('http://kamuzuki.top:8080/bbs/user.action', params)
+        .then(res=>{
+          if (res.data.status == 'success') {
+            store.state.isLogin = true
+            props.showAvatar()
+            props.openNotificationWithIcon('success', 'Login', 'Login success')
+          } else {
+            props.openNotificationWithIcon('error', 'Login', 'Login failed')
+          }
+        })
+        .catch(function (error) {
+          console.log(error); 
+        });
     }
+
+    // const login = () => {
+    //   store.state.isLogin = true
+    //   store.state.user = user
+    //   store.state.isCertified = true
+    //   sessionStorage.setItem("user", JSON.stringify(user));
+    //   props.showAvatar()
+    //   openNotification.value.openNotificationWithIcon('success', '登录', '恭喜登录成功');
+    // }
 
     const formState = reactive({
       id:1,
