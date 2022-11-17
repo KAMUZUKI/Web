@@ -1,5 +1,5 @@
 <template>
-  <a-list style="maxwidth:80%;min-width: 700px;" item-layout="vertical" size="large" :pagination="pagination"
+  <a-list style="max-width:1000px;min-width: 1000px" item-layout="vertical" size="large" :pagination="pagination"
     :data-source="initDataList">
     <template #footer>
       <div>
@@ -10,7 +10,7 @@
       <a-list-item key="item.title">
         <template #actions>
           <span v-for="{ type, id } in actions" :key="type">
-            <component :is="type" style="margin-right: 8px" /> 
+            <component :is="type" style="margin-right: 8px" />
             {{ item.colCnt[id] }}
           </span>
         </template>
@@ -26,20 +26,20 @@
             <a-avatar :src="item.avatar" />
           </template>
         </a-list-item-meta>
-        {{ item.content.replaceAll(/[#*`-]/ig, "").slice(0, 300) + "....." }}
+        {{ item.content.replace(/#*.*#/g, '').replace(/[^(\u4e00-\u9fa5)(，。（）【】{}！,\-!)]/g, '').substring(0, 200) + "....." }}
       </a-list-item>
     </template>
   </a-list>
 </template>
 <script>
-import { StarOutlined,StarFilled, LikeOutlined,LikeFilled, MessageOutlined } from '@ant-design/icons-vue';
+import { StarOutlined, StarFilled, LikeOutlined, LikeFilled, MessageOutlined } from '@ant-design/icons-vue';
 import { defineComponent, onMounted, ref, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex' // 引入useStore 方法
-
+import axios from 'axios'
 export default defineComponent({
   setup() {
 
-    const listData = [
+    const listDataTmp = [
       {
         id: 1,
         author: 'zhangsan',
@@ -114,12 +114,37 @@ export default defineComponent({
       },
     ];
 
+    // const tempListData = []
+    const listData = []
     const initDataList = ref([]);
     const store = useStore()  // 该方法用于返回store 实例
 
     const initData = () => {
-      //TODO:获取文章列表   listData
+      // TODO:获取文章列表   listData
+      var params = new URLSearchParams();
+      params.append('op', 'getAllAritcle');
+      //TODO: Login
+      axios.post('http://localhost:8081/demo/info.action', params)
+        .then(res => {
+          console.log(res)
+          if (res.data.code == 1) {
+            listDataTmp.value = res.data.data
+            for (const [key, value] of Object.entries(listDataTmp.value)) {
+              console.log(key)
+              value.colCnt = [123, 456, 789]
+              listData.push(value);
+            }
+            // listData.value = toRaw(listDataTmp)
+            // console.log("listData.value"+toRaw(listData.value)[2])
 
+            initDataByCategory('all')
+          } else {
+            console.log(res.data.msg)
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
 
     const pushToDetail = (item) => {
@@ -158,7 +183,6 @@ export default defineComponent({
 
     onMounted(() => {
       initData()
-      initDataByCategory('all')
     });
 
     onBeforeUnmount(() => {
@@ -181,7 +205,7 @@ export default defineComponent({
     }, {
       id: 1,
       type: 'LikeOutlined',
-    },{
+    }, {
       id: 2,
       type: 'MessageOutlined',
     }]);

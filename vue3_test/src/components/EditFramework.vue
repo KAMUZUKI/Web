@@ -4,11 +4,12 @@
             <a-layout-content>
                 <a-space :size="small" direction="horizontal" align="start">
                     <a-col>
-                        <div style="border: 1px solid #ccc;text-align:left;">
-                            <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef"
+                        <div style="border: 1px solid #ccc;text-align:left;height:800px;min-width:1000px;max-width:1100px">
+                            <!-- <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef"
                                 :defaultConfig="toolbarConfig" :mode="mode" />
                             <Editor style="height: 500px; overflow-y: hidden;" v-model="valueHtml"
-                                :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
+                                :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" /> -->
+                            <v-md-editor v-model="text" height="800px"></v-md-editor>
                         </div>
                     </a-col>
                     <a-col style="background-color:#fff;" flex="fix">
@@ -64,10 +65,7 @@ import NotificationComponent from './tools/NotificationComponent.vue';
 // import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router'
 
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
-
 import { onBeforeUnmount, shallowRef } from 'vue'
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import axios from 'axios';
 export default defineComponent({
     name: 'EditFramework',
@@ -225,12 +223,11 @@ export default defineComponent({
             handleCreated,
             onFinish,
             handleChange,
+            text: '',
         };
     },
     components: {
         NotificationComponent,
-        Editor,
-        Toolbar
     },
     props: {
         openNotificationWithIcon: {
