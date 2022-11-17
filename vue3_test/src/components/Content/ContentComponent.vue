@@ -1,9 +1,9 @@
 <template>
-  <a-list style="max-width:1000px;min-width: 1000px" item-layout="vertical" size="large" :pagination="pagination"
+  <a-list style="max-width:1000px;min-width: 700px" item-layout="vertical" size="large" :pagination="pagination"
     :data-source="initDataList">
     <template #footer>
       <div>
-        <b>到底了,没有了!!!</b>
+        <b></b>
       </div>
     </template>
     <template #renderItem="{ item }">
@@ -23,17 +23,19 @@
             </router-link>
           </template>
           <template #avatar>
-            <a-avatar :src="item.avatar" />
+            <a-avatar src="http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100" />
           </template>
         </a-list-item-meta>
-        {{ item.content.replace(/#*.*#/g, '').replace(/[^(\u4e00-\u9fa5)(，。（）【】{}！,\-!)]/g, '').substring(0, 200) + "....." }}
+        {{ item.content.replace(/#*.*#/g, '').replace(/[^(\u4e00-\u9fa5)(，。（）【】{}！,\-!)]/g, '').substring(0, 200) +
+    "....."
+        }}
       </a-list-item>
     </template>
   </a-list>
 </template>
 <script>
 import { StarOutlined, StarFilled, LikeOutlined, LikeFilled, MessageOutlined } from '@ant-design/icons-vue';
-import { defineComponent, onMounted, ref, onBeforeUnmount } from 'vue';
+import { defineComponent, onMounted, ref, toRaw, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex' // 引入useStore 方法
 import axios from 'axios'
 export default defineComponent({
@@ -115,14 +117,15 @@ export default defineComponent({
     ];
 
     // const tempListData = []
-    const listData = []
+    const listData = ref([])
     const initDataList = ref([]);
+    const newData = ref([]);
     const store = useStore()  // 该方法用于返回store 实例
 
     const initData = () => {
       // TODO:获取文章列表   listData
       var params = new URLSearchParams();
-      params.append('op', 'getAllAritcle');
+      params.append('op', 'getAllArticle');
       //TODO: Login
       axios.post('http://localhost:8081/demo/info.action', params)
         .then(res => {
@@ -132,11 +135,10 @@ export default defineComponent({
             for (const [key, value] of Object.entries(listDataTmp.value)) {
               console.log(key)
               value.colCnt = [123, 456, 789]
-              listData.push(value);
+              listData.value.push(value);
             }
             // listData.value = toRaw(listDataTmp)
             // console.log("listData.value"+toRaw(listData.value)[2])
-
             initDataByCategory('all')
           } else {
             console.log(res.data.msg)
@@ -154,11 +156,11 @@ export default defineComponent({
 
     const initDataByCategory = (type) => {
       if (type === 'all') {
-        for (let i = 0; i < listData.length; i++) {
-          initDataList.value.push(listData[i]);
+        for (let i = 0; i < listData.value.length; i++) {
+          initDataList.value.push(listData.value[i]);
         }
       } else {
-        for (let i = 0; i < listData.length; i++) {
+        for (let i = 0; i < listData.value.length; i++) {
           if (listData[i].category.includes(type)) {
             initDataList.value.push(listData[i]);
           }
@@ -167,7 +169,7 @@ export default defineComponent({
     }
 
     const initDataByKeyword = (type) => {
-      for (let i = 0; i < listData.length; i++) {
+      for (let i = 0; i < listData.value.length; i++) {
         if (listData[i].keywords.includes(type)) {
           initDataList.value.push(listData[i]);
         }
@@ -176,17 +178,38 @@ export default defineComponent({
 
     const pagination = {
       onChange: page => {
-        console.log(page);
+        console.log("pages" + page);
       },
-      pageSize: 3,
+      simple: true,
+      pageSize: 5,
     };
-
+    // var i = 1
     onMounted(() => {
       initData()
+      initDataByCategory('all')
+      setInterval(() => {
+        //TODO:获取最新数据 若有则更新 List的数据 无则跳过
+
+        var params = new URLSearchParams();
+        params.append('op', 'getArticleById');
+        params.append('id', 1);
+        axios.post('http://localhost:8081/demo/info.action', params).then(res => {
+          console.log(res)
+          if (res.data.code == 1) {
+            initDataList.value = []
+            newData.value = res.data.data
+            listData.value.unshift(newData.value)
+            initDataByCategory('all')
+          } else {
+            return
+          }
+        })
+      }, 3000)
     });
 
     onBeforeUnmount(() => {
       initDataList.value = [];
+      clearInterval(newData.value)
     });
 
     const changeContenByCategory = (type) => {
@@ -212,7 +235,6 @@ export default defineComponent({
 
     const handleStar = () => {
       actions.value[0].type = 'StarFilled';
-
     }
 
     const handleLike = () => {
@@ -220,6 +242,7 @@ export default defineComponent({
     }
 
     return {
+      toRaw,
       listData,
       pagination,
       actions,

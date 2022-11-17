@@ -1,18 +1,18 @@
 <template>
   <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
   <HelloWorld msg="Welcome to Your Vue.js App"/>
-  <EmojiComp></EmojiComp>
+  <TestDev/>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import TestDev from './components/TestDev.vue'
 import 'mavon-editor/dist/css/index.css'
-import EmojiComp from './components/EmojiComp.vue'
 export default {
   name: 'App',
   components: {
     HelloWorld,
-    EmojiComp
+    TestDev
   }
 }
 </script>
