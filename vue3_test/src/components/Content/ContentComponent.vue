@@ -9,9 +9,9 @@
     <template #renderItem="{ item }">
       <a-list-item key="item.title">
         <template #actions>
-          <span v-for="{ type, id } in actions" :key="type">
-            <component :is="type" style="margin-right: 8px" />
-            {{ item.colCnt[id] }}
+          <span v-for="{ type, flag, id } in actions" :key="type">
+              <component :is="type[hasExisted(item.id)]" style="margin-right: 8px" @click="clickModel(item.id, id);console.log(flag)" />
+              {{ item.colCnt[id]}}
           </span>
         </template>
         <template #extra>
@@ -35,8 +35,10 @@
 </template>
 <script>
 import { StarOutlined, StarFilled, LikeOutlined, LikeFilled, MessageOutlined } from '@ant-design/icons-vue';
-import { defineComponent, onMounted, ref, toRaw, onBeforeUnmount } from 'vue';
+import { defineComponent, onMounted, ref, toRaw, onBeforeUnmount, watch } from 'vue';
+import { message } from 'ant-design-vue';
 import { useStore } from 'vuex' // 引入useStore 方法
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 export default defineComponent({
   setup() {
@@ -117,16 +119,19 @@ export default defineComponent({
     ];
 
     // const tempListData = []
+    const router = useRouter()
     const listData = ref([])
-    const initDataList = ref([]);
-    const newData = ref([]);
+    const clickLimitCount = ref()
+    const initDataList = ref([])
+    const newData = ref([])
     const store = useStore()  // 该方法用于返回store 实例
+    const likeList = ref([1,5,6,13])
+    const set = new Set(likeList.value)
 
     const initData = () => {
       // TODO:获取文章列表   listData
       var params = new URLSearchParams();
       params.append('op', 'getAllArticle');
-      //TODO: Login
       axios.post('http://localhost:8081/demo/info.action', params)
         .then(res => {
           console.log(res)
@@ -183,33 +188,49 @@ export default defineComponent({
       simple: true,
       pageSize: 5,
     };
+
+    // 1.建立链接 -- 携带cookie参数
+    var ws = new WebSocket(
+      `ws://localhost:8081/demo/websocket`
+    );
+
+    // 3.服务器每次返回信息都会执行一次onmessage方法
+    ws.onmessage = function (res) {
+      console.log("服务器返回的信息: " + res.data);
+      //获取最新数据
+      if (res.data !== null) {
+        initDataList.value = []
+        newData.value = JSON.parse(res.data)
+        listData.value.unshift(newData.value)
+        initDataByCategory('all')
+      } else {
+        return
+      }
+    };
+
     // var i = 1
     onMounted(() => {
       initData()
       initDataByCategory('all')
+      //用于清除用户当前时间段点击次数
       setInterval(() => {
-        //TODO:获取最新数据 若有则更新 List的数据 无则跳过
-
-        var params = new URLSearchParams();
-        params.append('op', 'getArticleById');
-        params.append('id', 1);
-        axios.post('http://localhost:8081/demo/info.action', params).then(res => {
-          console.log(res)
-          if (res.data.code == 1) {
-            initDataList.value = []
-            newData.value = res.data.data
-            listData.value.unshift(newData.value)
-            initDataByCategory('all')
-          } else {
-            return
-          }
-        })
+        clickLimitCount.value = 0
+        console.log("clickLimitCount清空" + clickLimitCount.value)
       }, 3000)
     });
 
+    watch(clickLimitCount, (newValue) => {
+      //监听用户点击次数
+      if (newValue > 4) {
+        message.warning('请不要频繁点击');
+      }
+    })
+
     onBeforeUnmount(() => {
       initDataList.value = [];
-      clearInterval(newData.value)
+      ws.onclose = function () {
+        console.log("Connection closed.");
+      };
     });
 
     const changeContenByCategory = (type) => {
@@ -224,14 +245,55 @@ export default defineComponent({
 
     const actions = ref([{
       id: 0,
-      type: 'StarOutlined',
+      flag: 0,
+      type: ['StarOutlined', 'StarFilled'],
+      method: 'clickStar',
     }, {
       id: 1,
-      type: 'LikeOutlined',
+      flag: 0,
+      type: ['LikeOutlined', 'LikeFilled'],
+      method: 'clickLike',
     }, {
       id: 2,
-      type: 'MessageOutlined',
+      flag: 0,
+      type: ['MessageOutlined'],
+      method: 'clickMessage',
     }]);
+
+    const clickModel = (articleId, mode) => {
+      if (sessionStorage.getItem("user")) {
+        //登录执行点击事件
+        clickLimitCount.value++
+        if (clickLimitCount.value > 4) {
+          return
+        }
+        if (mode == 0 || mode == 1) {
+          initDataList.value.forEach((item) => {
+            if (item.id === articleId) {
+              if (actions.value[mode].flag === 0) {
+                set.add(item.id)
+                item.colCnt[mode] += 1;
+              } else {
+                item.colCnt[mode] -= 1;
+                set.delete(item.id)
+              }
+              actions.value[mode].flag ^= 1
+              // alert("点赞成功" + item.colCnt[mode])
+            }
+          })
+        } else {
+          router.push({
+            path: '/article/' + articleId,
+            query: {
+              mode: 1
+            }
+          })
+        }
+      } else {
+        message.warning('请先登录');
+        return
+      }
+    }
 
     const handleStar = () => {
       actions.value[0].type = 'StarFilled';
@@ -239,6 +301,14 @@ export default defineComponent({
 
     const handleLike = () => {
       actions.value[2].type = 'LikeFiller';
+    }
+
+    const hasExisted = (id) => {
+      if (set.has(id)) {
+        return 1
+      }else{
+        return 0
+      }
     }
 
     return {
@@ -254,6 +324,9 @@ export default defineComponent({
       changeContenByKeyword,
       handleStar,
       handleLike,
+      clickModel,
+      likeList,
+      hasExisted,  //判断文章是否被用户点赞
     };
   },
   components: {

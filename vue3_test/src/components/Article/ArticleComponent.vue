@@ -2,6 +2,7 @@
   <div style="text-align:left;" v-if="isShow" :key='indexKey'>
     <PageHeader :details="details"></PageHeader>
     <v-md-preview :text="details.content"></v-md-preview>
+    <a-anchor-link href="#comment" title="评论" />
     <CommentComponent :articleId="details.id"></CommentComponent>
   </div>
 </template>
