@@ -154,23 +154,24 @@ export default defineComponent({
             }, 1000);
 
             //TODO:提交评论
-            // var params = new URLSearchParams();
-            // params.append('op', 'login');
-            // params.append('username', );
-            // params.append('password', );
-            // //TODO: Login
-            // axios.post('http://kamuzuki.top:8080/bbs/user.action', params)
-            //     .then(res => {
-            //         if (res.data.status == 'success') {
-            //             store.state.isLogin = true
-            //             store.state.openNotificationWithIcon('success', 'Login', 'Login success')
-            //         } else {
-            //             store.state.openNotificationWithIcon('error', 'Login', 'Login failed')
-            //         }
-            //     })
-            //     .catch(function (error) {
-            //         console.log(error);
-            //     });
+            var params = new URLSearchParams()
+            params.append('op', 'addComment')
+            params.append('articleid',props.articleId)
+            params.append('createBy',userDetial.username)
+            params.append('avatar',userDetial.head)
+            params.append('content',value.value)
+            params.append('createTime',dayjs().format("YYYY-MM-DD HH:mm:ss"))
+            axios.post('http://localhost:8081/demo/info.action', params)
+                .then(res => {
+                    if (res.data.code == 1) {
+                        store.state.openNotificationWithIcon('success', '添加评论', '添加评论成功')
+                    } else {
+                        store.state.openNotificationWithIcon('error', '添加评论', '添加评论失败')
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
 
         onMounted(() => {

@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-    <a-table :columns="columns" :data-source="dataSource" bordered>
+    <a-table :columns="columns" :data-source="data" bordered>
       <template #bodyCell="{ column, text, record }">
         <template v-if="['id','name', 'account', 'phone','email','createTime','status','type'].includes(column.dataIndex)">
           <div>
@@ -44,161 +44,172 @@
   <script>
   import { cloneDeep } from 'lodash-es';
   import { defineComponent, reactive, ref,onMounted } from 'vue';
-  const columns = [{
-            title: 'Id',
-            width: 15,
-            dataIndex: 'id',
-        }, {
-            title: 'Name',
-            width: 25,
-            dataIndex: 'name',
-        }, {
-            title: 'Account',
-            dataIndex: 'account',
-            width: 35,
-        }, {
-            title: 'Phone',
-            dataIndex: 'phone',
-            width: 40,
-        }, {
-            title: 'Email',
-            dataIndex: 'email',
-            width: 60,
-        }, {
-            title: 'CreateTime',
-            dataIndex: 'createTime',
-            width: 50,
-        }, {
-            title: 'Status',
-            dataIndex: 'status',
-            width: 25,
-        }, {
-            title: '用户类型',
-            dataIndex: 'type',
-            width: 30,
-        }, {
-            title: 'Action',
-            dataIndex: 'modify',
-            width: 25,
-        }, {
-            title: 'Action',
-            dataIndex: 'delete',
-            width: 25,
-        }];
-  const data = [{
-            id: 1,
-            name: '张三',
-            account: '10001',
-            phone: '123456677',
-            email: '1437487442@qq.com',
-            createTime: '2021-05-01 12:00:00',
-            status: 1,
-            type: 1
-        },
-        {
-            id: 2,
-            name: '李四',
-            account: '10002',
-            phone: '123456677',
-            email: '1437487442@qq.com',
-            createTime: '2021-05-01 12:00:00',
-            status: 1,
-            type: 1
-        },
-        {
-            id: 3,
-            name: '王五',
-            account: '10003',
-            phone: '123456677',
-            email: '1437487442@qq.com',
-            createTime: '2021-05-01 12:00:00',
-            status: 1,
-            type: 1
-        },
-        {
-            id: 4,
-            name: '赵六',
-            account: '10004',
-            phone: '123456677',
-            email: '1437487442@qq.com',
-            createTime: '2021-05-01 12:00:00',
-            status: 1,
-            type: 1
-        }, {
-            id: 5,
-            name: '田七',
-            account: '10005',
-            phone: '123456677',
-            email: '1437487442@qq.com',
-            createTime: '2021-05-01 12:00:00',
-            status: 1,
-            type: 1
-        }, {
-            id: 6,
-            name: '张三',
-            account: '10006',
-            phone: '123456677',
-            email: '1437487442@qq.com',
-            createTime: '2021-05-01 12:00:00',
-            status: 1,
-            type: 1
-        },
-        {
-            id: 7,
-            name: '李四',
-            account: '10007',
-            phone: '123456677',
-            email: '1437487442@qq.com',
-            createTime: '2021-05-01 12:00:00',
-            status: 1,
-            type: 1
-        },
-        {
-            id: 8,
-            name: '王五',
-            account: '10008',
-            phone: '123456677',
-            email: '1437487442@qq.com',
-            createTime: '2021-05-01 12:00:00',
-            status: 1,
-            type: 1
-        },
-        {
-            id: 9,
-            name: '赵六',
-            account: '10009',
-            phone: '123456677',
-            email: '1437487442@qq.com',
-            createTime: '2021-05-01 12:00:00',
-            status: 1,
-            type: 1
-        }, {
-            id: 10,
-            name: '田七',
-            account: '10010',
-            phone: '123456677',
-            email: '1437487442@qq.com',
-            createTime: '2021-05-01 12:00:00',
-            status: 1,
-            type: 1
-        }, {
-            id: 11,
-            name: '田七',
-            account: '10005',
-            phone: '123456677',
-            email: '1437487442@qq.com',
-            createTime: '2021-05-01 12:00:00',
-            status: 1,
-            type: 1
-        }];
+
   export default defineComponent({
     name:'ManagerTest',
     setup() {
-      const dataSource = ref(data);
-
+    const columns = [{
+              title: 'Id',
+              width: 15,
+              dataIndex: 'id',
+          }, {
+              title: 'Name',
+              width: 25,
+              dataIndex: 'name',
+          }, {
+              title: 'Account',
+              dataIndex: 'account',
+              width: 35,
+          }, {
+              title: 'Phone',
+              dataIndex: 'phone',
+              width: 40,
+          }, {
+              title: 'Email',
+              dataIndex: 'email',
+              width: 60,
+          }, {
+              title: 'CreateTime',
+              dataIndex: 'createTime',
+              width: 50,
+          }, {
+              title: 'Status',
+              dataIndex: 'status',
+              width: 25,
+          }, {
+              title: '用户类型',
+              dataIndex: 'type',
+              width: 30,
+          }, {
+              title: 'Action',
+              dataIndex: 'modify',
+              width: 25,
+          }, {
+              title: 'Action',
+              dataIndex: 'delete',
+              width: 25,
+          }];
+    const data = ref([{
+              id: 1,
+              name: '张三',
+              account: '10001',
+              phone: '123456677',
+              email: '1437487442@qq.com',
+              createTime: '2021-05-01 12:00:00',
+              status: 1,
+              type: 1
+          },
+          {
+              id: 2,
+              name: '李四',
+              account: '10002',
+              phone: '123456677',
+              email: '1437487442@qq.com',
+              createTime: '2021-05-01 12:00:00',
+              status: 1,
+              type: 1
+          },
+          {
+              id: 3,
+              name: '王五',
+              account: '10003',
+              phone: '123456677',
+              email: '1437487442@qq.com',
+              createTime: '2021-05-01 12:00:00',
+              status: 1,
+              type: 1
+          },
+          {
+              id: 4,
+              name: '赵六',
+              account: '10004',
+              phone: '123456677',
+              email: '1437487442@qq.com',
+              createTime: '2021-05-01 12:00:00',
+              status: 1,
+              type: 1
+          }, {
+              id: 5,
+              name: '田七',
+              account: '10005',
+              phone: '123456677',
+              email: '1437487442@qq.com',
+              createTime: '2021-05-01 12:00:00',
+              status: 1,
+              type: 1
+          }, {
+              id: 6,
+              name: '张三',
+              account: '10006',
+              phone: '123456677',
+              email: '1437487442@qq.com',
+              createTime: '2021-05-01 12:00:00',
+              status: 1,
+              type: 1
+          },
+          {
+              id: 7,
+              name: '李四',
+              account: '10007',
+              phone: '123456677',
+              email: '1437487442@qq.com',
+              createTime: '2021-05-01 12:00:00',
+              status: 1,
+              type: 1
+          },
+          {
+              id: 8,
+              name: '王五',
+              account: '10008',
+              phone: '123456677',
+              email: '1437487442@qq.com',
+              createTime: '2021-05-01 12:00:00',
+              status: 1,
+              type: 1
+          },
+          {
+              id: 9,
+              name: '赵六',
+              account: '10009',
+              phone: '123456677',
+              email: '1437487442@qq.com',
+              createTime: '2021-05-01 12:00:00',
+              status: 1,
+              type: 1
+          }, {
+              id: 10,
+              name: '田七',
+              account: '10010',
+              phone: '123456677',
+              email: '1437487442@qq.com',
+              createTime: '2021-05-01 12:00:00',
+              status: 1,
+              type: 1
+          }, {
+              id: 11,
+              name: '田七',
+              account: '10005',
+              phone: '123456677',
+              email: '1437487442@qq.com',
+              createTime: '2021-05-01 12:00:00',
+              status: 1,
+              type: 1
+          }]);
       const initDataSource = () => {
         //TODO:获取数据
         //dataSource.value.push()
+        params.append('op', 'getAllUser');
+        axios.post('http://localhost:8081/demo/info.action', params)
+        .then(res => {
+            if (res.data.code == 1) {
+                data.value = res.data.data
+            } else {
+              console.log('获取用户信息列表失败');
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
       } 
 
       const editableData = reactive({});
@@ -228,7 +239,7 @@
       })
 
       return {
-        dataSource,
+        data,
         columns,
         editingKey: '',
         editableData,
