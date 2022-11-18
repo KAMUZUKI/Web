@@ -6,6 +6,9 @@ const store = createStore({
       count: 0,
       msg:'Hello Vuex',
       isCertified:false,
+      type:Number,
+      path:'http://localhost:8081/demo',
+      wspath:'ws://localhost:8081/demo'
     }
   },
   mutations: {

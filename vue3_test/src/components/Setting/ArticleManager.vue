@@ -27,8 +27,10 @@ import { defineComponent, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios'
+import { useStore } from 'vuex';
 export default defineComponent({
   setup() {
+    const store=useStore();
     const router = useRouter()
     const originData = ref([])
     const listDataTmp = ref([])
@@ -82,7 +84,7 @@ export default defineComponent({
       var params = new URLSearchParams();
       params.append('op', 'deleteArticle');
       params.append('articleId', articleId);
-      axios.post('http://localhost:8081/demo/article.action', params)
+      axios.post(store.state.path+'/article.action', params)
         .then(res => {
           if (res.data.code == 1) {
             message.success('删除成功');

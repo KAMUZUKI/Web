@@ -47,12 +47,13 @@
 import { defineComponent, reactive, ref } from 'vue';
 import NotificationComponent from '../tools/NotificationComponent.vue';
 import axios from 'axios'
+import {useStore} from vuex;
 export default defineComponent({
   components: { NotificationComponent },
     name: 'RegisterComponent',
     setup() {
         const formRef = ref();
-
+        const store=useStore();
         const openNotification = ref()
 
         const formState = reactive({
@@ -128,7 +129,7 @@ export default defineComponent({
             params.append('password', formState.value.pass);
             params.append('email', formState.value.email);
             params.append('gender', formState.value.gender);
-            axios.post('http://localhost:8081/demo/info.action', params)
+            axios.post(store.state.path+'/info.action', params)
           .then(res => {
             if (res.data.code == 1) {
                 openNotification.value.openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');

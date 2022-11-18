@@ -161,7 +161,7 @@ export default defineComponent({
             params.append('avatar',userDetial.head)
             params.append('content',value.value)
             params.append('createTime',dayjs().format("YYYY-MM-DD HH:mm:ss"))
-            axios.post('http://localhost:8081/demo/info.action', params)
+            axios.post(store.state.path+'/info.action', params)
                 .then(res => {
                     if (res.data.code == 1) {
                         store.state.openNotificationWithIcon('success', '添加评论', '添加评论成功')

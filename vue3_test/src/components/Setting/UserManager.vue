@@ -43,9 +43,11 @@ import { cloneDeep } from 'lodash-es';
 import { defineComponent, reactive, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios'
+import { useStore } from 'vuex';
 export default defineComponent({
   name: 'UserManager',
   setup() {
+    const store=useStore();
     const columns = [{
       title: 'Id',
       width: 15,
@@ -95,7 +97,7 @@ export default defineComponent({
       //TODO:获取数据
       var params = new URLSearchParams();
       params.append('op', 'getAllUser');
-      axios.post('http://localhost:8081/demo/info.action', params)
+      axios.post(store.state.path+'/info.action', params)
         .then(res => {
           if (res.data.code == 1) {
             listDataTmp.value = res.data.data
