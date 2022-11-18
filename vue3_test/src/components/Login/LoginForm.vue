@@ -53,15 +53,9 @@ export default defineComponent({
   },
 
   setup(props) {
-    const user = {
-      id:1,
-      username:'zhangsan',
-      email:'1437487442',
-      head:'http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100',
-    }
-
     const openNotification = ref() 
     const store = useStore();
+    const user = ref() 
 
     const login = () => {
       var params = new URLSearchParams();
@@ -69,15 +63,24 @@ export default defineComponent({
       params.append('username', formState.username);
       params.append('password', formState.password);
       //TODO: Login
-      axios.post('http://lcoalhost:8081/bbs/user.action', params)
+      axios.post('http://localhost:8081/demo/user.action', params)
         .then(res=>{
           if (res.data.code == 1) {
             store.state.isLogin = true
-            store.state.type = res.data.data.type
+            store.state.isCertified = true
+            user.value = {
+              id:res.data.data.id,
+              username:res.data.data.username,
+              email:res.data.data.email,
+              head:'http://q1.qlogo.cn/g?b=qq&nk=' + res.data.data.head + '&s=100',
+              type:res.data.data.type
+            }
+            store.state.user = user.value
+            sessionStorage.setItem("user", JSON.stringify(user.value));
             props.showAvatar()
-            props.openNotificationWithIcon('success', '登录', '登录成功')
+            openNotification.value.openNotificationWithIcon('success', '登录', '登录成功')
           } else {
-            props.openNotificationWithIcon('error', '登录', '登录失败')
+            openNotification.value.openNotificationWithIcon('error', '登录', '登录失败')
           }
         })
         .catch(function (error) {
@@ -96,7 +99,7 @@ export default defineComponent({
 
     const formState = reactive({
       id:1,
-      username: 'a',
+      username: '10001',
       password: 'a',
       remember: true,
     });
@@ -116,7 +119,7 @@ export default defineComponent({
     onMounted(() => {
       if(sessionStorage.getItem("user")!==null){
         store.state.isLogin = true
-        store.state.user = user
+        store.state.user = JSON.parse(sessionStorage.getItem("user"))
         store.state.isCertified = true
         props.showAvatar()
         openNotification.value.openNotificationWithIcon('success', '登录', '自动登录成功')

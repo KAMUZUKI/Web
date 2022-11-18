@@ -40,16 +40,13 @@
 <script>
 import { defineComponent } from 'vue';
 const data = ['JAVA技术', '.NET技术', '数据库技术', 'GO', 'PYTHON', 'C#'];
-const data1 = [{ '1': 'JAVA技术' },
-{ '2': '.NET技术' },
-{ '3': '数据库技术' },
-{ '4': 'GO' },
-{ '5': 'PYTHON' },
-{ '6': 'C#' }];
 
 export default defineComponent({
     name: 'MenuComponent',
     setup(props) {
+
+
+
         const showContentBycategory = (type)=>{
             console.log(type);
             props.showContentByCategory(type);
@@ -57,7 +54,6 @@ export default defineComponent({
 
         return {
             data,
-            data1,
             showContentBycategory
         };
     },

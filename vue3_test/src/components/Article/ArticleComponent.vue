@@ -1,5 +1,5 @@
 <template>
-  <div style="text-align:left;" v-if="isShow" :key='indexKey'>
+  <div style="text-align:left;max-width: 1000px;" v-if="isShow" :key='indexKey'>
     <PageHeader :details="details"></PageHeader>
     <v-md-preview :text="details.content"></v-md-preview>
     <a-anchor-link href="#comment" title="评论" />

@@ -6,7 +6,6 @@ const store = createStore({
       count: 0,
       msg:'Hello Vuex',
       isCertified:false,
-      type:Number,
     }
   },
   mutations: {

@@ -149,13 +149,13 @@ const routes = [
 // 你可以在这里输入更多的配置，但我们在这里a
 // 暂时保持简单
 
-
 const router = createRouter({
     // 4. 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
     history: createWebHistory(),
     routes // `routes: routes` 的缩写
 })
 
+const list = ['article', 'setflink', 'manager']
 router.beforeEach((to,from,next)=>{
     //to 目标路由
     //from 来源
@@ -165,7 +165,16 @@ router.beforeEach((to,from,next)=>{
     if(to.meta.requireAuth){
       //vuex仓库中的信息是否存在
       if(sessionStorage.getItem('user')){
-        next()
+        //   setting/article
+        if (list.includes(to.path.split('/')[2])) {
+            if(JSON.parse(sessionStorage.getItem('user')).type == 1){
+                next()
+            }else{
+                message.warning('您没有权限，请向管理员申请');
+            }
+        }else{
+            next()
+        }
       }else{
         //拦截路由
         message.warning('您没有权限，请先登录');
