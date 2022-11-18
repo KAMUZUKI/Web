@@ -66,7 +66,7 @@ export default defineComponent({
       // TODO:获取文章列表   listData
       var params = new URLSearchParams();
       params.append('op', 'getAllArticle');
-      axios.post('http://localhost:8081/demo/info.action', params)
+      axios.post(store.state.path+'/info.action', params)
         .then(res => {
           console.log(res)
           if (res.data.code == 1) {
@@ -123,7 +123,7 @@ export default defineComponent({
 
     // 1.建立链接 -- 携带cookie参数
     var ws = new WebSocket(
-      `ws://localhost:8081/demo/websocket`
+      store.state.wspath+`/websocket`
     );
 
     // 3.服务器每次返回信息都会执行一次onmessage方法

@@ -46,7 +46,7 @@ export default defineComponent({
         var params = new URLSearchParams();
         params.append('op', 'getArticleById');
         params.append('id', id);
-        axios.post('http://localhost:8081/demo/info.action', params)
+        axios.post(store.state.path+'/info.action', params)
           .then(res => {
             console.log(res)
             if (res.data.code == 1) {

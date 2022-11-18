@@ -69,7 +69,7 @@ export default defineComponent({
       params.append('username', formState.username);
       params.append('password', formState.password);
       //TODO: Login
-      axios.post('http://lcoalhost:8081/bbs/user.action', params)
+      axios.post(store.state.path+'/user.action', params)
         .then(res=>{
           if (res.data.code == 1) {
             store.state.isLogin = true

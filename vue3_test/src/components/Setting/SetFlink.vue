@@ -73,6 +73,8 @@ import { defineComponent, ref,reactive } from 'vue';
 import NotificationComponent from '../tools/NotificationComponent.vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios'
+import store from '@/store';
+import { useStore } from 'vuex';
 export default defineComponent({
   components: {
     NotificationComponent
@@ -80,7 +82,7 @@ export default defineComponent({
   setup() {
     const formRef = ref();
     const openNotification = ref()
-
+    const store=useStore();
     const flinkList = ref([
       {
         id: 1,
@@ -188,7 +190,7 @@ export default defineComponent({
       params.append('img', formState.img);
       params.append('description', formState.description);
       params.append('status', formState.status ? 1 : 0);
-      axios.post('http://localhost:8081/demo/info.action', params)
+      axios.post(store.state.path+'/info.action', params)
       .then(res => {
           if (res.data.code == 1) {
             flinkList.value.push(JSON.parse(res.data.data))

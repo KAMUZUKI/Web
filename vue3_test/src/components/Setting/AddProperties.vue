@@ -29,11 +29,13 @@
 <script>
 import { defineComponent, reactive, ref } from 'vue';
 import { message } from 'ant-design-vue';
-import axios from 'axios'
+import axios from 'axios';
+import {userStore} from vuex;
 export default defineComponent({
     setup() {
         const formRef = ref();
         const visible = ref(false);
+        const store=userStore();
         const formState = reactive({
             title: '',
             description: '',
@@ -82,7 +84,7 @@ export default defineComponent({
                 params.append('op', 'addCategory');
                 params.append('name', values.title);
                 params.append('description', values.description);
-                axios.post('http://localhost:8081/demo/info.action', params)
+                axios.post(store.state.path+'/info.action', params)
                 .then(res => {
                     if (res.data.code == 1) {
                         message.success('添加成功');

@@ -14,6 +14,7 @@ import { onMounted, reactive, ref } from 'vue'
 import { ElCarousel, ElCarouselItem } from 'element-plus'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { useStore } from 'vuex'
 export default {
     name: 'CarouselElement',
     components: {
@@ -23,7 +24,7 @@ export default {
     },
     setup() {
         const router = useRouter()
-
+        const store=useStore;
         const imgList = ref([
             {
                 id: 1,
@@ -53,7 +54,7 @@ export default {
             //TODO:获取阅读数最高的三篇文章
             var params = new URLSearchParams();
             params.append('op', 'getArticleTop');
-            axios.post('http://localhost:8081/demo/info.action', params)
+            axios.post(store.state.path+'/info.action', params)
                 .then(res => {
                     if (res.data.code == 1) {
                         listDataTemp.value = res.data.data

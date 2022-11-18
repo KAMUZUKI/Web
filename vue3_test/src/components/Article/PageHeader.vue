@@ -33,8 +33,7 @@ export default defineComponent({
   name: 'PageHeader',
   setup(props) {
     const router = useRouter()
-    const colors = ['pink', 'red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple']
-
+    const colors = ['pink', 'red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple'];
     const tags = reactive([
     ])
 

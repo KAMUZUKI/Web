@@ -31,8 +31,10 @@
 <script>
 import { defineComponent, ref,onMounted } from 'vue';
 import axios from 'axios'
+import {useStore} from vuex
 export default defineComponent({
   setup() {
+    const store=useStore();
     const flinkList = ref([
       {
         id: 1,
@@ -72,7 +74,7 @@ export default defineComponent({
       //TODO:初始化友链列表  flinkList
       var params = new URLSearchParams();
         params.append('op', 'getFlink');
-        axios.post('http://localhost:8081/demo/info.action', params)
+        axios.post(store.state.path+'/info.action', params)
           .then(res => {
             if (res.data.code == 1) {
                 flinkList.value=res.data.data
