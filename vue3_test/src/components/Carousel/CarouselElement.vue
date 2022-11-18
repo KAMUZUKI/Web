@@ -10,9 +10,10 @@
 </template>
 
 <script>
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { ElCarousel, ElCarouselItem } from 'element-plus'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 export default {
     name: 'CarouselElement',
     components: {
@@ -23,7 +24,7 @@ export default {
     setup() {
         const router = useRouter()
 
-        const imgList = reactive([
+        const imgList = ref([
             {
                 id: 1,
                 imgSrc: require('../../static/image/lunbo1.jpg'),
@@ -44,58 +45,45 @@ export default {
             }
         ])
 
-        const listData = [
-            {
-                id: 1,
-                author: 'zhangsan',
-                title: `zhangsan part`,
-                avatar: 'https://joeschmoe.io/api/v1/random',
-                description: 'GO JAVA',
-                content: '# 111111Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-                keywords: ['GO', 'JAVA'],
-                category: ['GO', 'PYTHON', 'JAVA'],
-                createTime: '2015-07-23 15:23:05',
-                colCnt: [234, 34, 43],
-            },
-            {
-                id: 2,
-                author: 'lisi',
-                title: `lisi part`,
-                avatar: 'https://joeschmoe.io/api/v1/random',
-                description: 'GO PYTHON.',
-                content: '# 222222Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-                keywords: ['GO', 'PYTHON'],
-                category: ['GO', 'PYTHON', 'JAVA'],
-                createTime: '2015-07-23 15:23:05',
-                colCnt: [423, 153, 98],
-            },
-            {
-                id: 3,
-                author: 'wangwu',
-                title: `wangwu part`,
-                avatar: 'https://joeschmoe.io/api/v1/random',
-                description: 'PYTHON JAVA.',
-                content: '# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-                keywords: ['PYTHON', 'JAVA'],
-                category: ['GO', 'PYTHON', 'JAVA'],
-                createTime: '2015-07-23 15:23:05',
-                colCnt: [365, 433, 43],
-            }
-        ];
+        const listData = ref([]);
+        const listDataTemp = ref([]);
         const initCarousel = reactive([])
 
         const getImage = () => {
-            //axios
-            imgList.forEach(item => {
-                item.description = item.description.slice(0, 20) + "....."
-                initCarousel.push(item)
-            })
+            //TODO:获取阅读数最高的三篇文章
+            var params = new URLSearchParams();
+            params.append('op', 'getArticleTop');
+            axios.post('http://localhost:8081/demo/info.action', params)
+                .then(res => {
+                    if (res.data.code == 1) {
+                        listDataTemp.value = res.data.data
+                        for (const [key, value] of Object.entries(listDataTemp.value)) {
+                          console.log(key)
+                          listData.value.push(value);
+                        }
+                        
+                        listData.value.forEach((item,i = 0) => {
+                            initCarousel.push({
+                                id: item.id,
+                                imgSrc: imgList.value[i].imgSrc,
+                                info: item.label,
+                                description: item.title
+                            })
+                            i++
+                        })
+                    } else {
+                        console.log(res.data.msg)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
 
         //跳转到文章详情页
         const toArticle = (articleId) => {
             router.push({
-                path: '/article/'+articleId,
+                path: '/article/' + articleId,
                 query: {
                     mode: 1
                 }

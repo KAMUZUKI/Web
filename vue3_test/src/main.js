@@ -6,26 +6,33 @@ import store from './store'
 import 'ant-design-vue/dist/antd.css';
 import 'animate.css/animate.min.css';
 import 'element-plus/dist/index.css'
+//引入Element-plus icons
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 //MARKED BEGIN
 // 预览组件以及样式
+import VMdEditor from '@kangc/v-md-editor';
+import '@kangc/v-md-editor/lib/style/base-editor.css';
+
 import VMdPreview from '@kangc/v-md-editor/lib/preview';
 import '@kangc/v-md-editor/lib/style/preview.css';
-// VuePress主题以及样式（这里也可以选择github主题）
-import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
-import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
-// Prism
-import Prism from 'prismjs';
+// githubTheme主题以及样式（这里也可以选择github主题）
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
+import '@kangc/v-md-editor/lib/theme/style/github.css';
+
 // 代码高亮
-import 'prismjs/components/prism-json';
+import hljs from 'highlight.js';
+
 // 选择使用主题
-VMdPreview.use(vuepressTheme, {
-  Prism,
+VMdPreview.use(githubTheme, {
+  Hljs: hljs,
+});
+
+VMdEditor.use(githubTheme, {
+  Hljs: hljs,
 });
 //MARKED END
 
-//引入Element-plus icons
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const app = createApp(App);
 
@@ -35,6 +42,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 app.use(Antd)
   .use(router)
+  .use(VMdEditor)
   .use(VMdPreview)
   .use(store)
   .mount('#app');

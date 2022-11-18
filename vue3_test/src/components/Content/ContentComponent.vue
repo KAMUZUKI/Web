@@ -1,17 +1,27 @@
 <template>
-  <a-list style="maxwidth:80%;min-width: 700px;" item-layout="vertical" size="large" :pagination="pagination"
+  <a-list style="max-width:1000px;min-width: 700px" item-layout="vertical" size="large" :pagination="pagination"
     :data-source="initDataList">
     <template #footer>
       <div>
-        <b>到底了,没有了!!!</b>
+        <b></b>
       </div>
     </template>
     <template #renderItem="{ item }">
       <a-list-item key="item.title">
         <template #actions>
           <span v-for="{ type, id } in actions" :key="type">
-            <component :is="type" style="margin-right: 8px" />
-            {{ item.colCnt[id] }}
+              <template v-if="id==0">
+                <component :is="type[0]" style="margin-right: 8px"/>
+                {{ item.colCnt[id]}}
+              </template>
+              <template v-else-if="id==1">
+                <component :is="type[hasExisted(item.id)]" style="margin-right: 8px" @click="clickModel(item.id, id);" />
+                {{ item.colCnt[id]}}
+              </template>
+              <template v-else>
+                <component :is="type[0]" style="margin-right: 8px" @click="clickModel(item.id, id)" />
+                {{ item.colCnt[id]}}
+              </template>
           </span>
         </template>
         <template #extra>
@@ -23,105 +33,57 @@
             </router-link>
           </template>
           <template #avatar>
-            <a-avatar :src="item.avatar" />
+            <a-avatar src="http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100" />
           </template>
         </a-list-item-meta>
-        {{ item.content.replaceAll(/[#*`-]/ig, "").slice(0, 300) + "....." }}
+        {{ item.content.replace(/#*.*#/g, '').replace(/[^(\u4e00-\u9fa5)(，。（）【】{}！,\-!)]/g, '').substring(0, 200) + "....."
+        }}
       </a-list-item>
     </template>
   </a-list>
 </template>
 <script>
-import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
-import { defineComponent, onMounted, ref, onBeforeUnmount } from 'vue';
+import { EyeOutlined, LikeOutlined, LikeFilled, MessageOutlined } from '@ant-design/icons-vue';
+import { defineComponent, onMounted, ref, toRaw, onBeforeUnmount, watch } from 'vue';
+import { message } from 'ant-design-vue';
 import { useStore } from 'vuex' // 引入useStore 方法
-
-
-
+import { useRouter } from 'vue-router'
+import axios from 'axios'
 export default defineComponent({
   setup() {
 
-    const listData = [
-      {
-        id: 1,
-        author: 'zhangsan',
-        title: `zhangsan part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'GO JAVA',
-        content: '# 111111Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['GO', 'JAVA'],
-        category: ['GO', 'PYTHON', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [234, 34, 43],
-      },
-      {
-        id: 2,
-        author: 'lisi',
-        title: `lisi part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'GO PYTHON.',
-        content: '# 222222Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['GO', 'PYTHON'],
-        category: ['GO', 'PYTHON', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [423, 153, 98],
-      },
-      {
-        id: 3,
-        author: 'wangwu',
-        title: `wangwu part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'PYTHON JAVA.',
-        content: '# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['PYTHON', 'JAVA'],
-        category: ['GO', 'PYTHON', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [365, 433, 43],
-      },
-      {
-        id: 4,
-        author: 'zhaoliu',
-        title: `zhaoliu part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'GO PYTHON JAVA.',
-        content: '# 444444Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['GO', 'PYTHON', 'JAVA'],
-        category: ['GO', 'PYTHON', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [432, 64, 876],
-      },
-      {
-        id: 5,
-        author: 'zhaoliu',
-        title: `zhaoliu part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'JAVA技术 .NET技术 JAVA.',
-        content: '# 555555Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['JAVA技术', '.NET技术', 'JAVA'],
-        category: ['JAVA技术', '.NET技术', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [432, 64, 876],
-      },
-      {
-        id: 6,
-        author: 'zhaoliu',
-        title: `zhaoliu part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'C# 数据库技术 JAVA.',
-        content: '# 666666Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['C#', '数据库技术', 'JAVA'],
-        category: ['C#', '数据库技术', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [432, 64, 876],
-      },
-    ];
-
-    const initDataList = ref([]);
+    const listDataTmp = ref([]);
+    const router = useRouter()
+    const listData = ref([])
+    const clickLimitCount = ref()
+    const initDataList = ref([])
+    const newData = ref([])
     const store = useStore()  // 该方法用于返回store 实例
+    const likeList = ref([1,5,6,13])
+    const set = new Set(likeList.value)
 
     const initData = () => {
-      //TODO:获取文章列表   listData
-
+      // TODO:获取文章列表   listData
+      var params = new URLSearchParams();
+      params.append('op', 'getAllArticle');
+      axios.post('http://localhost:8081/demo/info.action', params)
+        .then(res => {
+          console.log(res)
+          if (res.data.code == 1) {
+            listDataTmp.value = res.data.data
+            for (const [key, item] of Object.entries(listDataTmp.value)) {
+              console.log(key)
+              item.colCnt = [item.readCnt, item.agreeCnt, 0]
+              listData.value.push(item);
+            }
+            initDataByCategory('all')
+          } else {
+            console.log(res.data.msg)
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
 
     const pushToDetail = (item) => {
@@ -131,11 +93,11 @@ export default defineComponent({
 
     const initDataByCategory = (type) => {
       if (type === 'all') {
-        for (let i = 0; i < listData.length; i++) {
-          initDataList.value.push(listData[i]);
+        for (let i = 0; i < listData.value.length; i++) {
+          initDataList.value.push(listData.value[i]);
         }
       } else {
-        for (let i = 0; i < listData.length; i++) {
+        for (let i = 0; i < listData.value.length; i++) {
           if (listData[i].category.includes(type)) {
             initDataList.value.push(listData[i]);
           }
@@ -144,7 +106,7 @@ export default defineComponent({
     }
 
     const initDataByKeyword = (type) => {
-      for (let i = 0; i < listData.length; i++) {
+      for (let i = 0; i < listData.value.length; i++) {
         if (listData[i].keywords.includes(type)) {
           initDataList.value.push(listData[i]);
         }
@@ -153,18 +115,54 @@ export default defineComponent({
 
     const pagination = {
       onChange: page => {
-        console.log(page);
+        console.log("pages" + page);
       },
-      pageSize: 3,
+      simple: true,
+      pageSize: 5,
     };
 
+    // 1.建立链接 -- 携带cookie参数
+    var ws = new WebSocket(
+      `ws://localhost:8081/demo/websocket`
+    );
+
+    // 3.服务器每次返回信息都会执行一次onmessage方法
+    ws.onmessage = function (res) {
+      console.log("服务器返回的信息: " + res.data);
+      //获取最新数据
+      if (res.data !== null) {
+        initDataList.value = []
+        newData.value = JSON.parse(res.data)
+        listData.value.unshift(newData.value)
+        initDataByCategory('all')
+      } else {
+        return
+      }
+    };
+
+    // var i = 1
     onMounted(() => {
       initData()
       initDataByCategory('all')
+      //用于清除用户当前时间段点击次数
+      // setInterval(() => {
+      //   clickLimitCount.value = 0
+      //   console.log("clickLimitCount清空" + clickLimitCount.value)
+      // }, 3000)
     });
+
+    watch(clickLimitCount, (newValue) => {
+      //监听用户点击次数
+      if (newValue > 4) {
+        message.warning('请不要频繁点击');
+      }
+    })
 
     onBeforeUnmount(() => {
       initDataList.value = [];
+      ws.onclose = function () {
+        console.log("Connection closed.");
+      };
     });
 
     const changeContenByCategory = (type) => {
@@ -177,22 +175,87 @@ export default defineComponent({
       initDataByKeyword(type);
     }
 
-    const actions = [{
+    const actions = ref([{
       id: 0,
-      type: 'StarOutlined',
+      flag: 0,
+      type: ['EyeOutlined'],
+      method: 'clickStar',
     }, {
       id: 1,
-      type: 'LikeOutlined',
+      flag: 0,
+      type: ['LikeOutlined', 'LikeFilled'],
+      method: 'clickLike',
     }, {
       id: 2,
-      type: 'MessageOutlined',
-    }];
+      flag: 0,
+      type: ['MessageOutlined'],
+      method: 'clickMessage',
+    }]);
+
+    const clickModel = (articleId, mode) => {
+      if (sessionStorage.getItem("user")) {
+        //登录执行点击事件
+        clickLimitCount.value++
+        if (clickLimitCount.value > 4) {
+          return
+        }
+        if (mode == 1) {
+          initDataList.value.forEach((item) => {
+            if (item.id === articleId) {
+              if(hasExisted(articleId)){
+                //用户已经点赞
+                //取消点赞
+                item.colCnt[1] -= 1;
+                set.delete(item.id)
+              }else{
+                //点赞
+                set.add(item.id)
+                item.colCnt[1] += 1;
+              }
+              actions.value[1].flag ^= 1
+            }
+          })
+        } else {
+          router.push({
+            path: '/article/' + articleId,
+            query: {
+              mode: 1
+            }
+          })
+        }
+      } else {
+        message.warning('请先登录');
+        return
+      }
+    }
+
+    const handleStar = () => {
+      actions.value[0].type = 'StarFilled';
+    }
+
+    const handleLike = () => {
+      actions.value[2].type = 'LikeFiller';
+    }
+
+    const hasExisted = (id) => {
+      if (set.has(id)) {
+        return 1
+      }else{
+        return 0
+      }
+    }
 
     return {
+      actions,
+      likeList,
       listData,
       pagination,
-      actions,
       initDataList,
+      toRaw,
+      handleStar,
+      handleLike,
+      clickModel,
+      hasExisted,  //判断文章是否被用户点赞
       pushToDetail,
       initDataByKeyword,
       initDataByCategory,
@@ -201,8 +264,9 @@ export default defineComponent({
     };
   },
   components: {
-    StarOutlined,
+    EyeOutlined,
     LikeOutlined,
+    LikeFilled,
     MessageOutlined,
   },
 });

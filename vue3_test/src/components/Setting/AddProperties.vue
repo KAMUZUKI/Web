@@ -13,7 +13,6 @@
             <a-card hoverable style="width: 300px;height:97px;margin-top:20px" @click="visible = true">
                 <a-card-meta title="添加分类"/>
               </a-card>
-            <a-button type="primary" @click="visible = true">添加</a-button>
             <a-modal v-model:visible="visible" title="添加分类" ok-text="Create" cancel-text="Cancel" @ok="onOk">
                 <a-form ref="formRef" :model="formState" layout="vertical" name="form_in_modal">
                     <a-form-item name="title" label="分类名" :rules="[{ required: true, message: '请输入分类名' }]">
@@ -30,6 +29,7 @@
 <script>
 import { defineComponent, reactive, ref } from 'vue';
 import { message } from 'ant-design-vue';
+import axios from 'axios'
 export default defineComponent({
     setup() {
         const formRef = ref();
@@ -78,8 +78,23 @@ export default defineComponent({
                     description: values.description,
                 });
                 //TODO:添加分类
-                message.success('添加成功');
-                formRef.value.resetFields();
+                var params = new URLSearchParams();
+                params.append('op', 'addCategory');
+                params.append('name', values.title);
+                params.append('description', values.description);
+                axios.post('http://localhost:8081/demo/info.action', params)
+                .then(res => {
+                    if (res.data.code == 1) {
+                        message.success('添加成功');
+                        categoryList.value.push(JSON.parse(res.data.data))
+                        formRef.value.resetFields();
+                    } else {
+                        message.error('添加失败');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
             }).catch(info => {
                 message.error('添加失败');
                 console.log('Validate Failed:', info);

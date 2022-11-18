@@ -7,7 +7,7 @@
         <a-descriptions-item label="社交">
           <a>{{ details.createTime }}</a>
         </a-descriptions-item>
-        <a-descriptions-item label="发布时间">{{details.createTime}}</a-descriptions-item>
+        <a-descriptions-item label="发布时间">{{ details.createTime }}</a-descriptions-item>
         <a-descriptions-item label="关键词">
           <a-tag v-for="item of tags" :key="item.color" class="item-tag" :color="item.color">
             <router-link @click.prevent="showContentBykeyword(item.tag)" to="/">
@@ -27,7 +27,7 @@
 </style>
 
 <script>
-import {defineComponent,reactive,onMounted,onUnmounted} from 'vue'
+import { defineComponent, reactive, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'PageHeader',
@@ -39,10 +39,14 @@ export default defineComponent({
     ])
 
     const initTags = () => {
-      for (let i = 0; i < props.details.keywords.length; i++) {
-        let j = Math.floor(Math.random() * 7);
-        tags.push({ color: colors[j], tag: props.details.keywords[i] })
+      var flag = props.details.keywords??false
+      if (flag) {
+        for (let i = 0; i < props.details.keywords.length; i++) {
+          let j = Math.floor(Math.random() * 7);
+          tags.push({ color: colors[j], tag: props.details.keywords[i] })
+        }
       }
+
     }
 
     const destroyTags = () => {

@@ -30,6 +30,7 @@
 </style>
 <script>
 import { defineComponent, ref,onMounted } from 'vue';
+import axios from 'axios'
 export default defineComponent({
   setup() {
     const flinkList = ref([
@@ -69,6 +70,19 @@ export default defineComponent({
     
     const initData = ()=>{
       //TODO:初始化友链列表  flinkList
+      var params = new URLSearchParams();
+        params.append('op', 'getFlink');
+        axios.post('http://localhost:8081/demo/info.action', params)
+          .then(res => {
+            if (res.data.code == 1) {
+                flinkList.value=res.data.data
+            } else {
+              console.log(res.data.msg)
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
     }
     
     onMounted(() => {

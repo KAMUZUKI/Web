@@ -72,6 +72,7 @@
 import { defineComponent, ref,reactive } from 'vue';
 import NotificationComponent from '../tools/NotificationComponent.vue';
 import { message } from 'ant-design-vue';
+import axios from 'axios'
 export default defineComponent({
   components: {
     NotificationComponent
@@ -171,21 +172,38 @@ export default defineComponent({
 
     const handleFinish = values => {
       console.log(values, formState);
-      flinkList.value.push({
-        id: flinkList.value.length + 1,
-        name: formState.name,
-        url: formState.url,
-        img: formState.img,
-        description: formState.description,
-        status: formState.status ? 1 : 0,
-      })
+      // flinkList.value.push({
+      //   id: flinkList.value.length + 1,
+      //   name: formState.name,
+      //   url: formState.url,
+      //   img: formState.img,
+      //   description: formState.description,
+      //   status: formState.status ? 1 : 0,
+      // })
       //TODO:添加友链
-      openNotification.value.openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
-      formState.name = '';
-      formState.img = '';
-      formState.url = '';
-      formState.description = '';
-      openNotification.value.openNotificationWithIcon('error', '注册失败', '注册失败');
+      var params = new URLSearchParams();
+      params.append('op', 'addFlink');
+      params.append('name', formState.name);
+      params.append('url', formState.url);
+      params.append('img', formState.img);
+      params.append('description', formState.description);
+      params.append('status', formState.status ? 1 : 0);
+      axios.post('http://localhost:8081/demo/info.action', params)
+      .then(res => {
+          if (res.data.code == 1) {
+            flinkList.value.push(JSON.parse(res.data.data))
+            openNotification.value.openNotificationWithIcon('success', '添加成功', '恭喜你添加友链成功');
+            formState.name = '';
+            formState.img = '';
+            formState.url = '';
+            formState.description = '';
+          } else {
+            openNotification.value.openNotificationWithIcon('error', '添加失败', '添加友链出错');
+          }
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
     };
 
     const handleFinishFailed = errors => {
