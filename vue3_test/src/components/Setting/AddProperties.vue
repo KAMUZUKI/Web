@@ -29,6 +29,7 @@
 <script>
 import { defineComponent, reactive, ref } from 'vue';
 import { message } from 'ant-design-vue';
+import axios from 'axios'
 export default defineComponent({
     setup() {
         const formRef = ref();
@@ -77,8 +78,23 @@ export default defineComponent({
                     description: values.description,
                 });
                 //TODO:添加分类
-                message.success('添加成功');
-                formRef.value.resetFields();
+                var params = new URLSearchParams();
+                params.append('op', 'addCategory');
+                params.append('name', values.title);
+                params.append('description', values.description);
+                axios.post('http://localhost:8081/demo/info.action', params)
+                .then(res => {
+                    if (res.data.code == 1) {
+                        message.success('添加成功');
+                        categoryList.value.push(JSON.parse(res.data.data))
+                        formRef.value.resetFields();
+                    } else {
+                        message.error('添加失败');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
             }).catch(info => {
                 message.error('添加失败');
                 console.log('Validate Failed:', info);

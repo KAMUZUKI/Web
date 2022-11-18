@@ -121,8 +121,25 @@ export default defineComponent({
         const handleFinish = values => {
             console.log(values, formState);
             //TODO:注册账号
-            openNotification.value.openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
+            var params = new URLSearchParams();
+            params.append('op', 'register');
+            params.append('username', formState.value.username);
+            params.append('password', formState.value.pass);
+            params.append('email', formState.value.email);
+            params.append('gender', formState.value.gender);
+            axios.post('http://localhost:8081/demo/info.action', params)
+          .then(res => {
+            if (res.data.code == 1) {
+                openNotification.value.openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
+            } else {
+                openNotification.value.openNotificationWithIcon('error', '注册失败', '注册失败');
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
             openNotification.value.openNotificationWithIcon('error', '注册失败', '注册失败');
+          });
+            
         };
 
         const handleFinishFailed = errors => {

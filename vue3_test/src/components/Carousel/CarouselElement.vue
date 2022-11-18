@@ -1,8 +1,8 @@
 <template>
-    <!-- <el-card class="Carouselcard" style="width: 300px" shadow="hover"> -->
-    <el-carousel autoplay=false style="width: 300px;border-radius: 10px;" indicator-position="outside" height="230px">
-        <el-carousel-item v-for="item in initCarousel" :key="item.id" :label="item.info">
-            <img width="300" height="200" :src="item.imgSrc" @click="toArticle(item.id)">
+	<!-- <el-card class="Carouselcard" style="width: 300px" shadow="hover"> -->
+	<el-carousel autoplay=false style="width: 300px;border-radius: 10px;" indicator-position="outside" height="230px">
+		<el-carousel-item v-for="item in initCarousel" :key="item.id" :label="item.info">
+			<img width="300" height="200" :src="item.imgSrc" @click="toArticle(item.id)">
             <span>{{ item.description }}</span>
         </el-carousel-item>
     </el-carousel>
@@ -85,7 +85,20 @@ export default {
         const initCarousel = reactive([])
 
         const getImage = () => {
-            //axios
+            //TODO:获取阅读数最高的三篇文章
+            var params = new URLSearchParams();
+            params.append('op', 'getArticleTop');
+            axios.post('http://localhost:8081/demo/info.action', params)
+          .then(res => {
+            if (res.data.code == 1) {
+              imgList.value = res.data.data
+            } else {
+              console.log(res.data.msg)
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
             imgList.forEach(item => {
                 item.description = item.description.slice(0, 20) + "....."
                 initCarousel.push(item)
