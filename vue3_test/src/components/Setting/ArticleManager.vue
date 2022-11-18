@@ -13,8 +13,8 @@
             </template>
           </a-list-item-meta>
           <a-button class="button" type="primary" @click="modify(item.id)">修改</a-button>
-          <a-popconfirm title="确定删除该文章?" ok-text="确认" cancel-text="取消" @confirm="confirm" @cancel="cancel">
-            <a-button class="button" type="primary" danger @click="deleteByUserId(item.id)">删除</a-button>
+          <a-popconfirm title="确定删除该文章?" ok-text="确认" cancel-text="取消" @confirm="confirm(item.id)" @cancel="cancel">
+            <a-button class="button" type="primary" danger>删除</a-button>
           </a-popconfirm>
         </a-list-item>
       </template>
@@ -26,45 +26,49 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios'
 export default defineComponent({
   setup() {
-    const originData = ref([]);
-
-    for (let i = 1; i < 20; i++) {
-      originData.value.push({
-        id: i,
-        author: 'zhangsan' + i,
-        title: `zhangsan part` + i,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'GO JAVA',
-        content: i + '# Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['GO', 'JAVA'],
-        category: ['GO', 'PYTHON', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [234, 34, 43],
-      })
-    }
+    const router = useRouter()
+    const originData = ref([])
+    const listDataTmp = ref([])
+    const listData = ref([])
 
     const pagination = {
       onChange: page => {
         console.log(page);
       },
-      pageSize: 5,
+      pageSize: 10,
     };
 
-    const router = useRouter()
-
-    const listData = ref([])
-
     const initDataList = () => {
-      originData.value.forEach((item) => {
-        item.content = item.content.replaceAll(/[#*`-]/ig, "").slice(0, 200) + "....."
-        listData.value.push(item)
-      })
+      //TODO: 从后端获取数据
+      var params = new URLSearchParams();
+      params.append('op', 'getAllArticle');
+      axios.post('http://localhost:8081/demo/info.action', params)
+        .then(res => {
+          console.log(res)
+          if (res.data.code == 1) {
+            listDataTmp.value = res.data.data
+            for (const [key, item] of Object.entries(listDataTmp.value)) {
+              console.log(key)
+              originData.value.push(item);
+            }
+            originData.value.forEach((item) => {
+              item.content = item.content.replace(/#*.*#/g, '').replace(/[^(\u4e00-\u9fa5)(，。（）【】{}！,\-!)]/g, '').substring(0, 100) + "....."
+              listData.value.push(item)
+            })
+          } else {
+            console.log(res.data.msg)
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
 
     const modify = (articleId) => {
-      //TODO: 根据id修改文章,跳转至编辑页面
+      //根据id修改文章,跳转至编辑页面
       router.push({
         path: '/editor',
         query: {
@@ -73,14 +77,23 @@ export default defineComponent({
       })
     }
 
-    const deleteByUserId = (articleId) => {
+    const confirm = articleId => {
       //TODO:根据id删除文章
-      console.log(articleId)
-    }
-
-    const confirm = e => {
-      console.log(e);
-      message.success('删除成功');
+      var params = new URLSearchParams();
+      params.append('op', 'deleteArticle');
+      params.append('articleId', articleId);
+      axios.post('http://localhost:8081/demo/article.action', params)
+        .then(res => {
+          if (res.data.code == 1) {
+            message.success('删除成功');
+            listData.value.pop(articleId)
+          } else {
+            message.error('删除失败');
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
 
     const cancel = e => {
@@ -97,7 +110,6 @@ export default defineComponent({
       pagination,
       current: ref(2),
       modify,
-      deleteByUserId,
       confirm,
       cancel,
     };

@@ -9,13 +9,13 @@
     <template #renderItem="{ item }">
       <a-list-item key="item.title">
         <template #actions>
-          <span v-for="{ type, flag, id } in actions" :key="type">
+          <span v-for="{ type, id } in actions" :key="type">
               <template v-if="id==0">
                 <component :is="type[0]" style="margin-right: 8px"/>
                 {{ item.colCnt[id]}}
               </template>
               <template v-else-if="id==1">
-                <component :is="type[hasExisted(item.id)]" style="margin-right: 8px" @click="clickModel(item.id, id);console.log(flag)" />
+                <component :is="type[hasExisted(item.id)]" style="margin-right: 8px" @click="clickModel(item.id, id);" />
                 {{ item.colCnt[id]}}
               </template>
               <template v-else>
@@ -52,82 +52,7 @@ import axios from 'axios'
 export default defineComponent({
   setup() {
 
-    const listDataTmp = [
-      {
-        id: 1,
-        author: 'zhangsan',
-        title: `zhangsan part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'GO JAVA',
-        content: '# 111111Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['GO', 'JAVA'],
-        category: ['GO', 'PYTHON', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [234, 34, 43],
-      },
-      {
-        id: 2,
-        author: 'lisi',
-        title: `lisi part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'GO PYTHON.',
-        content: '# 222222Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['GO', 'PYTHON'],
-        category: ['GO', 'PYTHON', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [423, 153, 98],
-      },
-      {
-        id: 3,
-        author: 'wangwu',
-        title: `wangwu part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'PYTHON JAVA.',
-        content: '# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.# 333333Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['PYTHON', 'JAVA'],
-        category: ['GO', 'PYTHON', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [365, 433, 43],
-      },
-      {
-        id: 4,
-        author: 'zhaoliu',
-        title: `zhaoliu part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'GO PYTHON JAVA.',
-        content: '# 444444Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['GO', 'PYTHON', 'JAVA'],
-        category: ['GO', 'PYTHON', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [432, 64, 876],
-      },
-      {
-        id: 5,
-        author: 'zhaoliu',
-        title: `zhaoliu part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'JAVA技术 .NET技术 JAVA.',
-        content: '# 555555Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['JAVA技术', '.NET技术', 'JAVA'],
-        category: ['JAVA技术', '.NET技术', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [432, 64, 876],
-      },
-      {
-        id: 6,
-        author: 'zhaoliu',
-        title: `zhaoliu part`,
-        avatar: 'https://joeschmoe.io/api/v1/random',
-        description: 'C# 数据库技术 JAVA.',
-        content: '# 666666Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-        keywords: ['C#', '数据库技术', 'JAVA'],
-        category: ['C#', '数据库技术', 'JAVA'],
-        createTime: '2015-07-23 15:23:05',
-        colCnt: [432, 64, 876],
-      },
-    ];
-
-    // const tempListData = []
+    const listDataTmp = ref([]);
     const router = useRouter()
     const listData = ref([])
     const clickLimitCount = ref()
@@ -148,17 +73,9 @@ export default defineComponent({
             listDataTmp.value = res.data.data
             for (const [key, item] of Object.entries(listDataTmp.value)) {
               console.log(key)
-              console.log(item)
-              console.log("value.agreedCnt" + item.agreedCnt)
-              console.log("value.readCnt" + item.readCnt)
-              item.colCnt = [0, 0, 0]
-              item.colCnt[0] = item.readCnt
-              item.colCnt[1] = 53
-              item.colCnt[2] = 24
+              item.colCnt = [item.readCnt, item.agreeCnt, 0]
               listData.value.push(item);
             }
-            // listData.value = toRaw(listDataTmp)
-            // console.log("listData.value"+toRaw(listData.value)[2])
             initDataByCategory('all')
           } else {
             console.log(res.data.msg)
@@ -228,10 +145,10 @@ export default defineComponent({
       initData()
       initDataByCategory('all')
       //用于清除用户当前时间段点击次数
-      setInterval(() => {
-        clickLimitCount.value = 0
-        console.log("clickLimitCount清空" + clickLimitCount.value)
-      }, 3000)
+      // setInterval(() => {
+      //   clickLimitCount.value = 0
+      //   console.log("clickLimitCount清空" + clickLimitCount.value)
+      // }, 3000)
     });
 
     watch(clickLimitCount, (newValue) => {
@@ -285,15 +202,17 @@ export default defineComponent({
         if (mode == 1) {
           initDataList.value.forEach((item) => {
             if (item.id === articleId) {
-              if (actions.value[mode].flag === 0) {
-                set.add(item.id)
-                item.colCnt[mode] += 1;
-              } else {
-                item.colCnt[mode] -= 1;
+              if(hasExisted(articleId)){
+                //用户已经点赞
+                //取消点赞
+                item.colCnt[1] -= 1;
                 set.delete(item.id)
+              }else{
+                //点赞
+                set.add(item.id)
+                item.colCnt[1] += 1;
               }
-              actions.value[mode].flag ^= 1
-              // alert("点赞成功" + item.colCnt[mode])
+              actions.value[1].flag ^= 1
             }
           })
         } else {
