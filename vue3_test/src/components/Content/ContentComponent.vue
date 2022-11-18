@@ -10,8 +10,18 @@
       <a-list-item key="item.title">
         <template #actions>
           <span v-for="{ type, flag, id } in actions" :key="type">
-              <component :is="type[hasExisted(item.id)]" style="margin-right: 8px" @click="clickModel(item.id, id);console.log(flag)" />
-              {{ item.colCnt[id]}}
+              <template v-if="id==0">
+                <component :is="type[0]" style="margin-right: 8px"/>
+                {{ item.colCnt[id]}}
+              </template>
+              <template v-else-if="id==1">
+                <component :is="type[hasExisted(item.id)]" style="margin-right: 8px" @click="clickModel(item.id, id);console.log(flag)" />
+                {{ item.colCnt[id]}}
+              </template>
+              <template v-else>
+                <component :is="type[0]" style="margin-right: 8px" @click="clickModel(item.id, id)" />
+                {{ item.colCnt[id]}}
+              </template>
           </span>
         </template>
         <template #extra>
@@ -26,15 +36,14 @@
             <a-avatar src="http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100" />
           </template>
         </a-list-item-meta>
-        {{ item.content.replace(/#*.*#/g, '').replace(/[^(\u4e00-\u9fa5)(，。（）【】{}！,\-!)]/g, '').substring(0, 200) +
-    "....."
+        {{ item.content.replace(/#*.*#/g, '').replace(/[^(\u4e00-\u9fa5)(，。（）【】{}！,\-!)]/g, '').substring(0, 200) + "....."
         }}
       </a-list-item>
     </template>
   </a-list>
 </template>
 <script>
-import { StarOutlined, StarFilled, LikeOutlined, LikeFilled, MessageOutlined } from '@ant-design/icons-vue';
+import { EyeOutlined, LikeOutlined, LikeFilled, MessageOutlined } from '@ant-design/icons-vue';
 import { defineComponent, onMounted, ref, toRaw, onBeforeUnmount, watch } from 'vue';
 import { message } from 'ant-design-vue';
 import { useStore } from 'vuex' // 引入useStore 方法
@@ -137,10 +146,16 @@ export default defineComponent({
           console.log(res)
           if (res.data.code == 1) {
             listDataTmp.value = res.data.data
-            for (const [key, value] of Object.entries(listDataTmp.value)) {
+            for (const [key, item] of Object.entries(listDataTmp.value)) {
               console.log(key)
-              value.colCnt = [123, 456, 789]
-              listData.value.push(value);
+              console.log(item)
+              console.log("value.agreedCnt" + item.agreedCnt)
+              console.log("value.readCnt" + item.readCnt)
+              item.colCnt = [0, 0, 0]
+              item.colCnt[0] = item.readCnt
+              item.colCnt[1] = 53
+              item.colCnt[2] = 24
+              listData.value.push(item);
             }
             // listData.value = toRaw(listDataTmp)
             // console.log("listData.value"+toRaw(listData.value)[2])
@@ -246,7 +261,7 @@ export default defineComponent({
     const actions = ref([{
       id: 0,
       flag: 0,
-      type: ['StarOutlined', 'StarFilled'],
+      type: ['EyeOutlined'],
       method: 'clickStar',
     }, {
       id: 1,
@@ -267,7 +282,7 @@ export default defineComponent({
         if (clickLimitCount.value > 4) {
           return
         }
-        if (mode == 0 || mode == 1) {
+        if (mode == 1) {
           initDataList.value.forEach((item) => {
             if (item.id === articleId) {
               if (actions.value[mode].flag === 0) {
@@ -312,26 +327,25 @@ export default defineComponent({
     }
 
     return {
-      toRaw,
+      actions,
+      likeList,
       listData,
       pagination,
-      actions,
       initDataList,
+      toRaw,
+      handleStar,
+      handleLike,
+      clickModel,
+      hasExisted,  //判断文章是否被用户点赞
       pushToDetail,
       initDataByKeyword,
       initDataByCategory,
       changeContenByCategory,
       changeContenByKeyword,
-      handleStar,
-      handleLike,
-      clickModel,
-      likeList,
-      hasExisted,  //判断文章是否被用户点赞
     };
   },
   components: {
-    StarOutlined,
-    StarFilled,
+    EyeOutlined,
     LikeOutlined,
     LikeFilled,
     MessageOutlined,

@@ -30,6 +30,7 @@
 </style>
 <script>
 import { defineComponent, ref,onMounted } from 'vue';
+import axios from 'axios'
 export default defineComponent({
   setup() {
     const flinkList = ref([

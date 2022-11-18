@@ -46,6 +46,7 @@
 <script>
 import { defineComponent, reactive, ref } from 'vue';
 import NotificationComponent from '../tools/NotificationComponent.vue';
+import axios from 'axios'
 export default defineComponent({
   components: { NotificationComponent },
     name: 'RegisterComponent',

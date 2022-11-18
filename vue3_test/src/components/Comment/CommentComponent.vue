@@ -32,7 +32,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { Modal } from 'ant-design-vue';
 import V3Emoji from 'vue3-emoji'
 import 'vue3-emoji/dist/style.css'
-// import axios from 'axios';
+import axios from 'axios';
 import { useStore } from 'vuex' // 引入useStore 方法
 dayjs.extend(relativeTime);
 export default defineComponent({
