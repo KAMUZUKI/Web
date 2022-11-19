@@ -11,22 +11,19 @@
                     </a-col>
                     <a-col style="background-color:#fff;" flex="fix">
                         <a-card style="width: 300px;border-radius: 20px;" hoverable>
-                            <!-- <a-form name="custom-validation" :model="formState" 
-                                @finish="onFinish"
-                                @finishFailed="onFinishFailed" 
-                                >
-                                <a-form-item name="date-time-picker" label="日期" v-bind="config">
+                            <a-form :model="{ formState }" name="nest-messages" @finish="onFinish">
+                                <a-form-item name="date-time-picker" label="日期" :rules="[{ required: true, message: '请选择时间!' }]">
                                     <a-date-picker v-model:value="formState.createTime" show-time
                                         format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" />
                                 </a-form-item>
                                 <a-form-item name="title" label="文章标题" :rules="[{ required: true, message: '请填写标题!' }]">
-                                    <a-input v-model:value="formState.title" placeholder="文章标题" />
+                                    <a-input v-model:value="formState.title" />
                                 </a-form-item>
-                                <a-form-item name="description" label="文章描述" :rules="[{ required: true }]">
+                                <a-form-item name="description" label="文章描述" :rules="[{ required: true,message: '请填写文章描述!' }]">
                                     <a-input v-model:value="formState.description" />
                                 </a-form-item>
                                 <a-form-item name="articleImg" label="文章图片">
-                                    <a-input v-model:value="formState.avatar" />
+                                    <a-input v-model:value="formState.avatar" placeholder="空则使用默认图片" />
                                 </a-form-item>
                                 <a-form-item name="categorys" label="栏目选择">
                                     <a-select showSearch v-model:value="categoryOptions" mode="single"
@@ -40,16 +37,10 @@
                                         @change="handleChange">
                                     </a-select>
                                 </a-form-item>
-                                <a-form-item :wrapper-col="{ span: 16, offset: 6 }">
-                                    <a-button type="primary" html-type="submit">提交</a-button>
+                                <a-form-item>
+                                    <a-button shape="round" type="primary" html-type="submit">提交</a-button>
                                 </a-form-item>
-                                <a-button @click="onFinish" type="primary" shape="round" :size="size">
-                                    <template #icon>
-                                        <DownloadOutlined />
-                                    </template>
-                                    提交
-                                </a-button>
-                            </a-form> -->
+                            </a-form>
                         </a-card>
                     </a-col>
                 </a-space>
@@ -62,14 +53,14 @@
 <script>
 import { defineComponent, ref, onMounted } from 'vue';
 import NotificationComponent from './tools/NotificationComponent.vue';
-// import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
 import { onBeforeUnmount } from 'vue'
 export default defineComponent({
     name: 'EditFramework',
     setup() {
-        // const router = useRouter()
+        const router = useRouter()
         const route = useRoute()
         const openNotification = ref()
         const getContent = ref()
@@ -80,9 +71,8 @@ export default defineComponent({
         const keywordOptions = ref([])
         const categoryOptions = ref([])
         const text = ref()
-        const formRef = ref()
         const formState = ref({
-            id: 1,
+            id: undefined,
             author: '',
             title: '',
             avatar: '',
@@ -94,16 +84,12 @@ export default defineComponent({
             colCnt: [],
         });
 
-        const validateMessages = {
-            required: '${label} 是必要的!',
-        };
-
         const config = {
-          rules: [{
-            type: 'string',
-            required: true,
-            message: 'Please select time!',
-          }],
+            rules: [{
+                type: 'string',
+                required: true,
+                message: 'Please select time!',
+            }],
         };
 
         const judgeMode = () => {
@@ -131,7 +117,7 @@ export default defineComponent({
             }
         }
 
-        // var ws
+
         onMounted(() => {
             //撰写文章的分类以及关键词加载
             formState.value = formState.value.content ?? ''
@@ -144,33 +130,45 @@ export default defineComponent({
                 categorys.value.push({ index: key, value: value })
             })
             judgeMode()
+        })
+
+        // var ws
+        const onFinish = values => {
+            router.push('/')
             // ws = new WebSocket(
             //     `ws://localhost:8081/demo/websocket`
             // );
-        })
-
-        const onFinish = values => {
-            // router.push('/')
-           alert(values)
-          console.log('Success:', values);
+            console.log('Success:', values);
+            var params = new URLSearchParams();
+            params.append('op', 'getArticleById');
+            axios.post('http://localhost:8081/demo/info.action', params)
+                .then(res => {
+                    if (res.data.code == 1) {
+                        formState.value = res.data.data
+                        keywordOptions.value = res.data.data.label.split(',')
+                        categoryOptions.value = JSON.parse(sessionStorage.getItem("categorys"))[res.data.data.categoryId]
+                        text.value = formState.value.content
+                        sessionStorage.setItem("articleDetail", JSON.stringify(formState.value));
+                    } else {
+                        console.log(res.data.msg)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         };
 
         const onFinishFailed = errorInfo => {
-          console.log('Failed:', errorInfo);
+            console.log('Failed:', errorInfo);
         };
 
         // 组件销毁时，也及时销毁编辑器
         onBeforeUnmount(() => {
         })
 
-        const handleChange = value => {
-          console.log(`selected ${value}`);
-        };
-
         return {
             text,
             config,
-            formRef,
             formState,
             categorys,
             keywords,
@@ -178,10 +176,8 @@ export default defineComponent({
             keywordOptions,
             categoryOptions,
             openNotification,
-            validateMessages,
             mode: 'default', // 或 'simple'
             onFinish,
-            handleChange,
             onFinishFailed,
         };
     },
