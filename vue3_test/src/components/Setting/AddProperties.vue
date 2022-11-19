@@ -27,49 +27,21 @@
     </div>
 </template>
 <script>
-import { defineComponent, reactive, ref } from 'vue';
-import { message } from 'ant-design-vue';
-import axios from 'axios';
-import {userStore} from vuex;
+import { defineComponent, reactive, ref } from 'vue'
+import { message } from 'ant-design-vue'
+import {useStore} from 'vuex'
+import axios from 'axios'
+
 export default defineComponent({
     setup() {
         const formRef = ref();
         const visible = ref(false);
-        const store=userStore();
+        const store = useStore();
+        const categoryList = ref([])
         const formState = reactive({
             title: '',
             description: '',
-        });
-
-        const categoryList = ref([
-            {
-                id: 1,
-                name: 'JAVA',
-                description: 'JAVA学习',
-            },
-            {
-                id: 2,
-                name: 'C++',
-                description: 'C++学习',
-            },
-            {
-                id: 3,
-                name: 'C#',
-                description: 'C#学习',
-            }, {
-                id: 4,
-                name: 'GO',
-                description: 'GO学习',
-            }, {
-                id: 5,
-                name: 'JavaScript',
-                description: 'JavaScript学习',
-            },{
-                id: 6,
-                name: 'TypeScript',
-                description: 'TypeScript学习',
-            },
-        ]);
+        })
 
         const onOk = () => {
             formRef.value.validateFields().then(values => {

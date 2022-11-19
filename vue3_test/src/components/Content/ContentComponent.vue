@@ -10,18 +10,18 @@
       <a-list-item key="item.title">
         <template #actions>
           <span v-for="{ type, id } in actions" :key="type">
-              <template v-if="id==0">
-                <component :is="type[0]" style="margin-right: 8px"/>
-                {{ item.colCnt[id]}}
-              </template>
-              <template v-else-if="id==1">
-                <component :is="type[hasExisted(item.id)]" style="margin-right: 8px" @click="clickModel(item.id, id);" />
-                {{ item.colCnt[id]}}
-              </template>
-              <template v-else>
-                <component :is="type[0]" style="margin-right: 8px" @click="clickModel(item.id, id)" />
-                {{ item.colCnt[id]}}
-              </template>
+            <template v-if="id == 0">
+              <component :is="type[0]" style="margin-right: 8px" />
+              {{ item.colCnt[id] }}
+            </template>
+            <template v-else-if="id == 1">
+              <component :is="type[hasExisted(item.id)]" style="margin-right: 8px" @click="clickModel(item.id, id);" />
+              {{ item.colCnt[id] }}
+            </template>
+            <template v-else>
+              <component :is="type[0]" style="margin-right: 8px" @click="clickModel(item.id, id)" />
+              {{ item.colCnt[id] }}
+            </template>
           </span>
         </template>
         <template #extra>
@@ -36,7 +36,8 @@
             <a-avatar src="http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100" />
           </template>
         </a-list-item-meta>
-        {{ item.content.replace(/#*.*#/g, '').replace(/[^(\u4e00-\u9fa5)(，。（）【】{}！,\-!)]/g, '').substring(0, 200) + "....."
+        {{ item.content.replace(/#*.*#/g, '').replace(/[^(\u4e00-\u9fa5)(，。（）【】{}！,\-!)]/g, '').substring(0, 200) +
+    "....."
         }}
       </a-list-item>
     </template>
@@ -59,23 +60,34 @@ export default defineComponent({
     const initDataList = ref([])
     const newData = ref([])
     const store = useStore()  // 该方法用于返回store 实例
-    const likeList = ref([1,5,6,13])
-    const set = new Set(likeList.value)
+    const likeList = ref([])  //用户点赞的文章id
+    const keywords = ref([])
+    const keywordSet = new Set(keywords.value)
+    const likeSet = new Set(likeList.value)
 
     const initData = () => {
+      likeList.value = JSON.parse(sessionStorage.getItem('likeList'))??''
+      likeList.value.forEach(item => {
+        likeSet.add(item)
+      })
       // TODO:获取文章列表   listData
       var params = new URLSearchParams();
       params.append('op', 'getAllArticle');
-      axios.post(store.state.path+'/info.action', params)
+      axios.post(store.state.path + '/info.action', params)
         .then(res => {
           console.log(res)
           if (res.data.code == 1) {
             listDataTmp.value = res.data.data
             for (const [key, item] of Object.entries(listDataTmp.value)) {
               console.log(key)
-              item.colCnt = [item.readCnt, item.agreeCnt, 0]
+              item.colCnt = [item.readCnt, item.agreeCnt, item.commentCnt]
               listData.value.push(item);
+              item.label.split(',')
+                .forEach(element => {
+                  keywordSet.add(element)
+                });
             }
+            sessionStorage.setItem('keywords', JSON.stringify(Array.from(keywordSet)))
             initDataByCategory('all')
           } else {
             console.log(res.data.msg)
@@ -92,14 +104,14 @@ export default defineComponent({
     }
 
     const initDataByCategory = (type) => {
-      if (type === 'all') {
+      if (type == 'all') {
         for (let i = 0; i < listData.value.length; i++) {
           initDataList.value.push(listData.value[i]);
         }
       } else {
         for (let i = 0; i < listData.value.length; i++) {
-          if (listData[i].category.includes(type)) {
-            initDataList.value.push(listData[i]);
+          if (listData.value[i].categoryId == type) {
+            initDataList.value.push(listData.value[i]);
           }
         }
       }
@@ -107,8 +119,8 @@ export default defineComponent({
 
     const initDataByKeyword = (type) => {
       for (let i = 0; i < listData.value.length; i++) {
-        if (listData[i].keywords.includes(type)) {
-          initDataList.value.push(listData[i]);
+        if (listData.value[i].label.split(',').includes(type)) {
+          initDataList.value.push(listData.value[i]);
         }
       }
     }
@@ -123,7 +135,7 @@ export default defineComponent({
 
     // 1.建立链接 -- 携带cookie参数
     var ws = new WebSocket(
-      store.state.wspath+`/websocket`
+      store.state.wspath + `/websocket`
     );
 
     // 3.服务器每次返回信息都会执行一次onmessage方法
@@ -200,21 +212,37 @@ export default defineComponent({
           return
         }
         if (mode == 1) {
-          initDataList.value.forEach((item) => {
-            if (item.id === articleId) {
-              if(hasExisted(articleId)){
-                //用户已经点赞
-                //取消点赞
-                item.colCnt[1] -= 1;
-                set.delete(item.id)
-              }else{
-                //点赞
-                set.add(item.id)
-                item.colCnt[1] += 1;
+          var params = new URLSearchParams();
+          params.append('op', 'changeData');
+          params.append('articleId', articleId);
+          params.append('userId', JSON.parse(sessionStorage.getItem("user")).id);
+          axios.post(store.state.path + '/article.action', params)
+            .then(res => {
+              if (res.data.code == 1) {
+                //点赞执行成功
+                initDataList.value.forEach((item) => {
+                  if (item.id === articleId) {
+                    if (hasExisted(articleId)) {
+                      //用户已经点赞
+                      //取消点赞
+                      item.colCnt[1] -= 1;
+                      likeSet.delete(item.id)
+                    } else {
+                      //点赞
+                      likeSet.add(item.id)
+                      item.colCnt[1] += 1;
+                    }
+                    actions.value[1].flag ^= 1
+                  }
+                })
+              } else {
+                message.error(res.data.msg)
               }
-              actions.value[1].flag ^= 1
-            }
-          })
+            })
+            .catch(function (error) {
+              message.error(error);
+            });
+
         } else {
           router.push({
             path: '/article/' + articleId,
@@ -238,9 +266,9 @@ export default defineComponent({
     }
 
     const hasExisted = (id) => {
-      if (set.has(id)) {
+      if (likeSet.has(id)) {
         return 1
-      }else{
+      } else {
         return 0
       }
     }

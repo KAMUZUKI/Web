@@ -31,64 +31,36 @@
 <script>
 import { defineComponent, ref,onMounted } from 'vue';
 import axios from 'axios'
-import {useStore} from vuex
+import {message} from 'ant-design-vue'
+import {useStore} from 'vuex'
 export default defineComponent({
   setup() {
     const store=useStore();
-    const flinkList = ref([
-      {
-        id: 1,
-        name: '张三',
-        url: 'https://www.baidu.com',
-        img: '1437487442',
-        description: '百度一下，你就知道',
-        status: 1,
-      },
-      {
-        id: 2,
-        name: '李四',
-        url: 'https://cn.vuejs.org/',
-        img: '2725291836',
-        description: '百度一下，你就知道',
-        status: 1,
-      },
-      {
-        id: 3,
-        name: '王五',
-        url: 'https://cn.vuejs.org/',
-        img: '1196530268',
-        description: '百度一下，你就知道',
-        status: 1,
-      },
-      {
-        id: 4,
-        name: '赵六',
-        url: 'https://cn.vuejs.org/',
-        img: '3603685701',
-        description: '百度一下，你就知道',
-        status: 1,
-      }
-    ])
-    
-    const initData = ()=>{
-      //TODO:初始化友链列表  flinkList
+    const flinkList = ref([])
+    const tmpFlinkList = ref([])
+
+    const initFlink = () => {
       var params = new URLSearchParams();
-        params.append('op', 'getFlink');
-        axios.post(store.state.path+'/info.action', params)
-          .then(res => {
-            if (res.data.code == 1) {
-                flinkList.value=res.data.data
-            } else {
-              console.log(res.data.msg)
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+      params.append('op', 'getFlink');
+      axios.post(store.state.path+'/info.action', params)
+      .then(res => {
+          if (res.data.code == 1) {
+            tmpFlinkList.value = res.data.data
+            tmpFlinkList.value.forEach(item => {
+              item.url = 'http://' + item.url
+              flinkList.value.push(item)
+            })
+          }else {
+            message.error('获取友链失败');
+          }
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
     }
     
     onMounted(() => {
-      initData()
+      initFlink()
     })
 
     return {

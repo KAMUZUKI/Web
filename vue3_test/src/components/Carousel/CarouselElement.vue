@@ -24,7 +24,7 @@ export default {
     },
     setup() {
         const router = useRouter()
-        const store=useStore;
+        const store= useStore();
         const imgList = ref([
             {
                 id: 1,

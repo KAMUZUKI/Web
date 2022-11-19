@@ -1,15 +1,9 @@
 <template>
-    <a-form 
-        ref="formRef" 
-        name="custom-validation" 
-        :model="formState" 
-        :rules="rules" 
-        v-bind="layout"
+    <a-form ref="formRef" name="custom-validation" :model="formState" :rules="rules" v-bind="layout"
         @finish="handleFinish" 
         @validate="handleValidate" 
         @finishFailed="handleFinishFailed"
-        :validate-messages="validateMessages"
-    >
+        :validate-messages="validateMessages">
         <h2 style="text-align:center;">注册</h2>
         <a-form-item label="用户名" name="username" required>
             <a-input v-model:value="formState.username" :rules="[{ required: true }]">
@@ -24,7 +18,7 @@
         <a-form-item has-feedback label="确认密码" name="checkPass">
             <a-input v-model:value="formState.checkPass" type="password" autocomplete="off" />
         </a-form-item>
-        <a-form-item :name="['email']" label="邮箱" :rules="[{ required: true },{ type: 'email' }]">
+        <a-form-item :name="['email']" label="邮箱" :rules="[{ required: true }, { type: 'email' }]">
             <a-input v-model:value="formState.email" />
         </a-form-item>
         <a-form-item label="性别" required>
@@ -47,26 +41,26 @@
 import { defineComponent, reactive, ref } from 'vue';
 import NotificationComponent from '../tools/NotificationComponent.vue';
 import axios from 'axios'
-import {useStore} from vuex;
+import { useStore } from 'vuex';
 export default defineComponent({
-  components: { NotificationComponent },
+    components: { NotificationComponent },
     name: 'RegisterComponent',
     setup() {
         const formRef = ref();
-        const store=useStore();
+        const store = useStore();
         const openNotification = ref()
 
         const formState = reactive({
             username: '',
             pass: '',
             checkPass: '',
-            email:'',
+            email: '',
             gender: '1',
-            status:0,
-            usernamePass:0, 
-            password1Pass:0,
-            password2Pass:0,
-            emailPass:0,
+            status: 0,
+            usernamePass: 0,
+            password1Pass: 0,
+            password2Pass: 0,
+            emailPass: 0,
         });
 
         const validateMessages = {
@@ -129,19 +123,19 @@ export default defineComponent({
             params.append('password', formState.value.pass);
             params.append('email', formState.value.email);
             params.append('gender', formState.value.gender);
-            axios.post(store.state.path+'/info.action', params)
-          .then(res => {
-            if (res.data.code == 1) {
-                openNotification.value.openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
-            } else {
-                openNotification.value.openNotificationWithIcon('error', '注册失败', '注册失败');
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-            openNotification.value.openNotificationWithIcon('error', '注册失败', '注册失败');
-          });
-            
+            axios.post(store.state.path + '/info.action', params)
+                .then(res => {
+                    if (res.data.code == 1) {
+                        openNotification.value.openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
+                    } else {
+                        openNotification.value.openNotificationWithIcon('error', '注册失败', '注册失败');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    openNotification.value.openNotificationWithIcon('error', '注册失败', '注册失败');
+                });
+
         };
 
         const handleFinishFailed = errors => {

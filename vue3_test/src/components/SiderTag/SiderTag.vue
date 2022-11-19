@@ -11,27 +11,39 @@
 </template>
 
 <script>
-import { defineComponent, reactive } from 'vue'
-const colors = ['pink', 'red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple']
-const items = ['JAVA技术', '.NET技术', '数据库技术', 'GO', 'PYTHON', 'C#', 'JavaScript', 'TypeScript']
-
-const tags = reactive([
-])
-
-const initTags = () => {
-  for (let i = 0; i < items.length; i++) {
-    let j = Math.floor(Math.random() * 7);
-    tags.push({ color: colors[j], tag: items[i] })
-  }
-}
-
-const destroyTags = () => {
-  tags.splice(0, tags.length)
-}
-
+import { defineComponent, reactive,ref,onMounted,onUnmounted } from 'vue'
 export default defineComponent({
   name: 'SiderTag',
   setup(props) {
+
+    const colors = ['pink', 'red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple']
+    const items = ref([])
+    const tags = reactive([])
+
+    const initTags = () => {
+      items.value = JSON.parse(sessionStorage.getItem('keywords'))?? []
+      for (let i = 0; i < 30; i++) {
+        let j = Math.floor(Math.random() * 7);
+        if(items.value[i]!==undefined){
+          tags.push({ color: colors[j], tag: items.value[i] })
+        }
+      }
+    }
+
+    const destroyTags = () => {
+      tags.splice(0, tags.length)
+    }
+
+    onMounted(() => {
+      setTimeout(() => {
+        initTags()
+      }, 200)
+    })
+
+    onUnmounted(() => {
+      destroyTags()
+    })
+
     const showContentBykeyword = (type) => {
       props.showContentByKeyword(type);
     }
@@ -45,12 +57,6 @@ export default defineComponent({
       type: Function,
     }
   },
-  mounted() {
-    initTags()
-  },
-  beforeUnmount() {
-    destroyTags()
-  }
 })
 </script>
 

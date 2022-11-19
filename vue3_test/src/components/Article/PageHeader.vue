@@ -38,11 +38,11 @@ export default defineComponent({
     ])
 
     const initTags = () => {
-      var flag = props.details.keywords??false
-      if (flag) {
-        for (let i = 0; i < props.details.keywords.length; i++) {
+      var keywords = props.details.label.split(',')??false
+      if (keywords) {
+        for (let i = 0; i < keywords.length; i++) {
           let j = Math.floor(Math.random() * 7);
-          tags.push({ color: colors[j], tag: props.details.keywords[i] })
+          tags.push({ color: colors[j], tag: keywords[i] })
         }
       }
 
