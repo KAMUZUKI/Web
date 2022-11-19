@@ -123,9 +123,8 @@ export default defineComponent({
       axios.post(store.state.path+'/info.action', params)
       .then(res => {
           if (res.data.code == 1) {
+            flinkList.value.pop(id)
             message.success('删除成功');
-            flinkList.value = []
-            initFlink()
           }else {
             message.error('删除失败');
           }
@@ -134,24 +133,6 @@ export default defineComponent({
           console.log(error);
       });
     }
-
-    // const alertById = id => {
-    //   var params = new URLSearchParams();
-    //   params.append('op', 'alertFlinkById');
-    //   params.append('id', id);
-    //   axios.post(store.state.path+'/info.action', params)
-    //   .then(res => {
-    //       if (res.data.code == 1) {
-    //         formState.value = res.data.data
-    //         showDrawer()
-    //       }else {
-    //         message.error('获取失败');
-    //       }
-    //   })
-    //   .catch(function (error) {
-    //       console.log(error);
-    //   });
-    // }
 
     const cancel = e => {
       console.log(e);
@@ -168,7 +149,6 @@ export default defineComponent({
     //FORM END
 
     const handleFinish = values => {
-      alert(values.status)
       var params = new URLSearchParams();
       params.append('op', 'addFlink');
       params.append('name', values.name);

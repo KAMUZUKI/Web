@@ -67,9 +67,11 @@ export default defineComponent({
 
     const initData = () => {
       likeList.value = JSON.parse(sessionStorage.getItem('likeList'))??''
-      likeList.value.forEach(item => {
-        likeSet.add(item)
-      })
+      if (likeList.value.length > 0) {
+        likeList.value.forEach(item => {
+          likeSet.add(item)
+        })
+      }
       // TODO:获取文章列表   listData
       var params = new URLSearchParams();
       params.append('op', 'getAllArticle');

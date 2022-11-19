@@ -21,11 +21,8 @@
         <a-form-item :name="['email']" label="邮箱" :rules="[{ required: true }, { type: 'email' }]">
             <a-input v-model:value="formState.email" />
         </a-form-item>
-        <a-form-item label="性别" required>
-            <a-select v-model:value="formState.gender" placeholder="please select your gender">
-                <a-select-option value="1">男</a-select-option>
-                <a-select-option value="0">女</a-select-option>
-            </a-select>
+        <a-form-item :name="['phone']" label="手机号" :rules="[{ required: true }]">
+            <a-input v-model:value="formState.phone" />
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 16, offset: 6 }">
             <a-button type="primary" html-type="submit">注册</a-button>
@@ -38,7 +35,7 @@
 
 </style>
 <script>
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import NotificationComponent from '../tools/NotificationComponent.vue';
 import axios from 'axios'
 import { useStore } from 'vuex';
@@ -50,12 +47,12 @@ export default defineComponent({
         const store = useStore();
         const openNotification = ref()
 
-        const formState = reactive({
+        const formState = ref({
             username: '',
             pass: '',
             checkPass: '',
             email: '',
-            gender: '1',
+            phone: '',
             status: 0,
             usernamePass: 0,
             password1Pass: 0,
@@ -75,7 +72,7 @@ export default defineComponent({
             if (value === '') {
                 return Promise.reject('请输入密码!');
             } else {
-                if (formState.checkPass !== '') {
+                if (formState.value.checkPass !== '') {
                     formRef.value.validateFields('checkPass');
                 }
                 return Promise.resolve();
@@ -85,7 +82,7 @@ export default defineComponent({
         let validatePass2 = async (_rule, value) => {
             if (value === '') {
                 return Promise.reject('请再次输入密码!');
-            } else if (value !== formState.pass) {
+            } else if (value !== formState.value.pass) {
                 return Promise.reject("两次输入不一致!");
             } else {
                 return Promise.resolve();
@@ -121,12 +118,14 @@ export default defineComponent({
             params.append('op', 'register');
             params.append('username', formState.value.username);
             params.append('password', formState.value.pass);
+            params.append('phone', formState.value.phone);
             params.append('email', formState.value.email);
-            params.append('gender', formState.value.gender);
-            axios.post(store.state.path + '/info.action', params)
+            params.append('head', formState.value.email.match(/(\w+)@/)[1]);
+            axios.post(store.state.path + '/user.action', params)
                 .then(res => {
                     if (res.data.code == 1) {
-                        openNotification.value.openNotificationWithIcon('success', '注册成功', '恭喜你注册成功');
+                        alert(res.data.msg)
+                        openNotification.value.openNotificationWithIcon('success', '注册成功',res.data.msg);
                     } else {
                         openNotification.value.openNotificationWithIcon('error', '注册失败', '注册失败');
                     }

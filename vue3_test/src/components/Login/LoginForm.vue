@@ -46,7 +46,6 @@ import { useStore } from 'vuex' // 引入useStore 方法
 import axios from 'axios'
 export default defineComponent({
   name: 'LoginForm',
-
   components: {
     UserOutlined,
     LockOutlined,
@@ -92,15 +91,6 @@ export default defineComponent({
         });
     }
 
-    // const login = () => {
-    //   store.state.isLogin = true
-    //   store.state.user = user
-    //   store.state.isCertified = true
-    //   sessionStorage.setItem("user", JSON.stringify(user));
-    //   props.showAvatar()
-    //   openNotification.value.openNotificationWithIcon('success', '登录', '恭喜登录成功');
-    // }
-
     const formState = reactive({
       id: 1,
       username: '10001',
@@ -122,26 +112,26 @@ export default defineComponent({
 
     onMounted(() => {
       if (sessionStorage.getItem("user") !== null) {
+        var userId = JSON.parse(sessionStorage.getItem("user")).id
         var params = new URLSearchParams();
-        params.append('op', 'login');
-        params.append('username', formState.username);
-        params.append('password', formState.password);
-        //TODO: Login
-        axios.post(store.state.path + '/user.action', params)
+        params.append('op', 'getLikeList');
+        params.append('id', userId);
+        //TODO: 获取用户喜欢的列表
+        axios.post(store.state.path + '/info.action', params)
           .then(res => {
             if (res.data.code == 1) {
-              likeList.value = res.data.data.likeList
+              likeList.value = res.data.data
+              store.state.isLogin = true
+              store.state.user = JSON.parse(sessionStorage.getItem("user"))
+              store.state.isCertified = true
+              props.showAvatar()
               sessionStorage.setItem('likeList', JSON.stringify(likeList.value))
+              openNotification.value.openNotificationWithIcon('success', '登录', '自动登录成功')
             }
           })
           .catch(function (error) {
             console.log(error);
           });
-        store.state.isLogin = true
-        store.state.user = JSON.parse(sessionStorage.getItem("user"))
-        store.state.isCertified = true
-        props.showAvatar()
-        openNotification.value.openNotificationWithIcon('success', '登录', '自动登录成功')
       }
     });
     return {

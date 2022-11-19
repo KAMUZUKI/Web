@@ -1,18 +1,15 @@
 <template>
   <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
-  <TestDev/>
+  <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
+  <!-- <TestDev/> -->
+  <div></div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import TestDev from './components/TestDev.vue'
 import 'mavon-editor/dist/css/index.css'
 export default {
   name: 'App',
   components: {
-    HelloWorld,
-    TestDev
   }
 }
 </script>

@@ -4,44 +4,44 @@
             <a-layout-content>
                 <a-space :size="small" direction="horizontal" align="start">
                     <a-col>
-                        <div style="border: 1px solid #ccc;text-align:left;height:800px;min-width:1000px;max-width:1100px">
+                        <div
+                            style="border: 1px solid #ccc;text-align:left;height:800px;min-width:1000px;max-width:1100px">
                             <v-md-editor v-model="text" height="800px"></v-md-editor>
                         </div>
                     </a-col>
                     <a-col style="background-color:#fff;" flex="fix">
                         <a-card style="width: 300px;border-radius: 20px;" hoverable>
-                            <a-form ref="formRef" name="custom-validation" :model="formState" :rules="rules" v-bind="layout" 
-                                @finish="handleFinish" 
-                                @validate="handleValidate"
-                                @finishFailed="handleFinishFailed"
-                                :validate-messages="validateMessages"
+                            <!-- <a-form name="custom-validation" :model="formState" 
+                                @finish="onFinish"
+                                @finishFailed="onFinishFailed" 
                                 >
-                                <a-form-item name="date-time-picker" label="日期" v-bind="config"
-                                    :rules="[{ required: true, message: 'Please select your favourite colors!', type: 'array' }]">
+                                <a-form-item name="date-time-picker" label="日期" v-bind="config">
                                     <a-date-picker v-model:value="formState.createTime" show-time
                                         format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" />
                                 </a-form-item>
-                                <a-form-item :name="['title']" label="文章标题">
-                                    <a-input v-model:value="formState.title" placeholder="文章标题"
-                                        :rules="[{ required: true }]" />
+                                <a-form-item name="title" label="文章标题" :rules="[{ required: true, message: '请填写标题!' }]">
+                                    <a-input v-model:value="formState.title" placeholder="文章标题" />
                                 </a-form-item>
-                                <a-form-item :name="['description']" label="文章描述">
-                                    <a-input v-model:value="formState.description" :rules="[{ required: true }]" />
+                                <a-form-item name="description" label="文章描述" :rules="[{ required: true }]">
+                                    <a-input v-model:value="formState.description" />
                                 </a-form-item>
-                                <a-form-item :name="['articleImg']" label="文章图片">
-                                    <a-input v-model:value="formState.avatar" :rules="[{ required: true }]" />
+                                <a-form-item name="articleImg" label="文章图片">
+                                    <a-input v-model:value="formState.avatar" />
                                 </a-form-item>
-                                <a-form-item :name="['categorys']" label="栏目选择">
+                                <a-form-item name="categorys" label="栏目选择">
                                     <a-select showSearch v-model:value="categoryOptions" mode="single"
                                         style="width: 100%" placeholder="请选择栏目" :options="categorys"
                                         @change="handleChange">
                                     </a-select>
                                 </a-form-item>
-                                <a-form-item :name="['keywords']" label="关键词">
+                                <a-form-item name="keywords" label="关键词">
                                     <a-select showSearch v-model:value="keywordOptions" mode="multiple"
                                         style="width: 100%" placeholder="请选择关键词" :options="keywords"
                                         @change="handleChange">
                                     </a-select>
+                                </a-form-item>
+                                <a-form-item :wrapper-col="{ span: 16, offset: 6 }">
+                                    <a-button type="primary" html-type="submit">提交</a-button>
                                 </a-form-item>
                                 <a-button @click="onFinish" type="primary" shape="round" :size="size">
                                     <template #icon>
@@ -49,7 +49,7 @@
                                     </template>
                                     提交
                                 </a-button>
-                            </a-form>
+                            </a-form> -->
                         </a-card>
                     </a-col>
                 </a-space>
@@ -61,9 +61,7 @@
 
 <script>
 import { defineComponent, ref, onMounted } from 'vue';
-// import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import NotificationComponent from './tools/NotificationComponent.vue';
-// import { Modal } from 'ant-design-vue';
 // import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
@@ -84,7 +82,7 @@ export default defineComponent({
         const text = ref()
         const formRef = ref()
         const formState = ref({
-            id: Number,
+            id: 1,
             author: '',
             title: '',
             avatar: '',
@@ -98,6 +96,14 @@ export default defineComponent({
 
         const validateMessages = {
             required: '${label} 是必要的!',
+        };
+
+        const config = {
+          rules: [{
+            type: 'string',
+            required: true,
+            message: 'Please select time!',
+          }],
         };
 
         const judgeMode = () => {
@@ -127,7 +133,7 @@ export default defineComponent({
 
         // var ws
         onMounted(() => {
-            //撰写文章
+            //撰写文章的分类以及关键词加载
             formState.value = formState.value.content ?? ''
             tmpKeywords.value = JSON.parse(sessionStorage.getItem("keywords")) ?? []
             Object.entries(tmpKeywords.value).forEach(([key, value]) => {
@@ -143,25 +149,27 @@ export default defineComponent({
             // );
         })
 
-        const handleFinish = values => {
-            console.log(values, formState);
+        const onFinish = values => {
+            // router.push('/')
+           alert(values)
+          console.log('Success:', values);
         };
-        const handleFinishFailed = errors => {
-            console.log(errors);
-        };
-        const resetForm = () => {
-            formRef.value.resetFields();
-        };
-        const handleValidate = (...args) => {
-            console.log(args);
+
+        const onFinishFailed = errorInfo => {
+          console.log('Failed:', errorInfo);
         };
 
         // 组件销毁时，也及时销毁编辑器
         onBeforeUnmount(() => {
         })
 
+        const handleChange = value => {
+          console.log(`selected ${value}`);
+        };
+
         return {
             text,
+            config,
             formRef,
             formState,
             categorys,
@@ -172,10 +180,9 @@ export default defineComponent({
             openNotification,
             validateMessages,
             mode: 'default', // 或 'simple'
-            handleFinish,
-            handleFinishFailed,
-            resetForm,
-            handleValidate,
+            onFinish,
+            handleChange,
+            onFinishFailed,
         };
     },
     components: {

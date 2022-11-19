@@ -4,9 +4,9 @@
       :sub-title=details.description @back="back">
       <a-descriptions size="small" :column="3">
         <a-descriptions-item label="作者">{{ details.author }}</a-descriptions-item>
-        <a-descriptions-item label="社交">
+        <!-- <a-descriptions-item label="社交">
           <a>{{ details.createTime }}</a>
-        </a-descriptions-item>
+        </a-descriptions-item> -->
         <a-descriptions-item label="发布时间">{{ details.createTime }}</a-descriptions-item>
         <a-descriptions-item label="关键词">
           <a-tag v-for="item of tags" :key="item.color" class="item-tag" :color="item.color">

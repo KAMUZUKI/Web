@@ -21,7 +21,7 @@
                         </a-button>
                         <a-button class="siderSelect" block>
                             <router-link class="nav-link" to="/setting/add">
-                                <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>添加</span>
+                                <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>添加分类</span>
                             </router-link>
                         </a-button>
                     </a-card>

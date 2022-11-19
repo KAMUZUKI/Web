@@ -41,7 +41,7 @@
               </a-menu-item>
               <a-menu-item>
                 <router-link class="nav-link" to="/setting/add">
-                 <span>添加</span>
+                 <span>添加分类</span>
                 </router-link>
               </a-menu-item>
             </a-menu>

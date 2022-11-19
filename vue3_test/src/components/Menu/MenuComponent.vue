@@ -1,18 +1,18 @@
 <template>
-    <a-card bordered style="width: 200px;height: 290px;border-radius: 20px;margin: 60px 0 0 68px;" hoverable>
+    <a-card bordered style="width: 200px;border-radius: 20px;margin: 60px 0 0 68px;" hoverable>
         <div style="width: 100%" v-for="(item, index) in data" :key="index">
             <div class="list-item" v-if="index == 0">
                 <router-link @click.prevent="showContentBycategory(index+1)" to="/">
                     <a-list-item class="a-list-item">
                         <a-tag color="red">Top{{ index+1 }}</a-tag>{{ item }}
                     </a-list-item>
-                </router-link><br />
+                </router-link><br/>
             </div>
             <div class="list-item" v-else-if="index == 1">
                 <router-link @click.prevent="showContentBycategory(index+1)" to="/">
                     <a-list-item class="a-list-item">
                         <a-tag color="cyan">Top{{ index+1 }}</a-tag>{{ item }}
-                    </a-list-item><br />
+                    </a-list-item><br/>
                 </router-link>
             </div>
             <div class="list-item" v-else>
@@ -20,7 +20,7 @@
                     <a-list-item class="a-list-item">
                         <a-tag color="green">Top{{ index+1 }}</a-tag>{{ item }}
                     </a-list-item>
-                </router-link><br />
+                </router-link><br/>
             </div>
         </div>
     </a-card>
