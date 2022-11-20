@@ -25,15 +25,15 @@
           </span>
         </template>
         <template #extra>
-          <img width="272" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />
+          <img width="272" alt="logo" :src="(item.titleImgs==''?'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png':item.titleImgs==' '?'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png':item.titleImgs)" />
         </template>
-        <a-list-item-meta :description="item.description">
+        <a-list-item-meta :description="(item.description.substring(0, 40) + '  ' + item.createTime)">
           <template #title>
             <router-link class="nav-link" :to="'/article/' + item.id" @click="pushToDetail(item)">{{ item.title }}
             </router-link>
           </template>
           <template #avatar>
-            <a-avatar src="http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100" />
+            <a-avatar :src="'http://q1.qlogo.cn/g?b=qq&nk='+item.head+'&s=100'" />
           </template>
         </a-list-item-meta>
         {{ item.content.replace(/#*.*#/g, '').replace(/[^(\u4e00-\u9fa5)(，。（）【】{}！,\-!)]/g, '').substring(0, 200) +
@@ -58,7 +58,7 @@ export default defineComponent({
     const listData = ref([])
     const clickLimitCount = ref()
     const initDataList = ref([])
-    const newData = ref([])
+    const newData = ref({})
     const store = useStore()  // 该方法用于返回store 实例
     const likeList = ref([])  //用户点赞的文章id
     const keywords = ref([])
@@ -147,7 +147,7 @@ export default defineComponent({
       if (res.data !== null) {
         initDataList.value = []
         newData.value = JSON.parse(res.data)
-        listData.value.unshift(newData.value)
+        listData.value.unshift(JSON.parse(newData.value))
         initDataByCategory('all')
       } else {
         return
@@ -159,10 +159,10 @@ export default defineComponent({
       initData()
       initDataByCategory('all')
       //用于清除用户当前时间段点击次数
-      // setInterval(() => {
-      //   clickLimitCount.value = 0
-      //   console.log("clickLimitCount清空" + clickLimitCount.value)
-      // }, 3000)
+      setInterval(() => {
+        clickLimitCount.value = 0
+        console.log("clickLimitCount清空" + clickLimitCount.value)
+      }, 3000)
     });
 
     watch(clickLimitCount, (newValue) => {

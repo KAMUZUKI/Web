@@ -47,7 +47,7 @@ export default defineComponent({
       //TODO: 从后端获取数据
       var params = new URLSearchParams();
       params.append('op', 'getAllArticle');
-      axios.post('http://localhost:8081/demo/info.action', params)
+      axios.post(store.state.path + '/info.action', params)
         .then(res => {
           console.log(res)
           if (res.data.code == 1) {

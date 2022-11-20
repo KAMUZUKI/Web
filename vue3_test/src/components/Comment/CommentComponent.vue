@@ -58,6 +58,11 @@ export default defineComponent({
                     email: '1437487442',
                     head: 'http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100',
                 }
+                userDetial.value = {
+                    username: 'zhangsan',
+                    email: '1437487442',
+                    head: 'http://q1.qlogo.cn/g?b=qq&nk=1437487442&s=100',
+                }
             } else {
                 userDetial.value = user.value
                 store.state.isCertified = true

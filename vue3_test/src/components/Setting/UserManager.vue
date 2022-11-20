@@ -3,7 +3,7 @@
     <a-table :columns="columns" :data-source="dataSource" bordered>
       <template #bodyCell="{ column, text, record }">
         <template
-          v-if="['username', 'phone', 'email', 'status', 'type'].includes(column.dataIndex)">
+          v-if="['status', 'type'].includes(column.dataIndex)">
           <div>
             <a-input v-if="editableData[record.id]" v-model:value="editableData[record.id][column.dataIndex]"
               style="margin: -5px 0" />
@@ -121,9 +121,28 @@ export default defineComponent({
     }
 
     const save = user => {
-      //TODO:通过userid修改后台用户数据
       Object.assign(dataSource.value.filter(item => user.id === item.id)[0], editableData[user.id]);
       delete editableData[user.id];
+      //TODO:通过userid修改后台用户数据
+      setTimeout(() => {
+        var params = new URLSearchParams();
+        params.append('op', 'alterUser');
+        params.append('userId', user.id);
+        params.append('status', user.status);
+        params.append('type', user.type);
+        axios.post(store.state.path+'/user.action', params)
+          .then(res => {
+            if (res.data.code == 1) {
+              delete editableData[user.id];
+              message.success('修改用户ID'+user.id+'成功');
+            } else {
+              message.error('修改用户ID'+user.id+'失败');
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }, 500);
     }
 
     const cancel = key => {
@@ -134,14 +153,14 @@ export default defineComponent({
       //TODO:通过userid删除后台用户数据
       var params = new URLSearchParams();
       params.append('op', 'deleteUser');
-      params.append('id', userId);
-      axios.post('http://localhost:8081/demo/info.action', params)
+      params.append('userId', userId);
+      axios.post(store.state.path+'/user.action', params)
         .then(res => {
           if (res.data.code == 1) {
             dataSource.value = dataSource.value.filter(item => userId !== item.id);
-            message.success('修改用户ID'+userId+'成功');
+            message.success('删除用户ID'+userId+'成功');
           } else {
-            message.error('修改用户ID'+userId+'失败');
+            message.error('删除用户ID'+userId+'失败');
           }
         })
         .catch(function (error) {

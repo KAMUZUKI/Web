@@ -38,14 +38,15 @@ export default defineComponent({
     ])
 
     const initTags = () => {
-      var keywords = props.details.label.split(',')??false
-      if (keywords) {
-        for (let i = 0; i < keywords.length; i++) {
-          let j = Math.floor(Math.random() * 7);
-          tags.push({ color: colors[j], tag: keywords[i] })
+      if(props.details.label!==null&&props.details.label!==''&&props.details.label!==undefined){
+        var keywords = props.details.label.split(',') ?? false
+        if (keywords.length > 0) {
+          for (let i = 0; i < keywords.length; i++) {
+            let j = Math.floor(Math.random() * 7);
+            tags.push({ color: colors[j], tag: keywords[i] })
+          }
         }
       }
-
     }
 
     const destroyTags = () => {

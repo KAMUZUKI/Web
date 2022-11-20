@@ -3,23 +3,23 @@
     <a-space size="small" align="middle" direction="horizontal">
       <div class="link">
         <router-link class="nav-link" to="/">
-          <Edit style="width: 2em; height: 2em; margin-right: 8px" /><span>首页</span>
+          <span>首页</span>
         </router-link>
       </div>
       <div class="link">
         <router-link class="nav-link" to="/flink">
-          <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>友链</span>
+          <span>友链</span>
         </router-link>
       </div>
       <div class="link">
         <router-link class="nav-link" to="/editor">
-          <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>撰写</span>
+          <span>撰写</span>
         </router-link>
       </div>
       <div class="link">
         <a-dropdown>
           <router-link class="nav-link" to="">
-            <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>设置</span>
+            <span>设置</span>
             <DownOutlined />
           </router-link>
           <template #overlay>
@@ -50,7 +50,7 @@
       </div>
       <div class="link">
         <router-link class="nav-link" to="/about">
-          <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>关于</span>
+          <span>关于</span>
         </router-link>
       </div>
     </a-space>
@@ -61,14 +61,18 @@
 .link {
   margin-right: 20px;
   display: inline-block;
-  font-size: 16px;
+  font-size: 20px;
   color: #08c;
   align-items: center;
+}
+
+.link :hover{
+  background-color: rgb(246, 246, 246);
 }
 </style>
 
 <script>
-import { CommentOutlined, DownOutlined } from '@ant-design/icons-vue';
+import { DownOutlined } from '@ant-design/icons-vue';
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -86,7 +90,6 @@ const gotoEditor = () => {
 export default defineComponent({
   name: 'BarDemo',
   components: {
-    CommentOutlined,
     DownOutlined,
   },
   setup() {

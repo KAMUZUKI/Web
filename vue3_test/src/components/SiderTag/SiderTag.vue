@@ -24,7 +24,7 @@ export default defineComponent({
       items.value = JSON.parse(sessionStorage.getItem('keywords'))?? []
       for (let i = 0; i < 30; i++) {
         let j = Math.floor(Math.random() * 7);
-        if(items.value[i]!==undefined){
+        if(items.value[i]!==undefined&&items.value[i]!==''){
           tags.push({ color: colors[j], tag: items.value[i] })
         }
       }
