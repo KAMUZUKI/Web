@@ -2,6 +2,7 @@ package com.mu.web.servlet;
 
 import com.mu.dao.DbHelper;
 import com.mu.domain.Manager;
+import com.mu.utils.Md5;
 import com.mu.web.model.JsonModel;
 
 import javax.servlet.annotation.WebServlet;
@@ -25,12 +26,12 @@ public class UserServlet extends CommonServlet{
     public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DbHelper db = new DbHelper();
         JsonModel jm = new JsonModel();
-        Manager manager = new Manager();
+        Manager manager = null;
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String sql = "{call login(?,?)}";
         try {
-            manager = db.selectProc(sql, Manager.class, username, password).get(0);
+            manager = db.selectProc(sql, Manager.class, username, Md5.getInstance().getMD5(password)).get(0);
             if (manager == null) {
                 jm.setCode(0);
                 jm.setMsg("用户名或密码错误");

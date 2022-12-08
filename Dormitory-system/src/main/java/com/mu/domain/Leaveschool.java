@@ -38,12 +38,12 @@ public class Leaveschool implements Serializable {
     /**
      * 离校时间
      */
-    private Date leavetime;
+    private String leavetime;
 
     /**
      * 返校时间
      */
-    private Date backtime;
+    private String backtime;
 
     /**
      * 执行人id

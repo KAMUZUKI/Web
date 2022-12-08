@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    
     <a-card class="box" bordered hoverable>
       <h1>学生公寓管理系统</h1>
     <a-form :model="formState" name="normal_login" class="login-form" @finish="onFinish" @finishFailed="onFinishFailed">
@@ -65,7 +64,7 @@
 </style>
 
 <script>
-import { defineComponent, reactive, computed, onMounted, ref } from 'vue';
+import { defineComponent, reactive, computed, ref } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { useStore } from 'vuex' // 引入useStore 方法
 import {message} from 'ant-design-vue'
@@ -77,10 +76,9 @@ export default defineComponent({
     LockOutlined,
   },
 
-  setup() {
+  setup(props) {
     const store = useStore();
-    // const user = ref()
-    const likeList = ref([])
+    const user = ref()
 
     const login = () => {
       var params = new URLSearchParams();
@@ -88,38 +86,31 @@ export default defineComponent({
       params.append('username', formState.username);
       params.append('password', formState.password);
       //TODO: Login
-      // axios.post(store.state.path + '/user.action', params)
-      //   .then(res => {
-      //     if (res.data.code == 1) {
-      //       store.state.isLogin = true
-      //       store.state.isCertified = true
-      //       user.value = {
-      //         id: res.data.data.id,
-      //         username: res.data.data.username,
-      //         email: res.data.data.email,
-      //         head: 'http://q1.qlogo.cn/g?b=qq&nk=' + res.data.data.head + '&s=100',
-      //         type: res.data.data.type
-      //       }
-      //       likeList.value = res.data.data.likeList
-      //       sessionStorage.setItem('likeList', JSON.stringify(likeList.value))
-      //       store.state.user = user.value
-      //       sessionStorage.setItem("user", JSON.stringify(user.value));
-      //       props.showAvatar()
-      //       message.success('登录成功');
-      //     } else {
-      //       message.success('登录失败')
-      //     }
-      //   })
-      //   .catch(function (error) {
-      //     console.log(error);
-      //   });
-      store.state.isLogin = true
-      message.success('登录成功');
+      axios.post(store.state.path + '/user.action', params)
+        .then(res => {
+          if (res.data.code == 1) {
+            props.changeLogin()
+            store.state.isCertified = true
+            user.value = {
+              id: res.data.data.id,
+              username: res.data.data.name,
+              type: res.data.data.type
+            }
+            store.state.user = user.value
+            sessionStorage.setItem("user", JSON.stringify(user.value));
+            message.success('登录成功');
+          } else {
+            message.success('登录失败')
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
 
     const formState = reactive({
       id: 1,
-      username: '10001',
+      username: 'zhangsan',
       password: 'a',
       remember: true,
     });
@@ -136,29 +127,6 @@ export default defineComponent({
       return !(formState.username && formState.password);
     });
 
-    onMounted(() => {
-      if (sessionStorage.getItem("user") !== null) {
-        var userId = JSON.parse(sessionStorage.getItem("user")).id
-        var params = new URLSearchParams();
-        params.append('op', 'getLikeList');
-        params.append('id', userId);
-        //TODO: 获取用户喜欢的列表
-        axios.post(store.state.path + '/info.action', params)
-          .then(res => {
-            if (res.data.code == 1) {
-              likeList.value = res.data.data
-              store.state.isLogin = true
-              store.state.user = JSON.parse(sessionStorage.getItem("user"))
-              store.state.isCertified = true
-              sessionStorage.setItem('likeList', JSON.stringify(likeList.value))
-              message.success('自动登录成功')
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      }
-    });
     return {
       formState,
       onFinish,
@@ -167,6 +135,12 @@ export default defineComponent({
       login,
     };
   },
+  props: {
+    changeLogin: {
+      type: Function,
+      default: () => {},
+    },
+  }
 });
 </script>
 <style>

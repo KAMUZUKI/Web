@@ -1,7 +1,6 @@
 <template>
-    <LayoutFramework v-if="isLogin.value"></LayoutFramework>
-    <LoginForm v-if="!isLogin.value">{{!isLogin.value}}</LoginForm>
-    
+    <LayoutFramework v-if="isLogin"></LayoutFramework>
+    <LoginForm :changeLogin="changeLogin" v-if="!isLogin"></LoginForm>
 </template>
 
 <script>
@@ -13,9 +12,14 @@ export default defineComponent({
     name: "MainFramework",
     setup() {
         const store = useStore();
-        const isLogin = ref(store.state.isLogin)
+        const isLogin = ref(false);
+        const changeLogin = ()=>{
+            isLogin.value = !isLogin.value
+        }
+        store.isCertified = true
         return {
-            isLogin
+            isLogin,
+            changeLogin,
         }
     },
     components: {

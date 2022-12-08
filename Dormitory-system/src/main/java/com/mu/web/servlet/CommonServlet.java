@@ -153,6 +153,12 @@ public abstract class CommonServlet extends HttpServlet {
                 }else if("java.lang.Long".equals(methodParameterTypeName) || "long".equals(methodParameterTypeName)){
                     Long va = Long.parseLong(v);
                     m.invoke(obj,va);
+                } else if("java.lang.Boolean".equals(methodParameterTypeName) || "boolean".equals(methodParameterTypeName)){
+                    Boolean va = Boolean.parseBoolean(v);
+                    m.invoke(obj, va);
+                } else if ("java.lang.Byte".equals(methodParameterTypeName) || "byte".equals(methodParameterTypeName)) {
+                    Byte va = Byte.parseByte(v);
+                    m.invoke(obj, va);
                 }else {
                     m.invoke(obj,v);
                 }

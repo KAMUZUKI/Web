@@ -229,7 +229,7 @@ public class DbHelper {
 	}
 
 	/**
-	 * 查询：返回值为list<map<String,Object>>
+	 * 执行存储过程：返回值为list<map<String,Object>>
 	 * 存储过程
 	 */
 	public List<Map<String, Object>> selectProc(String sql, Object... value) throws SQLException {
@@ -260,5 +260,25 @@ public class DbHelper {
 		}
 		return list;
 	}
+
+    /**
+     * 更新操作,增删改统称更新操作
+     * 使用存储过程
+     * @param sql
+     * @param value
+     * @return
+     */
+    public int doUpdataProc(String sql, Object... value) {
+        int result = 0;
+        try (Connection con = getConnection();
+             CallableStatement cs = con.prepareCall(sql);) {
+            setParams(cs, value);
+            result = cs.executeUpdate();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 }

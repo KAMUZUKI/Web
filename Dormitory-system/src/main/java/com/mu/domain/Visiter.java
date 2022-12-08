@@ -33,7 +33,7 @@ public class Visiter implements Serializable {
     /**
      * 来访时间
      */
-    private Date createtime;
+    private String createtime;
 
     /**
      * 管理执行人id

@@ -43,7 +43,7 @@ public class Manager implements Serializable {
     /**
      * 账号是否启用
      */
-    private byte status;
+    private Boolean status;
 
     private static final long serialVersionUID = 1L;
 
