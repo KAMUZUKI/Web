@@ -98,7 +98,7 @@ export default defineComponent({
                       }
                       message.success('获取离校信息成功')
                   } else {
-                      message.success('获取离校信息失败')
+                      message.error('获取离校信息失败')
                   }
               })
               .catch(function (error) {

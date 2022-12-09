@@ -11,28 +11,6 @@
                       </template>
                   </div>
               </template>
-              <template v-else-if="column.dataIndex === 'modify'">
-                  <div class="editable-row-operations">
-                      <span v-if="editableData[record.id]">
-                          <a-typography-link @click="save(record)">保存</a-typography-link>
-                          <a-popconfirm title="确认取消?" @confirm="cancel(record.id)">
-                              <a>取消</a>
-                          </a-popconfirm>
-                      </span>
-                      <span v-else>
-                          <a @click="edit(record.id)">编辑</a>
-                      </span>
-                  </div>
-              </template>
-              <template v-else-if="column.dataIndex === 'delete'">
-                  <div class="editable-row-operations">
-                      <span>
-                          <a-popconfirm title="确认删除?" ok-text="删除" cancel-text="取消" @confirm="deleteById(record.id)">
-                              <a>删除</a>
-                          </a-popconfirm>
-                      </span>
-                  </div>
-              </template>
           </template>
       </a-table>
   </div>
@@ -86,11 +64,16 @@ export default defineComponent({
                       listDataTmp.value = res.data.data
                       for (const [key, item] of Object.entries(listDataTmp.value)) {
                           console.log(key)
+                          if (item.status == 1){
+                            item.status = "开启"
+                          }else{
+                            item.status = "禁用"
+                          }
                           dataSource.value.push(item);
                       }
                       message.success('获取管理员信息成功')
                   } else {
-                      message.success('获取管理员信息失败')
+                      message.error('获取管理员信息失败')
                   }
               })
               .catch(function (error) {
@@ -104,54 +87,8 @@ export default defineComponent({
           editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.id)[0]);
       }
 
-      const save = user => {
-          // Object.assign(dataSource.value.filter(item => user.id === item.id)[0], editableData[user.id]);
-          // delete editableData[user.id];
-          // //TODO:通过userid修改后台用户数据
-          // setTimeout(() => {
-          //     var params = new URLSearchParams();
-          //     params.append('op', 'alterUser');
-          //     params.append('userId', user.id);
-          //     params.append('status', user.status);
-          //     params.append('type', user.type);
-          //     axios.post(store.state.path + '/user.action', params)
-          //         .then(res => {
-          //             if (res.data.code == 1) {
-          //                 delete editableData[user.id];
-          //                 message.success('修改用户ID' + user.id + '成功');
-          //             } else {
-          //                 message.error('修改用户ID' + user.id + '失败');
-          //             }
-          //         })
-          //         .catch(function (error) {
-          //             console.log(error);
-          //         });
-          // }, 500);
-          console.log(user)
-      }
-
       const cancel = key => {
           delete editableData[key];
-      }
-
-      const deleteById = userId => {
-          //TODO:通过userid删除后台用户数据
-          // var params = new URLSearchParams();
-          // params.append('op', 'deleteUser');
-          // params.append('userId', userId);
-          // axios.post(store.state.path + '/user.action', params)
-          //     .then(res => {
-          //         if (res.data.code == 1) {
-          //             dataSource.value = dataSource.value.filter(item => userId !== item.id);
-          //             message.success('删除用户ID' + userId + '成功');
-          //         } else {
-          //             message.error('删除用户ID' + userId + '失败');
-          //         }
-          //     })
-          //     .catch(function (error) {
-          //         console.log(error);
-          //     });
-          console.log(userId)
       }
 
       onMounted(() => {
@@ -164,9 +101,7 @@ export default defineComponent({
           editingKey: '',
           editableData,
           edit,
-          save,
           cancel,
-          deleteById,
       };
   },
 });

@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @Classname UserServlet
@@ -26,17 +27,19 @@ public class UserServlet extends CommonServlet{
     public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DbHelper db = new DbHelper();
         JsonModel jm = new JsonModel();
-        Manager manager = null;
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        Manager manager = new Manager();
         String sql = "{call login(?,?)}";
         try {
-            manager = db.selectProc(sql, Manager.class, username, Md5.getInstance().getMD5(password)).get(0);
-            if (manager == null) {
+            List<Manager> list = db.selectProc(sql, Manager.class, username, Md5.getInstance().getMD5(password));
+            if (list != null && list.size() > 0) {
+                jm.setCode(1);
+                manager = list.get(0);
+                jm.setMsg("登录成功");
+            }else{
                 jm.setCode(0);
-                jm.setMsg("用户名或密码错误");
-                super.writeJson(jm, response);
-                return;
+                jm.setMsg("用户名或密码错误或已被禁用");
             }
             request.getSession().setAttribute("manager", manager);
         } catch (Exception e) {
@@ -46,8 +49,6 @@ public class UserServlet extends CommonServlet{
             super.writeJson(jm, response);
             return;
         }
-        jm.setCode(1);
-        jm.setData(manager);
         super.writeJson(jm, response);
     }
 }
