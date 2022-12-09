@@ -247,87 +247,56 @@ export default defineComponent({
         }
 
         const onFinish = (values) => {
-            console.log(formState.user)
-            if (formState.user.content == null || formState.user.content == undefined || formState.user.content == '') {
-                message.error('文章内容不能为空');
-                return
-            }
             console.log(values)
             var params = new URLSearchParams();
-            if (mode.value) {
-                params.append('op', 'addArticle');
-                params.append('author', JSON.parse(sessionStorage.getItem("user")).username);
-                params.append('title', formState.user.title)
-                params.append('content', formState.user.content)
-                params.append('description', formState.user.description)
-                params.append('categoryId', (JSON.parse(sessionStorage.getItem('categorys')).indexOf(categoryOptions.value)) + 1 ?? 1)
-                params.append('label', keywordOptions.value ?? '')
-                params.append('titleImgs', formState.user.titleImgs ?? JSON.parse(sessionStorage.getItem("user")).head)
-                params.append('createTime', formState.user.createTime)
-                axios.post(store.state.path + '/info.action', params)
-                    .then(res => {
-                        if (res.data.code == 1) {
-                            formState.user.author = JSON.parse(sessionStorage.getItem("user")).username
-                            formState.user.category = categoryOptions.value
-                            formState.user.keywords = keywordOptions.value
-                            let submitCode = JSON.stringify({
-                                id: res.data.msg,
-                                author: formState.user.author,
-                                title: formState.user.title,
-                                content: formState.user.content,
-                                description: formState.user.description,
-                                category: JSON.parse(sessionStorage.getItem('categorys')).indexOf(formState.user.category),
-                                keywords: formState.user.keywords,
-                                titleImgs: formState.user.titleImgs,
-                                createTime: formState.user.createTime,
-                                colCnt: [0, 0, 0],
-                            })
-                            // let submitCode = JSON.stringify({
-                            //     id: 1,
-                            //     author: 'zhangsan',
-                            //     title: `zhangsan part`,
-                            //     avatar: 'https://joeschmoe.io/api/v1/random',
-                            //     description: 'GO JAVA',
-                            //     content: '# 111111Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-                            //     keywords: ['GO', 'JAVA'],
-                            //     category: ['GO', 'PYTHON', 'JAVA'],
-                            //     createTime: '2015-07-23 15:23:05',
-                            //     colCnt: [0, 0, 0],
-                            // });
-                            ws.send(submitCode)
-                            message.success('文章发布成功')
-                            router.push('/')
-                        } else {
-                            message.error('文章发布失败')
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            } else {
-                params.append('op', 'alterArticle');
-                params.append('id', route.query.articleId);
-                params.append('author', JSON.parse(sessionStorage.getItem("user")).username);
-                params.append('title', formState.user.title)
-                params.append('content', formState.user.content)
-                params.append('description', formState.user.description)
-                params.append('categoryId', (JSON.parse(sessionStorage.getItem('categorys')).indexOf(categoryOptions.value)) + 1 ?? 1)
-                params.append('label', keywordOptions.value ?? '')
-                params.append('titleImgs', formState.user.titleImgs ?? JSON.parse(sessionStorage.getItem("user")).head)
-                params.append('createTime', formState.user.createTime)
-                axios.post(store.state.path + '/article.action', params)
-                    .then(res => {
-                        if (res.data.code == 1) {
-                            message.success('文章修改成功')
-                            router.push('/')
-                        } else {
-                            message.error('文章修改失败')
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            }
+            params.append('op', 'addStudent');
+            params.append('name', JSON.parse(sessionStorage.getItem("user")).username);
+            params.append('age', formState.student.name)
+            params.append('sex', formState.student.content)
+            params.append('academy', (JSON.parse(sessionStorage.getItem('academys')).indexOf(categoryOptions.value)) + 1 ?? 1)
+            params.append('class', keywordOptions.value ?? '')
+            params.append('address', formState.user.titleImgs ?? JSON.parse(sessionStorage.getItem("user")).head)
+            params.append('phone', formState.user.createTime)
+            axios.post(store.state.path + '/info.action', params)
+                .then(res => {
+                    if (res.data.code == 1) {
+                        formState.user.author = JSON.parse(sessionStorage.getItem("user")).username
+                        formState.user.category = categoryOptions.value
+                        formState.user.keywords = keywordOptions.value
+                        let submitCode = JSON.stringify({
+                            id: res.data.msg,
+                            author: formState.user.author,
+                            title: formState.user.title,
+                            content: formState.user.content,
+                            description: formState.user.description,
+                            category: JSON.parse(sessionStorage.getItem('categorys')).indexOf(formState.user.category),
+                            keywords: formState.user.keywords,
+                            titleImgs: formState.user.titleImgs,
+                            createTime: formState.user.createTime,
+                            colCnt: [0, 0, 0],
+                        })
+                        // let submitCode = JSON.stringify({
+                        //     id: 1,
+                        //     author: 'zhangsan',
+                        //     title: `zhangsan part`,
+                        //     avatar: 'https://joeschmoe.io/api/v1/random',
+                        //     description: 'GO JAVA',
+                        //     content: '# 111111Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
+                        //     keywords: ['GO', 'JAVA'],
+                        //     category: ['GO', 'PYTHON', 'JAVA'],
+                        //     createTime: '2015-07-23 15:23:05',
+                        //     colCnt: [0, 0, 0],
+                        // });
+                        ws.send(submitCode)
+                        message.success('文章发布成功')
+                        router.push('/')
+                    } else {
+                        message.error('文章发布失败')
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         };
 
         const onFinishFailed = errorInfo => {
@@ -379,6 +348,7 @@ export default defineComponent({
             visible,
             formState,
             validateMessages,
+            academyOptions,
             confirm,
             onClose,
             showDrawer,
