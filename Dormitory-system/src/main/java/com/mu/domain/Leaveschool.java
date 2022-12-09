@@ -38,17 +38,17 @@ public class Leaveschool implements Serializable {
     /**
      * 离校时间
      */
-    private String leavetime;
+    private String leaveTime;
 
     /**
      * 返校时间
      */
-    private String backtime;
+    private String backTime;
 
     /**
      * 执行人id
      */
-    private Integer managerid;
+    private String managername;
 
     private static final long serialVersionUID = 1L;
 
@@ -63,9 +63,9 @@ public class Leaveschool implements Serializable {
         sb.append(", sname=").append(sname);
         sb.append(", phone=").append(phone);
         sb.append(", purpose=").append(purpose);
-        sb.append(", leavetime=").append(leavetime);
-        sb.append(", backtime=").append(backtime);
-        sb.append(", managerid=").append(managerid);
+        sb.append(", leavetime=").append(leaveTime);
+        sb.append(", backtime=").append(backTime);
+        sb.append(", managername=").append(managername);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

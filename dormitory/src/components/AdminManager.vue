@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-      <a-table :columns="columns" :data-source="dataSource" bordered>
+  <div class="table">
+      <a-table style="min-width:1000px" :columns="columns" :data-source="dataSource" bordered>
           <template #bodyCell="{ column, text, record }">
               <template v-if="['status', 'type'].includes(column.dataIndex)">
                   <div>

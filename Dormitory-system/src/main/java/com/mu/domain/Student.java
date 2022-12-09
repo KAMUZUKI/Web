@@ -32,7 +32,7 @@ public class Student implements Serializable {
     /**
      * 学院id
      */
-    private Integer academy;
+    private String academy;
 
     /**
      * 班级

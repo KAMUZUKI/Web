@@ -37,6 +37,7 @@ public class UserServlet extends CommonServlet{
                 jm.setCode(1);
                 manager = list.get(0);
                 jm.setMsg("登录成功");
+                jm.setData(manager);
             }else{
                 jm.setCode(0);
                 jm.setMsg("用户名或密码错误或已被禁用");

@@ -53,6 +53,7 @@
   margin-top: -200px;
   border-radius: 20px;
 }
+
 .container {
     width: 100%;
     height: 100%;
@@ -64,10 +65,11 @@
 </style>
 
 <script>
-import { defineComponent, reactive, computed, ref } from 'vue';
+import { defineComponent, reactive, computed, ref,onMounted } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { useStore } from 'vuex' // 引入useStore 方法
 import {message} from 'ant-design-vue'
+import {useRouter} from 'vue-router'
 import axios from 'axios'
 export default defineComponent({
   name: 'LoginForm',
@@ -78,7 +80,8 @@ export default defineComponent({
 
   setup(props) {
     const store = useStore();
-    const user = ref()
+    const router = useRouter()
+    const manager = ref()
 
     const login = () => {
       var params = new URLSearchParams();
@@ -91,13 +94,15 @@ export default defineComponent({
           if (res.data.code == 1) {
             props.changeLogin()
             store.state.isCertified = true
-            user.value = {
+            manager.value = {
               id: res.data.data.id,
-              username: res.data.data.name,
+              name: res.data.data.name,
+              account: res.data.data.account,
               type: res.data.data.type
             }
-            store.state.user = user.value
-            sessionStorage.setItem("user", JSON.stringify(user.value));
+            store.state.user = manager.value
+            sessionStorage.setItem("manager", JSON.stringify(manager.value));
+            router.push('/student/BaseInfo')
             message.success('登录成功');
           } else {
             message.success('登录失败')
@@ -126,6 +131,17 @@ export default defineComponent({
     const disabled = computed(() => {
       return !(formState.username && formState.password);
     });
+
+    onMounted(() => {
+      if (sessionStorage.getItem("manager")) {
+        manager.value = JSON.parse(sessionStorage.getItem("manager"));
+        store.state.user = manager.value
+        store.state.isCertified = true
+        props.changeLogin()
+        message.success('自动登录成功');
+        router.push('/student/BaseInfo')
+      }
+    })
 
     return {
       formState,

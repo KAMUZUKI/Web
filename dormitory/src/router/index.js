@@ -8,11 +8,11 @@ import { message } from 'ant-design-vue';
 // 我们后面再讨论嵌套路由。
 const routes = [
     {
-        path: '/',
-        name: 'Index',
-        component: () => import('@/components/AdminManager.vue'),
+        path: '/login',
+        name: 'login',
+        component: () => import('@/components/LoginForm.vue'),
         meta: {
-            title: '学生基本信息',
+            title: '登录页面',
             // requireAuth: true,
             transition_enter: 'animate__fadeInRight',
             transition_leave: 'animate__fadeOutLeft',
@@ -95,7 +95,7 @@ const router = createRouter({
     routes // `routes: routes` 的缩写
 })
 
-const list = ['article', 'setflink', 'manager']
+const list = ['','article', 'setflink', 'manager']
 router.beforeEach((to, from, next) => {
     //to 目标路由
     //from 来源

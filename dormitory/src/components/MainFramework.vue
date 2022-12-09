@@ -1,12 +1,12 @@
 <template>
-    <LayoutFramework v-if="!isLogin"></LayoutFramework>
-    <!-- <LoginForm :changeLogin="changeLogin" v-if="!isLogin"></LoginForm> -->
+    <LayoutFramework v-if="isLogin"></LayoutFramework>
+    <LoginForm :changeLogin="changeLogin" v-if="!isLogin"></LoginForm>
 </template>
 
 <script>
 import {defineComponent,ref } from 'vue';
 import LayoutFramework from '@/components/LayoutFramework.vue';
-// import LoginForm from '@/components/LoginForm.vue';
+import LoginForm from '@/components/LoginForm.vue'
 import { useStore } from 'vuex' // 引入useStore 方法
 export default defineComponent({
     name: "MainFramework",
@@ -23,8 +23,8 @@ export default defineComponent({
         }
     },
     components: {
-        // LoginForm,
-        LayoutFramework
+        LayoutFramework,
+        LoginForm
     }
 })
 </script>

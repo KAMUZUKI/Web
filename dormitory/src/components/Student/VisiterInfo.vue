@@ -1,41 +1,61 @@
 <template>
-  <div class="container">
-      <a-table :columns="columns" :data-source="dataSource" bordered>
-          <template #bodyCell="{ column, text, record }">
-              <template v-if="['status', 'type'].includes(column.dataIndex)">
-                  <div>
-                      <a-input v-if="editableData[record.sno]"
-                          v-model:value="editableData[record.sno][column.dataIndex]" style="margin: -5px 0" />
-                      <template v-else>
-                          {{ text }}
-                      </template>
-                  </div>
-              </template>
-              <template v-else-if="column.dataIndex === 'modify'">
-                  <div class="editable-row-operations">
-                      <span v-if="editableData[record.sno]">
-                          <a-typography-link @click="save(record)">保存</a-typography-link>
-                          <a-popconfirm title="确认取消?" @confirm="cancel(record.sno)">
-                              <a>取消</a>
-                          </a-popconfirm>
-                      </span>
-                      <span v-else>
-                          <a @click="edit(record.sno)">编辑</a>
-                      </span>
-                  </div>
-              </template>
-              <template v-else-if="column.dataIndex === 'delete'">
-                  <div class="editable-row-operations">
-                      <span>
-                          <a-popconfirm title="确认删除?" ok-text="删除" cancel-text="取消" @confirm="deleteById(record.id)">
-                              <a>删除</a>
-                          </a-popconfirm>
-                      </span>
-                  </div>
-              </template>
-          </template>
-      </a-table>
-  </div>
+    <div class="table">
+        <a-button style="float:left;margin-left: 20px;margin-top: 20px;" type="primary"
+            @click="showDrawer">添加来访信息</a-button>
+        <a-table style="min-width:1000px" :columns="columns" :data-source="dataSource" bordered>
+            <template #bodyCell="{ column, text, record }">
+                <template v-if="['status', 'type'].includes(column.dataIndex)">
+                    <div>
+                        <a-input v-if="editableData[record.sno]"
+                            v-model:value="editableData[record.sno][column.dataIndex]" style="margin: -5px 0" />
+                        <template v-else>
+                            {{ text }}
+                        </template>
+                    </div>
+                </template>
+                <template v-else-if="column.dataIndex === 'modify'">
+                    <div class="editable-row-operations">
+                        <span v-if="editableData[record.sno]">
+                            <a-typography-link @click="save(record)">保存</a-typography-link>
+                            <a-popconfirm title="确认取消?" @confirm="cancel(record.sno)">
+                                <a>取消</a>
+                            </a-popconfirm>
+                        </span>
+                        <span v-else>
+                            <a @click="edit(record.sno)">编辑</a>
+                        </span>
+                    </div>
+                </template>
+                <template v-else-if="column.dataIndex === 'delete'">
+                    <div class="editable-row-operations">
+                        <span>
+                            <a-popconfirm title="确认删除?" ok-text="删除" cancel-text="取消" @confirm="deleteById(record.id)">
+                                <a>删除</a>
+                            </a-popconfirm>
+                        </span>
+                    </div>
+                </template>
+            </template>
+        </a-table>
+        <a-drawer title="添加来访信息" :width="300" :visible="visible" :body-style="{ paddingBottom: '80px' }"
+            :footer-style="{ textAlign: 'right' }" @close="onClose">
+            <a-form :model="formState" name="nest-messages" @finish="onFinish" @onFinishFailed="onFinishFailed"
+                :validate-messages="validateMessages">
+                <a-form-item :name="['visiter', 'name']" label="名字" :rules="[{ required: true, message: '填写来访者名字' }]">
+                    <a-input v-model:value="formState.visiter.name" />
+                </a-form-item>
+                <a-form-item :name="['visiter', 'phone']" label="手机号" :rules="[{ required: true, message: '手机号' }]">
+                    <a-input v-model:value="formState.visiter.phone" />
+                </a-form-item>
+                <a-form-item :name="['visiter', 'purpose']" label="目的" :rules="[{ required: true, message: '目的' }]">
+                    <a-textarea v-model:value="formState.visiter.purpose" />
+                </a-form-item>
+                <a-form-item>
+                    <a-button shape="round" type="primary" html-type="submit">提交</a-button>
+                </a-form-item>
+            </a-form>
+        </a-drawer>
+    </div>
 </template>
 <script>
 import { cloneDeep } from 'lodash-es';
@@ -44,139 +64,180 @@ import { message } from 'ant-design-vue';
 import axios from 'axios'
 import { useStore } from 'vuex';
 export default defineComponent({
-  name: 'VisiterInfo',
-  setup() {
-      const store = useStore();
-      const columns = [{
-          title: '编号',
-          width: 15,
-          dataIndex: 'id',
-      }, {
-          title: '名字',
-          width: 25,
-          dataIndex: 'name',
-      },{
-          title: '电话',
-          dataIndex: 'phone',
-          width: 30,
-      }, {
-          title: '目的',
-          dataIndex: 'purpose',
-          width: 15,
-      }, {
-          title: '进入时间',
-          dataIndex: 'createtime',
-          width: 15,
-      }, {
-          title: '离校时间',
-          dataIndex: 'managerid',
-          width: 15,
-      }];
+    name: 'VisiterInfo',
+    setup() {
+        const store = useStore();
+        const columns = [{
+            title: '编号',
+            width: 15,
+            dataIndex: 'id',
+        }, {
+            title: '名字',
+            width: 25,
+            dataIndex: 'name',
+        }, {
+            title: '电话',
+            dataIndex: 'phone',
+            width: 30,
+        }, {
+            title: '目的',
+            dataIndex: 'purpose',
+            width: 15,
+        }, {
+            title: '进入时间',
+            dataIndex: 'createTime',
+            width: 15,
+        }, {
+            title: '管理员',
+            dataIndex: 'managername',
+            width: 15,
+        }];
 
-      const dataSource = ref([]);
-      const listDataTmp = ref([]);
+        const dataSource = ref([]);
+        const listDataTmp = ref([]);
 
-      const initDataSource = () => {
-          //TODO:获取数据
-          var params = new URLSearchParams()
-          params.append('op', 'getAllVisiter')
-          axios.post(store.state.path + '/info.action', params)
-              .then(res => {
-                  if (res.data.code == 1) {
-                      listDataTmp.value = res.data.data
-                      for (const [key, item] of Object.entries(listDataTmp.value)) {
-                          console.log(key)
-                          dataSource.value.push(item);
-                      }
-                      message.success('获取来访者信息成功')
-                  } else {
-                      message.error('获取来访者信息失败')
-                  }
-              })
-              .catch(function (error) {
-                  console.log(error);
-              });
-      }
+        const formState = reactive({
+            visiter: {
+                name: '',
+                phone: '',
+                purpose: '',
+                managername: '',
+            }
+        });
 
-      const editableData = reactive({});
+        const validateMessages = {
+            required: '${label} 是必要的!',
+            types: {
+                email: '${label} 是无效的邮箱!',
+                number: '${label} 是无效的数字!',
+            }
+        };
 
-      const edit = key => {
-          editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.id)[0]);
-      }
+        const initDataSource = () => {
+            //TODO:获取数据
+            var params = new URLSearchParams()
+            params.append('op', 'getAllVisiter')
+            axios.post(store.state.path + '/info.action', params)
+                .then(res => {
+                    if (res.data.code == 1) {
+                        listDataTmp.value = res.data.data
+                        for (const [key, item] of Object.entries(listDataTmp.value)) {
+                            console.log(key)
+                            dataSource.value.push(item);
+                        }
+                        message.success('获取来访者信息成功')
+                    } else {
+                        message.error('获取来访者信息失败')
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
 
-      const save = user => {
-          // Object.assign(dataSource.value.filter(item => user.id === item.id)[0], editableData[user.id]);
-          // delete editableData[user.id];
-          // //TODO:通过userid修改后台用户数据
-          // setTimeout(() => {
-          //     var params = new URLSearchParams();
-          //     params.append('op', 'alterUser');
-          //     params.append('userId', user.id);
-          //     params.append('status', user.status);
-          //     params.append('type', user.type);
-          //     axios.post(store.state.path + '/user.action', params)
-          //         .then(res => {
-          //             if (res.data.code == 1) {
-          //                 delete editableData[user.id];
-          //                 message.success('修改用户ID' + user.id + '成功');
-          //             } else {
-          //                 message.error('修改用户ID' + user.id + '失败');
-          //             }
-          //         })
-          //         .catch(function (error) {
-          //             console.log(error);
-          //         });
-          // }, 500);
-          console.log(user)
-      }
+        const editableData = reactive({});
 
-      const cancel = key => {
-          delete editableData[key];
-      }
+        const edit = key => {
+            editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.id)[0]);
+        }
 
-      const deleteById = userId => {
-          //TODO:通过userid删除后台用户数据
-          // var params = new URLSearchParams();
-          // params.append('op', 'deleteUser');
-          // params.append('userId', userId);
-          // axios.post(store.state.path + '/user.action', params)
-          //     .then(res => {
-          //         if (res.data.code == 1) {
-          //             dataSource.value = dataSource.value.filter(item => userId !== item.id);
-          //             message.success('删除用户ID' + userId + '成功');
-          //         } else {
-          //             message.error('删除用户ID' + userId + '失败');
-          //         }
-          //     })
-          //     .catch(function (error) {
-          //         console.log(error);
-          //     });
-          console.log(userId)
-      }
+        const save = user => {
+            console.log(user)
+        }
 
-      onMounted(() => {
-          initDataSource()
-      })
+        const cancel = key => {
+            delete editableData[key];
+        }
 
-      return {
-          dataSource,
-          columns,
-          editingKey: '',
-          editableData,
-          edit,
-          save,
-          cancel,
-          deleteById,
-      };
-  },
+        const deleteById = userId => {
+            console.log(userId)
+        }
+
+        const onFinish = (values) => {
+            console.log(values)
+            var params = new URLSearchParams();
+            params.append('op', 'addVisiter');
+            params.append('name', formState.visiter.name);
+            params.append('phone', formState.visiter.phone)
+            params.append('purpose', formState.visiter.purpose)
+            params.append('managername', JSON.parse(sessionStorage.getItem("manager")).id)
+            axios.post(store.state.path + '/info.action', params)
+                .then(res => {
+                    if (res.data.code == 1) {
+                        dataSource.value.push({
+                            name: formState.visiter.name,
+                            phone: formState.visiter.phone,
+                            purpose: formState.visiter.purpose,
+                            managername: JSON.parse(sessionStorage.getItem("manager")).name,
+                        })
+                        formState.visiter.name = ''
+                        formState.visiter.phone = ''
+                        formState.visiter.purpose = ''
+                        message.success(res.data.msg)
+                    } else {
+                        message.error(res.data.msg)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        };
+
+        const onFinishFailed = errorInfo => {
+            console.log('Failed:', errorInfo);
+        };
+
+        const layout = {
+            labelCol: {
+                span: 6,
+            },
+            wrapperCol: {
+                span: 16,
+            },
+        };
+
+        //DRAWER BEGIN
+        const visible = ref(false);
+
+        const showDrawer = () => {
+            visible.value = true;
+        };
+
+        const onClose = () => {
+            visible.value = false;
+        };
+
+        onMounted(() => {
+            initDataSource()
+        })
+
+        return {
+            dataSource,
+            columns,
+            editingKey: '',
+            editableData,
+            layout,
+            visible,
+            formState,
+            validateMessages,
+            edit,
+            save,
+            cancel,
+            deleteById,
+            onClose,
+            showDrawer,
+            onFinish,
+            onFinishFailed,
+        };
+    },
 });
 </script>
 <style scoped>
 .editable-row-operations a {
-  margin-right: 8px;
+    margin-right: 8px;
 }
 
 .container {
-  min-width: 1000px;
+    min-width: 1000px;
 }
 </style>

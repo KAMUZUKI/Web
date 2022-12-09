@@ -6,22 +6,22 @@
                     <a-card title="设置中心" style="width: 200px;position: fixed;">
                         <a-button class="siderSelect" block>
                             <router-link class="nav-link" to="/student/BaseInfo">
-                                <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>学生信息</span>
+                                <span>学生信息</span>
                             </router-link>
                         </a-button>
                         <a-button class="siderSelect" block>
                             <router-link class="nav-link" to="/student/VisiterInfo">
-                                <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>来访信息</span>
+                                <span>来访信息</span>
                             </router-link>
                         </a-button>
                         <a-button class="siderSelect" block>
                             <router-link class="nav-link" to="/student/LeaveInfo">
-                                <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>学生出入</span>
+                                <span>学生出入</span>
                             </router-link>
                         </a-button>
                         <a-button class="siderSelect" block>
                             <router-link class="nav-link" to="/admin">
-                                <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>权限管理</span>
+                                <span>权限管理</span>
                             </router-link>
                         </a-button>
                     </a-card>

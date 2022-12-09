@@ -1,8 +1,10 @@
 <template>
-    <div class="container">
-        <a-button style="float:left;margin-left: 20px;margin-top: 20px;" type="primary"
-            @click="showDrawer">添加学生</a-button>
-        <a-table :columns="columns" :data-source="dataSource" bordered>
+    <div class="table">
+        <div style="width: 100%;display:inline">
+            <a-button style="float:left;margin-left: 60px;margin-top: 20px;" type="primary"
+                @click="showDrawer">添加学生</a-button>
+        </div>
+        <a-table style="min-width:1000px" :columns="columns" :data-source="dataSource" bordered>
             <template #bodyCell="{ column, text, record }">
                 <template v-if="['address', 'phone'].includes(column.dataIndex)">
                     <div>
@@ -39,36 +41,40 @@
         </a-table>
         <a-drawer title="添加学生" :width="300" :visible="visible" :body-style="{ paddingBottom: '80px' }"
             :footer-style="{ textAlign: 'right' }" @close="onClose">
-            <a-form :model="formState" name="nest-messages" @finish="onFinish" @onFinishFailed="onFinishFailed"
+            <a-form :model="formState" name="nest-messages" 
+                @finish="onFinish" 
+                @onFinishFailed="onFinishFailed"
                 :validate-messages="validateMessages">
-                <a-form-item :name="['student', 'name']" label="名字" :rules="[{ required: true, message: '填写学生名字' }]">
-                    <a-input v-model:value="formState.student.name" />
+                <a-form-item :name="['student', 'sname']" label="名字" :rules="[{ required: true, message: '填写学生名字' }]">
+                    <a-input v-model:value="formState.student.sname" />
                 </a-form-item>
-                <a-form-item :name="['student', 'age']" label="年龄" :rules="[{ required: true, message: '填写年龄' }]">
-                    <a-input v-model:value="formState.student.age" />
+                <a-form-item :name="['student', 'age']" label="年龄" :rules="[{  required: true,type: 'number', min: 10, max: 30, message: '年龄在10-30之间'}]">
+                    <a-input-number v-model:value="formState.student.age" />
                 </a-form-item>
-                <a-form-item :name="['student', 'sex']" label="性别">
-                    <a-input v-model:value="formState.student.sex" />
+                <a-form-item :name="['student', 'sex']" label="性别" :rules="[{ required: true, message: '选择性别' }]">
+                    <a-radio-group v-model:value="formState.student.sex">
+                      <a-radio value="1">男</a-radio>
+                      <a-radio value="0">女</a-radio>
+                    </a-radio-group>
                 </a-form-item>
-                <a-form-item :name="['student', 'academy']" label="学院名称">
-                    <a-select showSearch v-model:value="academyOptions" smode="single" style="width: 100%"
-                        placeholder="请选择栏目" :options="academys">
+                <a-form-item :name="['student', 'academy']" label="学院名称" :rules="[{ required: true, message: '选择学院' }]">
+                    <a-select showSearch v-model:value="formState.student.academy" smode="single" style="width: 100%"
+                        placeholder="请选择学院" :options="academys">
                     </a-select>
                 </a-form-item>
-                <a-form-item :name="['student', 'class']" label="班级名称">
-                    <a-input v-model:value="formState.student.class" />
+                <a-form-item :name="['student', 'classname']" label="班级名称" :rules="[{ required: true, message: '填写班级名称' }]">
+                    <a-input v-model:value="formState.student.classname" />
                 </a-form-item>
-                <a-form-item :name="['student', 'address']" label="学院名称">
+                <a-form-item :name="['student', 'address']" label="住宿地址" :rules="[{ required: true, message: '填写住宿地址' }]">
                     <a-input v-model:value="formState.student.address" />
                 </a-form-item>
-                <a-form-item :name="['student', 'phone']" label="学院名称">
+                <a-form-item :name="['student', 'phone']" label="手机号" :rules="[{ required: true, message: '填写手机号' }]">
                     <a-input v-model:value="formState.student.phone" />
                 </a-form-item>
                 <a-form-item>
                     <a-button shape="round" type="primary" html-type="submit">提交</a-button>
                 </a-form-item>
             </a-form>
-            <notification-component ref="openNotification"></notification-component>
         </a-drawer>
     </div>
 </template>
@@ -79,9 +85,10 @@ import { message } from 'ant-design-vue';
 import axios from 'axios'
 import { useStore } from 'vuex';
 export default defineComponent({
-    name: 'UserManager',
+    name: 'BaseInfo',
     setup() {
         const store = useStore();
+        const academys = ref([]);
         const columns = [{
             title: '学号',
             width: 10,
@@ -93,6 +100,10 @@ export default defineComponent({
         }, {
             title: '年龄',
             dataIndex: 'age',
+            width: 10,
+        }, {
+            title: '性别',
+            dataIndex: 'sex',
             width: 10,
         }, {
             title: '学院',
@@ -120,15 +131,14 @@ export default defineComponent({
             width: 15,
         }];
 
-        const academyOptions = ref([])
 
         const formState = reactive({
             student: {
-                name: '',
+                sname: '',
                 age: '',
                 sex: '',
                 academy: '',
-                class: '',
+                classname: '',
                 address: '',
                 phone: '',
             }
@@ -146,19 +156,18 @@ export default defineComponent({
         const listDataTmp = ref([]);
 
         const getAcademys = () => {
-            const data = ref([])
             const tmpData = ref([])
             var params = new URLSearchParams();
-            params.append('op', 'getCategory');
+            params.append('op', 'getAllAcademy');
             //TODO: 从后台获取分类
             axios.post(store.state.path + '/info.action', params)
                 .then(res => {
                     if (res.data.code == 1) {
                         tmpData.value = res.data.data
                         for (var i = 0; i < tmpData.value.length; i++) {
-                            data.value.push(tmpData.value[i].name)
+                            academys.value.push({index: i, value:tmpData.value[i].aname})
                         }
-                        sessionStorage.setItem('academys', JSON.stringify(data.value))
+                        sessionStorage.setItem('academys', JSON.stringify(academys.value))
                     } else {
                         console.log(res.data.msg)
                     }
@@ -178,7 +187,12 @@ export default defineComponent({
                     if (res.data.code == 1) {
                         listDataTmp.value = res.data.data
                         for (const [key, item] of Object.entries(listDataTmp.value)) {
-                            console.log(key)
+                            key;
+                            if (item.sex==true) {
+                                item.sex = '男'
+                            }else{
+                                item.sex = '女'
+                            }
                             dataSource.value.push(item);
                         }
                         message.success('获取学生信息成功')
@@ -250,48 +264,35 @@ export default defineComponent({
             console.log(values)
             var params = new URLSearchParams();
             params.append('op', 'addStudent');
-            params.append('name', JSON.parse(sessionStorage.getItem("user")).username);
-            params.append('age', formState.student.name)
-            params.append('sex', formState.student.content)
-            params.append('academy', (JSON.parse(sessionStorage.getItem('academys')).indexOf(categoryOptions.value)) + 1 ?? 1)
-            params.append('class', keywordOptions.value ?? '')
-            params.append('address', formState.user.titleImgs ?? JSON.parse(sessionStorage.getItem("user")).head)
-            params.append('phone', formState.user.createTime)
+            params.append('sname', formState.student.sname);
+            params.append('age', formState.student.age)
+            params.append('sex', formState.student.sex==0?false:true)
+            params.append('academy', formState.student.academy)
+            params.append('classname', formState.student.classname)
+            params.append('address', formState.student.address)
+            params.append('phone', formState.student.phone)
             axios.post(store.state.path + '/info.action', params)
                 .then(res => {
                     if (res.data.code == 1) {
-                        formState.user.author = JSON.parse(sessionStorage.getItem("user")).username
-                        formState.user.category = categoryOptions.value
-                        formState.user.keywords = keywordOptions.value
-                        let submitCode = JSON.stringify({
-                            id: res.data.msg,
-                            author: formState.user.author,
-                            title: formState.user.title,
-                            content: formState.user.content,
-                            description: formState.user.description,
-                            category: JSON.parse(sessionStorage.getItem('categorys')).indexOf(formState.user.category),
-                            keywords: formState.user.keywords,
-                            titleImgs: formState.user.titleImgs,
-                            createTime: formState.user.createTime,
-                            colCnt: [0, 0, 0],
+                        dataSource.value.push({
+                            sname: formState.student.sname,
+                            age: formState.student.age,
+                            sex: formState.student.sex,
+                            academy: formState.student.academy,
+                            classname: formState.student.classname,
+                            address: formState.student.address,
+                            phone: formState.student.phone,
                         })
-                        // let submitCode = JSON.stringify({
-                        //     id: 1,
-                        //     author: 'zhangsan',
-                        //     title: `zhangsan part`,
-                        //     avatar: 'https://joeschmoe.io/api/v1/random',
-                        //     description: 'GO JAVA',
-                        //     content: '# 111111Marked in the browser  Marked in the browser  Marked in the browser\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.\n\nRendered by **marked**.',
-                        //     keywords: ['GO', 'JAVA'],
-                        //     category: ['GO', 'PYTHON', 'JAVA'],
-                        //     createTime: '2015-07-23 15:23:05',
-                        //     colCnt: [0, 0, 0],
-                        // });
-                        ws.send(submitCode)
-                        message.success('文章发布成功')
-                        router.push('/')
+                        formState.student.sname = ''
+                        formState.student.age = ''
+                        formState.student.sex = ''
+                        formState.student.academy = ''
+                        formState.student.classname = ''
+                        formState.student.address = ''
+                        formState.student.phone = ''
+                        message.success(res.data.msg)
                     } else {
-                        message.error('文章发布失败')
+                        message.error(res.data.msg)
                     }
                 })
                 .catch(function (error) {
@@ -317,10 +318,6 @@ export default defineComponent({
         const visible = ref(false);
 
         const showDrawer = () => {
-            tmpAcademys.value = JSON.parse(sessionStorage.getItem("academys")) ?? []
-            Object.entries(v.value).forEach(([key, value]) => {
-                categorys.value.push({ index: key, value: value })
-            })
             visible.value = true;
         };
 
@@ -339,16 +336,15 @@ export default defineComponent({
             columns,
             editingKey: '',
             editableData,
-            edit,
-            save,
-            cancel,
-            deleteById,
-
             layout,
             visible,
             formState,
             validateMessages,
-            academyOptions,
+            academys,
+            edit,
+            save,
+            cancel,
+            deleteById,
             confirm,
             onClose,
             showDrawer,
@@ -361,9 +357,5 @@ export default defineComponent({
 <style scoped>
 .editable-row-operations a {
     margin-right: 8px;
-}
-
-.container {
-    min-width: 1000px;
 }
 </style>

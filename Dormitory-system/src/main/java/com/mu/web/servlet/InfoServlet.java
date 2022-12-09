@@ -20,7 +20,7 @@ import java.util.List;
 public class InfoServlet extends CommonServlet {
     /**
      * info.action?op=getAllStudent
-     * 获取所有用户信息
+     * 获取所有学生信息
      */
     protected void getAllStudent(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DbHelper db = new DbHelper();
@@ -241,7 +241,7 @@ public class InfoServlet extends CommonServlet {
         String sql = "{call add_ls(?,?,?,?,?)}";
         try {
             leaveschool = super.parseRequestToT(request, Leaveschool.class);
-            result = db.doUpdataProc(sql,leaveschool.getSno(),leaveschool.getPurpose(),leaveschool.getLeavetime(),leaveschool.getBacktime(),leaveschool.getManagerid());
+            result = db.doUpdataProc(sql,leaveschool.getSno(),leaveschool.getPurpose(),leaveschool.getLeaveTime(),leaveschool.getBackTime(),leaveschool.getManagername());
         } catch (Exception e) {
             e.printStackTrace();
             jm.setCode(0);
@@ -272,7 +272,7 @@ public class InfoServlet extends CommonServlet {
         String sql = "{call add_v(?,?,?,?)}";
         try {
             visiter = super.parseRequestToT(request, Visiter.class);
-            result = db.doUpdataProc(sql,visiter.getName(),visiter.getPhone(),visiter.getPurpose(),visiter.getManagerid());
+            result = db.doUpdataProc(sql,visiter.getName(),visiter.getPhone(),visiter.getPurpose(),visiter.getManagername());
         } catch (Exception e) {
             e.printStackTrace();
             jm.setCode(0);

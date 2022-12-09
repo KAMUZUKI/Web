@@ -32,7 +32,7 @@
                                 <a-form-item :name="['user', 'categorys']" label="栏目选择">
                                     <a-select showSearch v-model:value="categoryOptions" mode="single"
                                         style="width: 100%" placeholder="请选择栏目" :options="categorys">
-                                    </a-select>
+                                    </a-select>{{categorys}}
                                 </a-form-item>
                                 <a-form-item :name="['user', 'keywords']" label="关键词">
                                     <a-select showSearch v-model:value="keywordOptions" mode="multiple"

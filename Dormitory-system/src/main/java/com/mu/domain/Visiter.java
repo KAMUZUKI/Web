@@ -33,12 +33,12 @@ public class Visiter implements Serializable {
     /**
      * 来访时间
      */
-    private String createtime;
+    private String createTime;
 
     /**
      * 管理执行人id
      */
-    private Integer managerid;
+    private String managername;
 
     private static final long serialVersionUID = 1L;
 
@@ -52,8 +52,8 @@ public class Visiter implements Serializable {
         sb.append(", name=").append(name);
         sb.append(", phone=").append(phone);
         sb.append(", purpose=").append(purpose);
-        sb.append(", createtime=").append(createtime);
-        sb.append(", managerid=").append(managerid);
+        sb.append(", createtime=").append(createTime);
+        sb.append(", managerid=").append(managername);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
