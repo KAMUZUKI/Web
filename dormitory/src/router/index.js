@@ -8,11 +8,22 @@ import { message } from 'ant-design-vue';
 // 我们后面再讨论嵌套路由。
 const routes = [
     {
-        path: '/student/AccommodationInfo',
-        name: 'AccommodationInfo',
-        component: () => import('@/components/Student/AccommodationInfo.vue'),
+        path: '/',
+        name: 'Index',
+        component: () => import('@/components/AdminManager.vue'),
         meta: {
-            title: '住宿信息',
+            title: '学生基本信息',
+            // requireAuth: true,
+            transition_enter: 'animate__fadeInRight',
+            transition_leave: 'animate__fadeOutLeft',
+        },
+    },
+    {
+        path: '/student/VisiterInfo',
+        name: 'VisiterInfo',
+        component: () => import('@/components/Student/VisiterInfo.vue'),
+        meta: {
+            title: '来访信息',
             // requireAuth: true,
             transition_enter: 'animate__fadeInRight',
             transition_leave: 'animate__fadeOutLeft',
@@ -35,6 +46,17 @@ const routes = [
         component: () => import('@/components/Student/LeaveInfo.vue'),
         meta: {
             title: '出入基本信息',
+            // requireAuth: true,
+            transition_enter: 'animate__fadeInRight',
+            transition_leave: 'animate__fadeOutLeft',
+        },
+    },
+    {
+        path: '/admin',
+        name: 'AdminManager',
+        component: () => import('@/components/AdminManager.vue'),
+        meta: {
+            title: '管理员管理',
             // requireAuth: true,
             transition_enter: 'animate__fadeInRight',
             transition_leave: 'animate__fadeOutLeft',

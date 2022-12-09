@@ -4,8 +4,8 @@
           <template #bodyCell="{ column, text, record }">
               <template v-if="['status', 'type'].includes(column.dataIndex)">
                   <div>
-                      <a-input v-if="editableData[record.id]"
-                          v-model:value="editableData[record.id][column.dataIndex]" style="margin: -5px 0" />
+                      <a-input v-if="editableData[record.sno]"
+                          v-model:value="editableData[record.sno][column.dataIndex]" style="margin: -5px 0" />
                       <template v-else>
                           {{ text }}
                       </template>
@@ -13,14 +13,14 @@
               </template>
               <template v-else-if="column.dataIndex === 'modify'">
                   <div class="editable-row-operations">
-                      <span v-if="editableData[record.id]">
+                      <span v-if="editableData[record.sno]">
                           <a-typography-link @click="save(record)">保存</a-typography-link>
-                          <a-popconfirm title="确认取消?" @confirm="cancel(record.id)">
+                          <a-popconfirm title="确认取消?" @confirm="cancel(record.sno)">
                               <a>取消</a>
                           </a-popconfirm>
                       </span>
                       <span v-else>
-                          <a @click="edit(record.id)">编辑</a>
+                          <a @click="edit(record.sno)">编辑</a>
                       </span>
                   </div>
               </template>
@@ -44,7 +44,7 @@ import { message } from 'ant-design-vue';
 import axios from 'axios'
 import { useStore } from 'vuex';
 export default defineComponent({
-  name: 'LeaveInfo',
+  name: 'VisiterInfo',
   setup() {
       const store = useStore();
       const columns = [{
@@ -52,31 +52,23 @@ export default defineComponent({
           width: 15,
           dataIndex: 'id',
       }, {
-          title: '学号',
-          width: 25,
-          dataIndex: 'sno',
-      }, {
           title: '名字',
-          dataIndex: 'sname',
-          width: 35,
-      }, {
+          width: 25,
+          dataIndex: 'name',
+      },{
           title: '电话',
           dataIndex: 'phone',
-          width: 40,
+          width: 30,
       }, {
           title: '目的',
           dataIndex: 'purpose',
-          width: 60,
+          width: 15,
+      }, {
+          title: '进入时间',
+          dataIndex: 'createtime',
+          width: 15,
       }, {
           title: '离校时间',
-          dataIndex: 'leavetime',
-          width: 50,
-      }, {
-          title: '返校时间',
-          dataIndex: 'backtime',
-          width: 30,
-      }, {
-          title: '管理员',
           dataIndex: 'managerid',
           width: 15,
       }];
@@ -87,7 +79,7 @@ export default defineComponent({
       const initDataSource = () => {
           //TODO:获取数据
           var params = new URLSearchParams()
-          params.append('op', 'getAllLeaveschool')
+          params.append('op', 'getAllVisiter')
           axios.post(store.state.path + '/info.action', params)
               .then(res => {
                   if (res.data.code == 1) {
@@ -96,9 +88,9 @@ export default defineComponent({
                           console.log(key)
                           dataSource.value.push(item);
                       }
-                      message.success('获取离校信息成功')
+                      message.success('获取来访者信息成功')
                   } else {
-                      message.success('获取离校信息失败')
+                      message.success('获取来访者信息失败')
                   }
               })
               .catch(function (error) {

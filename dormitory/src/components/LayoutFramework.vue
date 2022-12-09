@@ -3,15 +3,15 @@
         <a-layout-content>
             <a-space :size="small" direction="horizontal" align="start">
                 <a-col>
-                    <a-card title="设置中心" style="width: 200px">
+                    <a-card title="设置中心" style="width: 200px;position: fixed;">
                         <a-button class="siderSelect" block>
                             <router-link class="nav-link" to="/student/BaseInfo">
                                 <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>学生信息</span>
                             </router-link>
                         </a-button>
                         <a-button class="siderSelect" block>
-                            <router-link class="nav-link" to="/student/AccommodationInfo">
-                                <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>学生住宿</span>
+                            <router-link class="nav-link" to="/student/VisiterInfo">
+                                <comment-outlined :style="{ fontSize: '26px', color: '#08c' }" /><span>来访信息</span>
                             </router-link>
                         </a-button>
                         <a-button class="siderSelect" block>
@@ -26,7 +26,7 @@
                         </a-button>
                     </a-card>
                 </a-col>
-                <a-col style="background-color:#fff;" flex="fix">
+                <a-col style="background-color:#fff;margin-left: 200px;" flex="fix">
                     <router-view #default="{ route, Component }">
                         <transition :enter-active-class="`animate__animated ${route.meta.transition_enter}`"
                             :leave-active-class="`animate__animated ${route.meta.transition_leave}`" mode="out-in">

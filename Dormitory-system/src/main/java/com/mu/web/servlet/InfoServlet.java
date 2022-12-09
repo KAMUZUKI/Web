@@ -109,6 +109,36 @@ public class InfoServlet extends CommonServlet {
     }
 
     /**
+     * info.action?op=getAllAcademy
+     * 获取所有学院信息
+     */
+    protected void getAllManager(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DbHelper db = new DbHelper();
+        JsonModel jm = new JsonModel();
+        Manager manager = new Manager();
+        List<Manager> list = null;
+        String sql = "{call select_m()}";
+        try {
+            list = db.selectProc(sql, Manager.class);
+            if (list == null && list.size() <= 0) {
+                jm.setCode(0);
+                jm.setMsg("无数据...");
+                super.writeJson(jm, response);
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            jm.setCode(0);
+            jm.setMsg(e.getMessage());
+            super.writeJson(jm, response);
+            return;
+        }
+        jm.setCode(1);
+        jm.setData(list);
+        super.writeJson(jm, response);
+    }
+
+    /**
      * info.action?op=getAllVisiter
      * 获取所有来访者信息
      */
@@ -120,6 +150,36 @@ public class InfoServlet extends CommonServlet {
         String sql = "{call select_v()}";
         try {
             list = db.selectProc(sql, Visiter.class);
+            if (list == null && list.size() <= 0) {
+                jm.setCode(0);
+                jm.setMsg("无数据...");
+                super.writeJson(jm, response);
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            jm.setCode(0);
+            jm.setMsg(e.getMessage());
+            super.writeJson(jm, response);
+            return;
+        }
+        jm.setCode(1);
+        jm.setData(list);
+        super.writeJson(jm, response);
+    }
+
+    /**
+     * info.action?op=getAllLeaveschool
+     * 获取所有离校学生信息
+     */
+    protected void getAllLeaveschool(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DbHelper db = new DbHelper();
+        JsonModel jm = new JsonModel();
+        Leaveschool leaveschool = new Leaveschool();
+        List<Leaveschool> list = null;
+        String sql = "{call select_ls()}";
+        try {
+            list = db.selectProc(sql, Leaveschool.class);
             if (list == null && list.size() <= 0) {
                 jm.setCode(0);
                 jm.setMsg("无数据...");

@@ -44,7 +44,7 @@ import { message } from 'ant-design-vue';
 import axios from 'axios'
 import { useStore } from 'vuex';
 export default defineComponent({
-  name: 'LeaveInfo',
+  name: 'AdminInfo',
   setup() {
       const store = useStore();
       const columns = [{
@@ -52,32 +52,24 @@ export default defineComponent({
           width: 15,
           dataIndex: 'id',
       }, {
-          title: '学号',
-          width: 25,
-          dataIndex: 'sno',
-      }, {
           title: '名字',
-          dataIndex: 'sname',
-          width: 35,
-      }, {
+          width: 25,
+          dataIndex: 'name',
+      },{
           title: '电话',
           dataIndex: 'phone',
-          width: 40,
-      }, {
-          title: '目的',
-          dataIndex: 'purpose',
-          width: 60,
-      }, {
-          title: '离校时间',
-          dataIndex: 'leavetime',
-          width: 50,
-      }, {
-          title: '返校时间',
-          dataIndex: 'backtime',
           width: 30,
       }, {
-          title: '管理员',
-          dataIndex: 'managerid',
+          title: '账号',
+          dataIndex: 'account',
+          width: 15,
+      }, {
+          title: '角色',
+          dataIndex: 'type',
+          width: 15,
+      }, {
+          title: '状态',
+          dataIndex: 'status',
           width: 15,
       }];
 
@@ -87,7 +79,7 @@ export default defineComponent({
       const initDataSource = () => {
           //TODO:获取数据
           var params = new URLSearchParams()
-          params.append('op', 'getAllLeaveschool')
+          params.append('op', 'getAllManager')
           axios.post(store.state.path + '/info.action', params)
               .then(res => {
                   if (res.data.code == 1) {
@@ -96,9 +88,9 @@ export default defineComponent({
                           console.log(key)
                           dataSource.value.push(item);
                       }
-                      message.success('获取离校信息成功')
+                      message.success('获取管理员信息成功')
                   } else {
-                      message.success('获取离校信息失败')
+                      message.success('获取管理员信息失败')
                   }
               })
               .catch(function (error) {
