@@ -24,7 +24,7 @@ const routes = [
         component: () => import('@/components/Student/VisiterInfo.vue'),
         meta: {
             title: '来访信息',
-            // requireAuth: true,
+            requireAuth: true,
             transition_enter: 'animate__fadeInRight',
             transition_leave: 'animate__fadeOutLeft',
         },
@@ -35,7 +35,7 @@ const routes = [
         component: () => import('@/components/Student/BaseInfo.vue'),
         meta: {
             title: '学生基本信息',
-            // requireAuth: true,
+            requireAuth: true,
             transition_enter: 'animate__fadeInRight',
             transition_leave: 'animate__fadeOutLeft',
         },
@@ -46,7 +46,7 @@ const routes = [
         component: () => import('@/components/Student/LeaveInfo.vue'),
         meta: {
             title: '出入基本信息',
-            // requireAuth: true,
+            requireAuth: true,
             transition_enter: 'animate__fadeInRight',
             transition_leave: 'animate__fadeOutLeft',
         },
@@ -57,7 +57,7 @@ const routes = [
         component: () => import('@/components/AdminManager.vue'),
         meta: {
             title: '管理员管理',
-            // requireAuth: true,
+            requireAuth: true,
             transition_enter: 'animate__fadeInRight',
             transition_leave: 'animate__fadeOutLeft',
         },
@@ -91,11 +91,11 @@ const routes = [
 const router = createRouter({
     // 4. 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
     history: createWebHistory(),
-    base: '/dist/',
+    base: '/Dormitory/',
     routes // `routes: routes` 的缩写
 })
 
-const list = ['','article', 'setflink', 'manager']
+const list = ['admin']
 router.beforeEach((to, from, next) => {
     //to 目标路由
     //from 来源
@@ -104,10 +104,10 @@ router.beforeEach((to, from, next) => {
     //如果需要验证，首页守卫
     if (to.meta.requireAuth) {
         //vuex仓库中的信息是否存在
-        if (sessionStorage.getItem('user')) {
+        if (sessionStorage.getItem('manager')) {
             //   setting/article
-            if (list.includes(to.path.split('/')[2])) {
-                if (JSON.parse(sessionStorage.getItem('user')).type == 1) {
+            if (list.includes(to.path.split('/')[1])) {
+                if (JSON.parse(sessionStorage.getItem('manager')).type == 0) {
                     next()
                 } else {
                     message.warning('您没有权限，请向管理员申请');

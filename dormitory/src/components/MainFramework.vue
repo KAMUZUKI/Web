@@ -1,5 +1,5 @@
 <template>
-    <LayoutFramework v-if="isLogin"></LayoutFramework>
+    <LayoutFramework :changeLogin="changeLogin" v-if="isLogin"></LayoutFramework>
     <LoginForm :changeLogin="changeLogin" v-if="!isLogin"></LoginForm>
 </template>
 

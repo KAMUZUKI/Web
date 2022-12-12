@@ -3,7 +3,8 @@
         <a-layout-content>
             <a-space :size="small" direction="horizontal" align="start">
                 <a-col>
-                    <a-card title="设置中心" style="width: 200px;position: fixed;">
+                    <div class="position: fixed;">
+                        <a-card title="设置中心" style="width: 200px;">
                         <a-button class="siderSelect" block>
                             <router-link class="nav-link" to="/student/BaseInfo">
                                 <span>学生信息</span>
@@ -25,8 +26,10 @@
                             </router-link>
                         </a-button>
                     </a-card>
+                    <AvatarComponent :changeLogin="changeLogin"></AvatarComponent>
+                    </div>
                 </a-col>
-                <a-col style="background-color:#fff;margin-left: 200px;" flex="fix">
+                <a-col style="background-color:#fff;" flex="fix">
                     <router-view #default="{ route, Component }">
                         <transition :enter-active-class="`animate__animated ${route.meta.transition_enter}`"
                             :leave-active-class="`animate__animated ${route.meta.transition_leave}`" mode="out-in">
@@ -56,8 +59,18 @@
 </style>
 <script>
 import { defineComponent } from 'vue';
+import AvatarComponent from './Avatar/AvatarComponent.vue';
 export default defineComponent({
     name: 'LayoutFramework',
+    components: {
+        AvatarComponent,
+    },
+    props: {
+        changeLogin: {
+            type: Function,
+            default: ()=>{},
+        },
+    },
 })
 
 </script>

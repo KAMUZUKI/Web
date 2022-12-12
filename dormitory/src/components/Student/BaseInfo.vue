@@ -95,7 +95,7 @@ export default defineComponent({
             dataIndex: 'sno',
         }, {
             title: '名字',
-            width: 25,
+            width: 10,
             dataIndex: 'sname',
         }, {
             title: '年龄',
@@ -108,7 +108,7 @@ export default defineComponent({
         }, {
             title: '学院',
             dataIndex: 'academy',
-            width: 10,
+            width: 60,
         }, {
             title: '班级',
             dataIndex: 'classname',
@@ -130,7 +130,6 @@ export default defineComponent({
             dataIndex: 'delete',
             width: 15,
         }];
-
 
         const formState = reactive({
             student: {
